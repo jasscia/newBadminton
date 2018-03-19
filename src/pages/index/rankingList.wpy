@@ -1,0 +1,95 @@
+<template>
+<view class="rankingList">
+    <view class="NO">NO.1 </view>
+    <view class="identity">
+      <view class="avatar"></view>
+      <view class="name">jassay king</view>
+    </view>
+
+    <view class="generalRank">
+      <view class="score">66</view>
+      <view class="describe">综合实力</view>
+    </view>
+
+    <view class="detail">
+      <view class="item1">场次</view>
+      <view class="item1">10</view>
+      <view class="item1">胜利</view>
+      <view class="item1">4</view>
+      <view class="item1">失败</view>
+      <view class="item1">6</view>
+      <view class="item1">胜率</view>
+      <view class="item1">40%</view>
+    </view>
+</view>
+</template>
+<style lang="less">
+  .rankingList{
+    margin:15px;
+    padding:10px;
+    display: grid;
+    border-radius: 5px;
+    grid-template-columns:1fr 3fr 3fr 3fr;
+    align-items: center;
+    font-size: 12px;
+    background: #fff;
+    
+    .NO{
+      padding-right: 10px;
+      background: lightblue;
+      height: 30px;
+      line-height: 30px;
+      background-clip: content-box;
+    }
+    .avatar{
+      height:50px;
+      width:50px;
+      border-radius: 50%;
+      background: burlywood
+    }
+    .score{
+      font-size: 40px;
+      height:50px;
+      line-height: 50px;
+    }
+    .score::after{
+      content:'分';
+      font-size:16px;
+    }
+    .detail{
+      display: grid;
+      grid-template-columns: 40px 50px;
+      grid-row-gap: 3px;
+    }
+    .item1:nth-child(2n){
+      background:cadetblue;
+      border-radius: 5px;
+      padding-left:6px;
+    }
+  }
+</style>
+
+<script>
+  import wepy from 'wepy';
+  import 'wepy-async-function';
+
+  export default class Index extends wepy.page {
+   
+    components = {
+      // itemPerson:itemPerson
+    }
+    // data = {
+    //   personList:[1,2,3,4],
+    //   name:12
+    // } 
+
+    // onLoad() {
+    //   console.log('123');
+    //   let url='https://gzbtestsystem.cn/badminton/againsttable?NumberOfPeople=10&RoundsOfPerson=6&format=json';
+    //   wepy.request(url).then((res) =>{
+    //     this.personList.push;
+    //     console.log('sussed')
+    //   } );  
+    // }
+  }
+</script>

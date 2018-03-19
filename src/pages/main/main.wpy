@@ -1,0 +1,75 @@
+
+<template>
+  <view id="main">    
+    <view class="header"> 
+      <view  @tap.stop="againstTableTap" class="{{activeBar==='againstTable'?'active':''}}">对阵记录</view>
+      <view  @tap.stop="resultTap" class="{{activeBar==='result'?'active':''}}">战绩排行</view>
+    </view>
+    <againstTable wx:if="{{activeBar==='againstTable'}}"></againstTable>
+    <result wx:if="{{activeBar==='result'}}"></result>
+  </view>
+</template>
+<style lang="less">
+@import '../../util/util.less';
+
+#main {
+  background: @bgc;
+}
+.header {
+  margin: 0px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -5px;
+    width: 60px;
+    color: cadetblue;
+    border-bottom: 5px solid;
+  }
+  .active {
+    position: relative;
+  }
+}
+</style>
+<script>
+import wepy from 'wepy';
+import againstTable from './againstTable';
+import result from './result';
+import 'wepy-async-function';
+
+export default class Main extends wepy.page {
+  data = {
+    activeBar :'againstTable'
+  };
+  computed = {};
+  components = {
+    againstTable: againstTable,
+    result: result
+  };
+
+  onLoad(options) {};
+  onShow(options) {};
+  getPersonList() {};
+
+  watch = {};
+  events = {};
+  // }
+  methods = {
+    againstTableTap() {
+      this.activeBar = 'againstTable';
+    },
+    resultTap() {
+      this.activeBar = 'result';
+    },
+  activeItem(e){
+    this.$broadcast('activeItem',e)
+  }
+  };
+}
+</script>

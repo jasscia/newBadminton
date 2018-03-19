@@ -1,0 +1,69 @@
+
+<template>
+  <view class="nearMatch"> 
+    <view class="row row1">
+      <view class="status">报名中</view>
+      <view class="distance">距您1000.00km</view>
+    </view>
+    <view class="row row2">葛洲坝青少年宫-双打排位赛</view>
+    <view class="row">时间 03-17 周六 19：30</view>
+    <view class="row">葛洲坝青少年宫三楼</view>
+    <view class="row row5">
+      <view class="summery">3人已报名</view>
+      <view class="avatarList">12345</view>
+    </view>
+  </view>
+</template>
+
+<style lang="less">
+.nearMatch{
+  margin:20px;
+  padding:10px;
+  background:#fff;
+  border-radius: 10px;
+  font-size: 12px;
+  color:#666;
+  .row{
+    margin:10px;
+  }
+  .row1{
+    display: flex;
+    justify-content: space-between;
+    font-size:10px;
+    color:#333;
+    .status{
+      background: lightblue;
+      border-radius: 6px;
+      padding:0 2px;
+      height:12px;
+    }
+  }
+  .row2{
+    font-size: 18px;
+  }
+  .row5{
+    height:30px;
+    line-height: 15px;
+    display: flex;
+    justify-content: space-between;
+    .avatarList{
+      flex:1;
+      text-align: end;
+    }
+  }
+}
+</style>
+
+<script>
+  import wepy from 'wepy';
+  // import 'wepy-async-function';
+
+  export default class Index extends wepy.page {
+   
+    components = {
+      // itemPerson:itemPerson
+    }
+  }
+</script>
+
+

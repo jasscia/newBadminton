@@ -1,0 +1,77 @@
+<template>
+  <view id="index">
+    <view class="header"> 
+      <view  @tap.stop="nearMatchTap" class="{{activeBar==='nearMatch'?'active':''}}">附近的比赛</view>
+      <view  @tap.stop="rankingListTap" class="{{activeBar==='rankingList'?'active':''}}">球员排行榜</view>
+    </view>
+    <repeat for='[1,2,3]' key='index'  wx:if="{{activeBar==='nearMatch'}}">
+      <nearMatch></nearMatch>
+    </repeat>
+    <repeat for='[1,2,3,4]' key='index' wx:if="{{activeBar==='rankingList'}}">
+      <rankingList ></rankingList>
+    </repeat> 
+  </view>
+</template>
+<style lang="less">
+@import  '../../util/util.less';
+#index{
+  background: #eee;
+}
+.header{
+  margin:0px;
+  padding-top:10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  
+.active::after {
+  content: '';
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  bottom:-5px;
+  width:60px;
+  color:cadetblue;
+  border-bottom:5px solid;
+  }
+  .active{
+    position: relative;
+  }
+}
+</style>
+<script>
+  import wepy from 'wepy';
+  import nearMatch from './nearMatch';
+  import rankingList from './rankingList';
+  import 'wepy-async-function';
+
+  export default class Index extends wepy.page {
+  
+    components = {
+      nearMatch:nearMatch,
+      rankingList:rankingList
+    }
+    data = {
+      activeBar:'rankingList'
+    } 
+    methods={
+      nearMatchTap(){console.log(this.data.activeBar);
+          this.activeBar='nearMatch';
+      },
+      rankingListTap(){console.log(this.data.activeBar);
+          this.activeBar='rankingList';
+          
+      },
+      getPhoneNumber: function(e) { 
+        console.log(e.detail.errMsg) 
+        console.log(e.detail.iv) 
+        console.log(e.detail.encryptedData) 
+    }
+    }
+onLoad(){
+//   wx.switchTab({
+//   url: '../main/main'
+// })
+}
+}
+</script>

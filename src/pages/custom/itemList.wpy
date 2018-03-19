@@ -1,0 +1,15 @@
+<template>
+  <view class="itemList">
+    <view class="item"></view>
+  </view>
+</template>
+<style lang="less">
+@import '../../util/util.less';
+</style>
+
+<script>
+import wepy from 'wepy';
+export default class ItemList extends wepy.page {
+  
+}
+</script>

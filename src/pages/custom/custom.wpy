@@ -1,0 +1,137 @@
+<template>
+  <view class="custom">
+    <view class="part part">
+      <view class="item" @tap.stop="tap"></view>
+      <view class="item" @tap.stop="tap"></view>
+    </view>
+    <view class="part part2">
+      <view class="item" @tap.stop="tap"></view>
+      <view class="item" @tap.stop="tap"></view>
+    </view>
+    <view class="part part3">
+      <view class="item title" @tap.stop="tap">得分统计</view>
+      <view class="item content" @tap.stop="tap">
+        <view class="row1">180</view>
+        <view class="row1">4</view>
+        <view class="row1">6</view>
+        <view class="row1 raito">40</view>
+        <view class="row2">场次</view>
+        <view class="row2">胜利</view>
+        <view class="row2">失败</view>
+        <view class="row2">胜率</view>
+      </view>
+    </view>
+    <view class="part part4">
+      <view class="item" @tap.stop="tap">
+        <view class="side left">我的战绩</view>
+        <view class="side right">88</view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">我的积分</view>
+        <view class="side right">200</view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">创建赛事</view>
+        <view class="side right"></view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">扫一扫</view>
+        <view class="side right">0</view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">我的资料</view>
+        <view class="side right">修改</view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">关于</view>
+        <view class="side right"></view>
+      </view>
+      <view class="item" @tap.stop="tap">
+        <view class="side left">帮助</view>
+        <view class="side right"></view>
+      </view>
+    </view>
+  </view>
+</template>
+</script>
+<style lang="less">
+@import '../../util/util.less';
+.part4{
+  background: @bgc;
+  font-size: 16px;
+  .item{
+    display: flex;
+    background: @bgc-card;
+    padding:10px;
+    margin:10px 0;
+  }
+  .right{
+    flex:1;
+    text-align: right;
+    color:#999;
+    font-size: 14px;
+  }
+  .right::after{
+    content: '>';
+    margin-left:0.5ch;
+  }
+}
+.part3{
+  background: @bgc-card;
+  padding:10px;
+  margin:10px 0;
+  .content{
+    padding:10px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    justify-items: center;
+  }
+  .row1,.row2{
+    text-align: center;
+  }
+  .row1{
+    height: 60px;
+    line-height: 60%;
+    width: 60px;
+    font-size: 40px;
+    vertical-align: bottom;
+    background: @score-color;
+    font-family:"Birch Std","Mesquite Std";
+  }
+  .row2{
+    height: 20px;
+    width: 60px;
+    font-size: 12px;
+    margin-top:-16px;
+  }
+  .raito::after{
+    content:'%';
+    font-size: 14px;
+  }
+}
+</style>
+<script>
+import wepy from 'wepy';
+import baseInfo from "./baseInfo";
+import data from "./data";
+import itemList from "./itemList";
+export default class Custom extends wepy.page {
+    config = {};
+    components={
+      baseInfo:baseInfo,
+      data:data,
+      itemList:itemList
+    };
+    data = {};
+    methods = {};
+
+    events = {};
+    onLoad() {};
+    // Other properties
+}
+</script>
+
+
+<style lang="less">
+/** less **/
+</style>

@@ -1,0 +1,78 @@
+<script>
+import wepy from 'wepy';
+import 'wepy-async-function';
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index/index',
+      'pages/main/main',
+      'pages/message/message',
+      'pages/custom/custom'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      backgroundColor:'#eeeeee',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor: '#eeeeee',
+      navigationBarTitleText: '羽球赛',
+    },
+    tabBar: {
+    list: [{
+      pagePath: "pages/index/index",
+      text: "首页"
+    }, {
+      pagePath: "pages/main/main",
+      text: "比赛"
+    }, {
+      pagePath: "pages/message/message",
+      text: "消息"
+    }, {
+      pagePath: "pages/custom/custom",
+      text: "我的"
+    }]
+  }
+  }
+
+  globalData = {
+    userInfo: null,
+    openId:''
+  }
+  onLaunch() {
+    this.initGlobalData();
+  }
+  watch={
+    openid(newdata){
+      wx.setLocalStorage({
+          key:'openId',
+          data:newdata
+        })
+    },
+    userInfo(newdata){
+      wx.setLocalStorage({
+          key:'userInfo',
+          data:newdata
+        })
+    }
+  }
+  initGlobalData(){
+    this.openId=wx.getStorageSync('openId');
+    this.userInfo=wx.getStorageSync('userInfo');
+    if(!this.openId){
+      wx.login({
+        success:(res)=>{
+          wx.request({
+          url: 'https://kkiqq.cn/api/wx/qlogin',
+          data: {code: res.code},
+          success:(data)=>{this.openId=data.data.openid;}
+          })
+        }
+      });     
+      wx.getUserInfo({
+        success:res=>{
+          this.userInfo=[res.userInfo.nickName,res.userInfo.avatarUrl,res.userInfo.gender]; 
+        }
+      });    
+    }
+  }
+}
+</script>

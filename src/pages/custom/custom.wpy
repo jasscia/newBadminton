@@ -5,8 +5,8 @@
       <view class="item" @tap.stop="tap"></view>
     </view>
     <view class="part part2">
-      <view class="item" @tap.stop="tap"></view>
-      <view class="item" @tap.stop="tap"></view>
+      <view class="item title" @tap.stop="tap">个人数据</view>
+      <cycleProgressBar :value="10" :comment="综合实力"></cycleProgressBar>
     </view>
     <view class="part part3">
       <view class="item title" @tap.stop="tap">得分统计</view>
@@ -15,7 +15,7 @@
         <view class="row1">4</view>
         <view class="row1">6</view>
         <view class="row1 raito">40</view>
-        <view class="row2">场次</view>
+        <view class="row2" >场次</view>
         <view class="row2">胜利</view>
         <view class="row2">失败</view>
         <view class="row2">胜率</view>
@@ -56,9 +56,24 @@
 </script>
 <style lang="less">
 @import '../../util/util.less';
-.part4{
+.custom{
   background: @bgc;
+  margin:0;
+  padding:0;
+}
+.part{
+  margin-bottom:10px;
   font-size: 16px;
+}
+.part2{
+  padding:10px;
+  background: @bgc-card;
+  .content{
+    // height:80px;
+    text-align: center;
+  }
+}
+.part4{
   .item{
     display: flex;
     background: @bgc-card;
@@ -79,30 +94,27 @@
 .part3{
   background: @bgc-card;
   padding:10px;
-  margin:10px 0;
   .content{
-    padding:10px;
     display: grid;
+    padding:10px 0;
     grid-template-columns: repeat(4,1fr);
     justify-items: center;
   }
   .row1,.row2{
     text-align: center;
+    min-width: 60px;
   }
   .row1{
-    height: 60px;
-    line-height: 60%;
-    width: 60px;
+    line-height: 40px;
     font-size: 40px;
-    vertical-align: bottom;
+    padding-top:15px;
     background: @score-color;
     font-family:"Birch Std","Mesquite Std";
   }
   .row2{
-    height: 20px;
-    width: 60px;
+    line-height: 12px;
     font-size: 12px;
-    margin-top:-16px;
+    margin-top:-15px;
   }
   .raito::after{
     content:'%';
@@ -115,12 +127,14 @@ import wepy from 'wepy';
 import baseInfo from "./baseInfo";
 import data from "./data";
 import itemList from "./itemList";
+import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Custom extends wepy.page {
     config = {};
     components={
       baseInfo:baseInfo,
       data:data,
-      itemList:itemList
+      itemList:itemList,
+      cycleProgressBar:cycleProgressBar,
     };
     data = {};
     methods = {};

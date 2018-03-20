@@ -1,0 +1,77 @@
+<template>
+  <view class="cycleProgressBar" @tap.stop="tap">
+        <view class="cycle">
+          <view class="score" comment="综合实力">{{value||0}}</view>
+          <view class="bg1"></view> 
+          <view class="bg2"></view>  
+        </view>      
+      </view>
+</template>
+<style lang="less">
+@import '../util/util.less';
+.cycleProgressBar{
+  text-align: center;
+}
+  .cycle{
+    display: inline-block;
+    position: relative;
+    height:100px;
+    width:100px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 100px;
+    border:15px solid orange;
+  }
+  .bg1,.bg2{
+    position: absolute;
+    border: 15px solid;
+    border-radius: 50%;
+    top:-15px;
+    left:-15px;
+    height:100px;
+    width:100px;
+  }
+  .bg1{
+    border-color: @bgc @bgc transparent transparent ;
+    transform-origin:50% 50%;
+    z-index: 1;
+    transform: rotate(170deg);
+  }
+   .bg2{
+    border-color: transparent transparent @bgc @bgc ;
+    transform-origin:50% 50%;
+    z-index: 2;
+  }
+  .score{
+    font-size: 60px;
+    font-family: "Birch Std";
+    position: relative;
+  }
+  .score::after{
+    content: attr(comment);
+    display:inline-block;
+    position: absolute;
+    left:0;
+    bottom:-25%;
+    // margin-top:20px;;
+    font-size:12px;
+    width:100%;
+  }
+</style>
+
+<script>
+import wepy from 'wepy';
+export default class Com extends wepy.component {
+    components = {};
+    props={
+      value:Number,
+      comment:String
+    }
+    watch={}
+    data = {};
+    methods = {};
+
+    events = {};
+    // Other properties
+}
+</script>

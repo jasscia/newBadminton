@@ -1,77 +1,78 @@
 <template>
   <view class="cycleProgressBar" @tap.stop="tap">
         <view class="cycle">
-          <view class="score" comment="综合实力">{{value||0}}</view>
-          <view class="bg1"></view> 
-          <view class="bg2"></view>  
+          <slot name="score"></slot>
+          <block wx:if="{{value<=50}}">
+            <view class="less bg">
+            <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view> 
+            </view>
+          </block>
+          <block wx:if="{{value>50}}">
+              <view class="more bg">
+              <view class="more bg1" style="transform: rotate(180deg)"></view> 
+              <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view> 
+              </view>
+          </block>
         </view>      
       </view>
 </template>
 <style lang="less">
 @import '../util/util.less';
-.cycleProgressBar{
+.cycleProgressBar {
   text-align: center;
 }
-  .cycle{
-    display: inline-block;
-    position: relative;
-    height:100px;
-    width:100px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 100px;
-    border:15px solid orange;
-  }
-  .bg1,.bg2{
-    position: absolute;
-    border: 15px solid;
-    border-radius: 50%;
-    top:-15px;
-    left:-15px;
-    height:100px;
-    width:100px;
-  }
-  .bg1{
-    border-color: @bgc @bgc transparent transparent ;
-    transform-origin:50% 50%;
-    z-index: 1;
-    transform: rotate(170deg);
-  }
-   .bg2{
-    border-color: transparent transparent @bgc @bgc ;
-    transform-origin:50% 50%;
-    z-index: 2;
-  }
-  .score{
-    font-size: 60px;
-    font-family: "Birch Std";
-    position: relative;
-  }
-  .score::after{
-    content: attr(comment);
-    display:inline-block;
-    position: absolute;
-    left:0;
-    bottom:-25%;
-    // margin-top:20px;;
-    font-size:12px;
-    width:100%;
-  }
+.cycle {
+  display: inline-block;
+  position: relative;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  line-height: 100px;
+  font-size: 0;
+}
+.bg{
+  height:100%;
+  width:100%;
+  position: absolute;
+  top:0;
+  background:@bgc;
+  border-radius: 50%;
+}
+.less.bg{
+  clip: rect(0 100px 50px 0);
+}
+
+.bg1,
+.bg2 {
+  border: 10px solid orange;
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip: rect(50px 100px 100px 0);
+  transform: rotate(0deg);
+}
 </style>
 
 <script>
 import wepy from 'wepy';
 export default class Com extends wepy.component {
-    components = {};
-    props={
-      value:Number,
-      comment:String
-    }
-    watch={}
-    data = {};
-    methods = {};
+  components = {};
+  props = {
+    value: { type: Number, default: 'null' },
+    comment: { type: String, default: '综合实力' }
+  };
+  onLoad(){
+    console.log('load',this.value,this.comment)
+  }
+  watch = {};
+  data = {};
+  methods = {};
 
-    events = {};
-    // Other properties
+  events = {};
+  // Other properties
 }
 </script>

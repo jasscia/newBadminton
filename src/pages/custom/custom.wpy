@@ -1,12 +1,31 @@
 <template>
   <view class="custom">
-    <view class="part part">
-      <view class="item" @tap.stop="tap"></view>
+    <view class="part part1">
+      <view class="item" @tap.stop="tap">
+        <image class="avatar" src="{{userPrivate.avatar}}" />
+        <view class="edit">&#x270e;</view>
+        <view class="nickname">{{userPrivate.nickName}}</view>
+        <view class="sumary">
+          <view class="item">{{userPrivate.gender===1?'男':'女'}}</view>
+          <view class="item">年龄{{userPublic.age}}</view>
+          <view class="item">身高{{userPublic.tall}}</view>
+          <view class="item">体重{{userPublic.weight}}</view>
+        </view>
+        <view class="other">
+          <view class="item">{{on}}关注</view>
+          <view class="item">|</view>
+          <view class="item">{{fans}}粉丝</view>
+          <view class="item">|</view>
+          <view class="item">{{diamond}}钻石</view>
+        </view>
+      </view>
       <view class="item" @tap.stop="tap"></view>
     </view>
     <view class="part part2">
       <view class="item title" @tap.stop="tap">个人数据</view>
-      <cycleProgressBar :value="10" :comment="综合实力"></cycleProgressBar>
+      <cycleProgressBar :value.sync="value" :comment.sync="comment">
+      <view slot="score" class="score">{{value}}</view>
+      </cycleProgressBar>
     </view>
     <view class="part part3">
       <view class="item title" @tap.stop="tap">得分统计</view>
@@ -65,12 +84,56 @@
   margin-bottom:10px;
   font-size: 16px;
 }
+.part1{
+  background: @score-color;
+  padding:20px 30px;
+  text-align: center;
+  margin-bottom:0;
+  .avatar{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background-size: cover;
+  }
+  .edit{
+    height: 0;
+    width:15px;
+    border-radius: 50%;
+    background:@bgc-card;
+    opacity: 0.5;
+    font-size:14px;
+    color:red;
+    margin:auto;
+    padding-right:50px;
+  }
+  .name{
+    text-align: center;
+  }
+  .sumary,.other{
+    margin:5px auto;
+    width:60%;
+    display:flex;
+    justify-content: space-around;
+    font-size: 12px;
+  }
+}
 .part2{
   padding:10px;
   background: @bgc-card;
-  .content{
-    // height:80px;
-    text-align: center;
+  .score {
+    font-size: 55px;
+    font-family: 'Arial Narrow';
+    position: relative;
+    z-index: 1;
+  }
+  .score::after {
+    content: '综合实力';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    bottom: -27%;
+    font-size: 12px;
+    width: 100%;
   }
 }
 .part4{
@@ -109,12 +172,12 @@
     font-size: 40px;
     padding-top:15px;
     background: @score-color;
-    font-family:"Birch Std","Mesquite Std";
+    font-family:"Arial Narrow";
   }
   .row2{
     line-height: 12px;
     font-size: 12px;
-    margin-top:-15px;
+    margin-top:-13px;
   }
   .raito::after{
     content:'%';
@@ -136,12 +199,30 @@ export default class Custom extends wepy.page {
       itemList:itemList,
       cycleProgressBar:cycleProgressBar,
     };
-    data = {};
+    data = {
+      value:80,
+      userPrivate:{},
+      userPublic:{
+        age:'20',
+        tall:'180cm',
+        weight:'45kg',
+      },
+      on:'200',
+      fans:'3000',
+      diamond:'56'
+    };
     methods = {};
 
     events = {};
-    onLoad() {};
-    // Other properties
+    onLoad() {
+      wx.getStorage({
+        key:'userInfo',
+        success:(res)=>{
+          this.userPrivate=res.data;
+          this.$apply()
+        }
+      })
+    };
 }
 </script>
 

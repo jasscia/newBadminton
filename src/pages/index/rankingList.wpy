@@ -49,6 +49,7 @@
     }
     .score{
       font-size: 40px;
+      font-family: 'Arial Narrow';
       height:50px;
       line-height: 50px;
     }

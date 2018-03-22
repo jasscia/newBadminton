@@ -15,7 +15,7 @@
     </view>
   </view>
 </template>
-<style lang="less">
+<style lang="less" scoped>
 /* pages/result/result.wxss */
   .wrapper{
     margin:20px;

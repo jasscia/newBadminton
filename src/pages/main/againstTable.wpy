@@ -38,7 +38,7 @@
   </view>
 </view>
 </template>
-<style lang="less">
+<style lang="less" scoped>
 @import '../../util/util.less';
 .wrapper{
   background: @bgc;

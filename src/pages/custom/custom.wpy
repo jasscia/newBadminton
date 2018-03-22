@@ -73,7 +73,7 @@
   </view>
 </template>
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @import '../../util/util.less';
 .custom{
   background: @bgc;
@@ -86,7 +86,7 @@
 }
 .part1{
   background: @score-color;
-  padding:20px 30px;
+  padding:50px 30px 10px;
   text-align: center;
   margin-bottom:0;
   .avatar{
@@ -219,6 +219,7 @@ export default class Custom extends wepy.page {
         key:'userInfo',
         success:(res)=>{
           this.userPrivate=res.data;
+          console.log(res.data);
           this.$apply()
         }
       })

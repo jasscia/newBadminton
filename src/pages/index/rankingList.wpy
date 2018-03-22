@@ -1,29 +1,27 @@
 <template>
-<view class="rankingList">
-    <view class="NO">NO.1 </view>
+<view class="rankingList" for="{{data}}" key="item" index="index">
+    <view class="NO">NO.{{item.NO}}</view>
     <view class="identity">
-      <view class="avatar"></view>
-      <view class="name">jassay king</view>
+      <image class="avatar" src="{{item.avatarUrl}}" />
+      <view class="name">{{item.nickName}}</view>
     </view>
-
     <view class="generalRank">
-      <view class="score">66</view>
+      <view class="score">{{item.generalRank}}</view>
       <view class="describe">综合实力</view>
     </view>
-
     <view class="detail">
       <view class="item1">场次</view>
-      <view class="item1">10</view>
+      <view class="item1">{{item.count}}</view>
       <view class="item1">胜利</view>
-      <view class="item1">4</view>
+      <view class="item1">{{item.win}}</view>
       <view class="item1">失败</view>
-      <view class="item1">6</view>
+      <view class="item1">{{item.fail}}</view>
       <view class="item1">胜率</view>
-      <view class="item1">40%</view>
+      <view class="item1">{{item.ratio}}%</view>
     </view>
 </view>
 </template>
-<style lang="less">
+<style lang="less" scoped>
   .rankingList{
     margin:15px;
     padding:10px;
@@ -41,13 +39,20 @@
       line-height: 30px;
       background-clip: content-box;
     }
+    .identity{
+      text-align: center;
+    }
     .avatar{
       height:50px;
       width:50px;
       border-radius: 50%;
-      background: burlywood
+      background-size: cover;
+    }
+    .name{
+      text-align: center;
     }
     .score{
+      text-align: center;
       font-size: 40px;
       font-family: 'Arial Narrow';
       height:50px;
@@ -57,7 +62,11 @@
       content:'分';
       font-size:16px;
     }
+    .describe{   
+      text-align: center;
+    }
     .detail{
+      margin:auto 0 auto auto;
       display: grid;
       grid-template-columns: 40px 50px;
       grid-row-gap: 3px;
@@ -75,22 +84,11 @@
   import 'wepy-async-function';
 
   export default class Index extends wepy.page {
-   
-    components = {
-      // itemPerson:itemPerson
-    }
-    // data = {
-    //   personList:[1,2,3,4],
-    //   name:12
-    // } 
-
-    // onLoad() {
-    //   console.log('123');
-    //   let url='https://gzbtestsystem.cn/badminton/againsttable?NumberOfPeople=10&RoundsOfPerson=6&format=json';
-    //   wepy.request(url).then((res) =>{
-    //     this.personList.push;
-    //     console.log('sussed')
-    //   } );  
-    // }
+   props={
+     item:{
+       type:Object,
+       default:'null'
+     }
+   }
   }
 </script>

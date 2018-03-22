@@ -9,7 +9,7 @@
     <result wx:if="{{activeBar==='result'}}"></result>
   </view>
 </template>
-<style lang="less">
+<style lang="less" scoped>
 @import '../../util/util.less';
 
 #main {

@@ -7,12 +7,12 @@
     <repeat for='[1,2,3]' key='index'  wx:if="{{activeBar==='nearMatch'}}">
       <nearMatch></nearMatch>
     </repeat>
-    <repeat for='[1,2,3,4]' key='index' wx:if="{{activeBar==='rankingList'}}">
-      <rankingList ></rankingList>
+    <repeat for='{{rankingList}}' key='index' wx:if="{{activeBar==='rankingList'}}">
+      <rankingList :item.sync="item"></rankingList>
     </repeat> 
   </view>
 </template>
-<style lang="less">
+<style lang="less" scoped>
 @import  '../../util/util.less';
 #index{
   background: #eee;
@@ -52,7 +52,8 @@
       rankingList:rankingList
     }
     data = {
-      activeBar:'rankingList'
+      activeBar:'rankingList',
+      rankingList:[]
     } 
     methods={
       nearMatchTap(){console.log(this.data.activeBar);
@@ -61,17 +62,30 @@
       rankingListTap(){console.log(this.data.activeBar);
           this.activeBar='rankingList';
           
-      },
-      getPhoneNumber: function(e) { 
-        console.log(e.detail.errMsg) 
-        console.log(e.detail.iv) 
-        console.log(e.detail.encryptedData) 
+      }
     }
+   onLoad(){
+     //请求资源，res
+     let createMockItem=()=>{
+          return {
+              id:1,
+              openId:'xxxxxx',
+              avatarUrl:'https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0',
+              nickName:'轻轻',
+              generalRank:(Math.random()*100).toFixed(0),
+              No:(Math.random()*20).toFixed(0),
+              count:(Math.random()*100).toFixed(0),
+              win:(Math.random()*100).toFixed(0),
+              fail:(Math.random()*100).toFixed(0),
+              ratio:30
+          }
+       };
+    let mockData=[];
+    for(let i=0;i<10;i++){
+      mockData.push(createMockItem());
     }
-onLoad(){
-//   wx.switchTab({
-//   url: '../main/main'
-// })
-}
+     this.rankingList=mockData;
+     this.$apply();
+   }
 }
 </script>

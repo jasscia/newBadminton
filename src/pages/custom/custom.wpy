@@ -2,8 +2,8 @@
   <view class="custom">
     <view class="part part1">
       <view class="item" @tap.stop="tap">
-        <image class="avatar" src="{{userPrivate.avatar}}" />
-        <view class="edit">&#x270e;</view>
+        <image class="avatar" src="{{userPrivate.avatar}}"/>
+        <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
         <view class="nickname">{{userPrivate.nickName}}</view>
         <view class="sumary">
           <view class="item">{{userPrivate.gender===1?'男':'女'}}</view>
@@ -57,7 +57,7 @@
         <view class="side left">扫一扫</view>
         <view class="side right">0</view>
       </view>
-      <view class="item" @tap.stop="tap">
+      <view class="item" @tap.stop="navigateToBaseInfoPage">
         <view class="side left">我的资料</view>
         <view class="side right">修改</view>
       </view>
@@ -187,14 +187,12 @@
 </style>
 <script>
 import wepy from 'wepy';
-import baseInfo from "./baseInfo";
 import data from "./data";
 import itemList from "./itemList";
 import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Custom extends wepy.page {
     config = {};
     components={
-      baseInfo:baseInfo,
       data:data,
       itemList:itemList,
       cycleProgressBar:cycleProgressBar,
@@ -211,7 +209,14 @@ export default class Custom extends wepy.page {
       fans:'3000',
       diamond:'56'
     };
-    methods = {};
+    methods = {
+      navigateToBaseInfoPage(){
+        console.log('try');
+        wx.navigateTo({
+          url:"/pages/custom/baseInfo"
+        })
+      }
+    };
 
     events = {};
     onLoad() {

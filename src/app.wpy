@@ -7,7 +7,8 @@ export default class extends wepy.app {
       'pages/index/index',
       'pages/main/main',
       'pages/message/message',
-      'pages/custom/custom'
+      'pages/custom/custom',
+      "pages/custom/baseInfo"
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -44,6 +45,9 @@ export default class extends wepy.app {
   };
   onLaunch() {
     this.initGlobalData();
+    // wx.navigateTo({
+    //   url:"/pages/custom/baseInfo"
+    // })
   }
   openidChanged() {
     wx.setStorage({

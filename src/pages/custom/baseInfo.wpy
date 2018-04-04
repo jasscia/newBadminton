@@ -1,5 +1,10 @@
 <template>
-  <view>datainfo</view>
+  <view>
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <baseInfoItem :item="item"></baseInfoItem>
+    </repeat>
+    <button>确定</button>
+  </view>
 </template>
 <style lang="less">
 @import '../../util/util.less';
@@ -7,7 +12,45 @@
 
 <script>
 import wepy from 'wepy';
+import baseInfoItem from '../../components/baseInfoItem'
 export default class BaseInfo extends wepy.page {
-  
+  config = {
+      navigationBarTitleText:"信息编辑"
+  };
+  components={
+    baseInfoItem:baseInfoItem
+  }
+  data={
+    list:[
+      {
+        title:'姓名',
+        value:'张三',
+        type:'string'
+      },
+      {
+        title:'性别',
+        value:'女',
+        type:'string'
+      },
+      {
+        title:'年龄',
+        value:9,
+        type:'number'
+      },
+      {
+        title:'身高',
+        value:158,
+        type:'number'
+      },
+      {
+        title:'体重',
+        value:45,
+        type:'number'
+      }
+    ]
+  }
+  onLoad(option){
+    console.log(option)
+  }
 }
 </script>

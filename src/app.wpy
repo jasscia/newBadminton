@@ -69,11 +69,12 @@ export default class extends wepy.app {
       wx.login({
         success: res => {
           wx.request({
-            url: 'https://kkiqq.cn/api/wx/qlogin',
+            url: 'https://kkiqq.cn/api/badminton/qlogin',
             data: { code: res.code },
             success: data => {
               this.openId = data.data.openid;
               this.openIdChanged();
+              console.log(this.openId);
             }
           });
         }

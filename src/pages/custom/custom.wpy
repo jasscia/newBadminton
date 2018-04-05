@@ -5,7 +5,7 @@
         <image class="avatar" src="{{userPrivate.avatar}}"/>
         <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
         <view class="nickname">{{userPrivate.nickName}}</view>
-        <view class="sumary">
+        <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
           <view class="item">{{userPrivate.gender===1?'男':'女'}}</view>
           <view class="item">年龄{{userPublic.age}}</view>
           <view class="item">身高{{userPublic.tall}}</view>
@@ -24,7 +24,7 @@
     <view class="part part2">
       <view class="item title" @tap.stop="tap">个人数据</view>
       <cycleProgressBar :value.sync="value" :comment.sync="comment">
-      <view slot="score" class="score">{{value}}</view>
+        <view slot="score" class="score">{{value}}</view>
       </cycleProgressBar>
     </view>
     <view class="part part3">
@@ -49,7 +49,7 @@
         <view class="side left">我的积分</view>
         <view class="side right">200</view>
       </view>
-      <view class="item" @tap.stop="tap">
+      <view class="item"  @tap.stop="createNewAgainst">
         <view class="side left">创建赛事</view>
         <view class="side right"></view>
       </view>
@@ -146,7 +146,7 @@
   .right{
     flex:1;
     text-align: right;
-    color:#999;
+    color:@color-side;
     font-size: 14px;
   }
   .right::after{
@@ -187,13 +187,11 @@
 </style>
 <script>
 import wepy from 'wepy';
-import data from "./data";
 import itemList from "./itemList";
 import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Custom extends wepy.page {
     config = {};
     components={
-      data:data,
       itemList:itemList,
       cycleProgressBar:cycleProgressBar,
     };
@@ -211,9 +209,13 @@ export default class Custom extends wepy.page {
     };
     methods = {
       navigateToBaseInfoPage(){
-        console.log('try');
         wx.navigateTo({
           url:"/pages/custom/baseInfo"
+        })
+      },
+      createNewAgainst(){
+        wx.navigateTo({
+          url:"/pages/custom/createNewAgainst"
         })
       }
     };
@@ -224,7 +226,6 @@ export default class Custom extends wepy.page {
         key:'userInfo',
         success:(res)=>{
           this.userPrivate=res.data;
-          console.log(res.data);
           this.$apply()
         }
       })

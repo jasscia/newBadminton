@@ -1,56 +1,80 @@
 <template>
-  <view>
-    <repeat for="{{list}}" key="index" index="index" item="item">
-        <baseInfoItem :item="item"></baseInfoItem>
+  <form class="container"  @submit="submitBaseInfo">
+    <repeat for="{{list}}" key="index" index="index" item="item">      
+        <item2colunm :item.sync="item"></item2colunm>
     </repeat>
-    <button>确定</button>
-  </view>
+    <button formType="submit">确定</button>
+  </form>
 </template>
 <style lang="less">
 @import '../../util/util.less';
+.container{
+  
+  button{
+    margin:20px auto;
+    width: 375rpx;
+    background: @score-color;
+  }
+}
 </style>
 
 <script>
 import wepy from 'wepy';
-import baseInfoItem from '../../components/baseInfoItem'
+import item2colunm from '../../components/item2colunm';
 export default class BaseInfo extends wepy.page {
   config = {
       navigationBarTitleText:"信息编辑"
   };
   components={
-    baseInfoItem:baseInfoItem
+    item2colunm:item2colunm
   }
   data={
+    openId:'',
+    userPrivateInfo:{},
     list:[
-      {
-        title:'姓名',
+      {title:'姓名',
+        name:'realName',
         value:'张三',
         type:'string'
       },
-      {
-        title:'性别',
-        value:'女',
-        type:'string'
-      },
-      {
-        title:'年龄',
-        value:9,
+      {title:'年龄',
+        name:'age',
+        value:0,
         type:'number'
       },
-      {
-        title:'身高',
-        value:158,
+      {title:'身高',
+        name:'tall',
+        value:0,
         type:'number'
       },
-      {
-        title:'体重',
-        value:45,
+      {title:'体重',
+        name:'weight',
+        value:0,
         type:'number'
       }
     ]
   }
   onLoad(option){
-    console.log(option)
+    this.openId=wx.getStorageSync('openId');
+    this.userPrivateInfo= wx.getStorageSync('userInfo');
+  }
+  methods={
+    submitBaseInfo(e){
+      console.log(e.detail.value);
+      let url='https://kkiqq.cn/api/badminton/game?userid='+this.openId,//错误接口
+          method='GET',
+          success=function(res){
+            console.log('success:',res)
+          },
+          fail=function(err={}){
+            console.log('fail,',err)
+          };
+      if(this.openId){
+        wx.request({url,method,success,fail})
+      }else{
+        fail();
+      }
+    }
   }
 }
 </script>

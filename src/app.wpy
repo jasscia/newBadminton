@@ -8,7 +8,8 @@ export default class extends wepy.app {
       'pages/main/main',
       'pages/message/message',
       'pages/custom/custom',
-      "pages/custom/baseInfo"
+      'pages/custom/baseInfo',
+      'pages/custom/createNewAgainst'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -49,10 +50,10 @@ export default class extends wepy.app {
     //   url:"/pages/custom/baseInfo"
     // })
   }
-  openidChanged() {
+  openIdChanged() {
     wx.setStorage({
       key: 'openId',
-      data: this.openid
+      data: this.openId
     });
   }
   userInfoChanged() {
@@ -72,7 +73,7 @@ export default class extends wepy.app {
             data: { code: res.code },
             success: data => {
               this.openId = data.data.openid;
-              this.openidChanged();
+              this.openIdChanged();
             }
           });
         }

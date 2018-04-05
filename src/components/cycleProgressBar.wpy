@@ -1,5 +1,5 @@
 <template>
-  <view class="cycleProgressBar" @tap.stop="tap">
+  <view class="cycleProgressBar">
         <view class="cycle">
           <slot name="score"></slot>
           <block wx:if="{{value<=50}}">
@@ -59,19 +59,10 @@
 
 <script>
 import wepy from 'wepy';
-export default class Com extends wepy.component {
-  components = {};
+export default class CycleProgressBar extends wepy.component {
   props = {
     value: { type: Number, default: 'null' },
     comment: { type: String, default: '综合实力' }
-  };
-  onLoad(){
   }
-  watch = {};
-  data = {};
-  methods = {};
-
-  events = {};
-  // Other properties
 }
 </script>

@@ -21,22 +21,14 @@ export default class extends wepy.app {
     },
     tabBar: {
       list: [
-        {
-          pagePath: 'pages/index/index',
-          text: '首页'
-        },
-        {
-          pagePath: 'pages/main/main',
-          text: '比赛'
-        },
-        {
-          pagePath: 'pages/message/message',
-          text: '消息'
-        },
-        {
-          pagePath: 'pages/custom/custom',
-          text: '我的'
-        }
+        {pagePath: 'pages/index/index',
+          text: '首页'},
+        {pagePath: 'pages/main/main',
+          text: '比赛'},
+        {pagePath: 'pages/message/message',
+          text: '消息'},
+        {pagePath: 'pages/custom/custom',
+          text: '我的'}
       ]
     }
   };
@@ -45,8 +37,8 @@ export default class extends wepy.app {
     userInfo: null,
     openId: ''
   };
-  async onLaunch() {
-    await this.initGlobalData();
+  onLaunch() {
+    this.initGlobalData();
   }
   setKeepScreenOn(){
     wx.setKeepScreenOn({
@@ -74,9 +66,9 @@ export default class extends wepy.app {
     if (!this.openId) {
     let getOpenIdUrl='https://kkiqq.cn/api/badminton/qlogin';
     let loginRes=await login();
-    console.log('wxcode:',wxcode);
+    console.log('wxcode:',loginRes);
     let code=loginRes.code;
-    let getuserInfoRes= await getUserInfo;
+    let getuserInfoRes= await getUserInfo();
     console.log('userInfo',getuserInfoRes);
     this.userInfo = {
               nickName:getuserInfoRes.userInfo.nickName,
@@ -91,28 +83,30 @@ export default class extends wepy.app {
     this.openIdChanged();
     // console.log(this.userInfo,this.openId)
   }
+  // else{
+  //     wx.login({
+  //         success: res => {
+  //           wx.request({
+  //             url: 'https://kkiqq.cn/api/badminton/qlogin',
+  //             data: { code: res.code },
+  //             success: data => {
+  //               this.openId = data.data.openid;
+  //               this.openIdChanged();
+  //             }
+  //           });
+  //         }
+  //       });
+  //    wx.getUserInfo({
+  //         success: res => {
+  //           this.userInfo = {
+  //             nickName:res.userInfo.nickName,
+  //             avatar:res.userInfo.avatarUrl,
+  //             gender:res.userInfo.gender
+  //         };
+  //           this.userInfoChanged();
+  //         }
+  //       });
+  // }
   }
-    //  wx.login({
-    //       success: res => {
-    //         wx.request({
-    //           url: 'https://kkiqq.cn/api/badminton/qlogin',
-    //           data: { code: res.code },
-    //           success: data => {
-    //             this.openId = data.data.openid;
-    //             this.openIdChanged();
-    //           }
-    //         });
-    //       }
-    //     });
-    //  wx.getUserInfo({
-    //       success: res => {
-    //         this.userInfo = {
-    //           nickName:res.userInfo.nickName,
-    //           avatar:res.userInfo.avatarUrl,
-    //           gender:res.userInfo.gender
-    //       };
-    //         this.userInfoChanged();
-    //       }
-    //     });
 }
 </script>

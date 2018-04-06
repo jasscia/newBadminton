@@ -58,32 +58,12 @@
           this.activeBar='nearMatch';
       },
       rankingListTap(){console.log(this.data.activeBar);
-          this.activeBar='rankingList';
-          
+          this.activeBar='rankingList';         
       }
     }
    onLoad(){
      //请求资源，res
-     let createMockItem=()=>{
-          return {
-              id:1,
-              openId:'xxxxxx',
-              avatarUrl:'https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0',
-              nickName:'轻轻',
-              generalRank:(Math.random()*100).toFixed(0),
-              No:(Math.random()*20).toFixed(0),
-              count:(Math.random()*100).toFixed(0),
-              win:(Math.random()*100).toFixed(0),
-              fail:(Math.random()*100).toFixed(0),
-              ratio:30
-          }
-       };
-    let mockData=[];
-    for(let i=0;i<10;i++){
-      mockData.push(createMockItem());
-    }
-     this.rankingList=mockData;
-     this.$apply();
+
    }
 }
 </script>

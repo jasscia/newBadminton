@@ -1,0 +1,154 @@
+<template>
+  <view class="container">
+    <view class="search">搜索附近的比赛</view>
+    <form @submit="submitNewAgainst">
+      <repeat for="{{list}}" key="index" index="index" item="item">    
+        <item2colunm :item.sync="item" :dateRange.sync="dateRange"></item2colunm>
+      </repeat>
+      <button formType="submit">确定</button>
+    </form>
+  </view>
+</template>
+<style lang="less" scoped>
+@import '../../util/util.less';
+.container{
+  .search{
+    height:300rpx;
+    line-height: 375rpx;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom-left-radius:50% 10%;
+    border-bottom-right-radius:50% 10%;
+    background: @score-color;
+    margin-bottom: 60rpx;
+  }
+  button{
+    margin:60rpx auto;
+    width: 375rpx;
+    background: @score-color;
+  }
+}
+</style>
+
+<script>
+import wepy from 'wepy';
+import {formatTime} from '../../util/util'
+import item2colunm from "../../components/item2colunm";
+export default class CreateNewAgain extends wepy.page {
+  config={
+    navigationBarTitleText:'创建比赛'
+  }
+  components={
+    item2colunm:item2colunm
+  }
+  data={
+    openId:'',
+    userInfo:{},
+    dateRange:{
+      end:{time:"23:00",date:''},
+      start:{time:"04:00",date:''}
+    },
+    newAgainstInfo:{
+      userid: "",
+      gamename: "",
+      status: 0,
+      note: "",
+      begintime: null,
+      address: ""
+    },
+    list:[
+      {
+        title:'主题',
+        name:'theme',
+        value:'勘测设计羽协',
+        type:'strng',
+      },{
+        title:'地点',
+        name:'address',
+        value:'葛洲坝青少年宫三楼',
+        type:'strng',
+      },{
+        title:'日期',
+        name:'date',
+        value:'--',
+        type:'string',
+      },{
+        title:'时间',
+        name:'time',
+        value:'09:00',
+        type:'string',
+      }
+    ]
+  }
+   onLoad(option){
+    this.downLoadUserInfo();
+    this.getDateRange();
+    this.initDateTime();
+  }
+  downLoadUserInfo(){
+    this.openId=wx.getStorageSync('openId');
+    this.userPrivateInfo= wx.getStorageSync('userInfo');
+  }
+  getDateRange(){//只允许在未来的1个月内创建比赛
+    let start=new Date(Date.now()),
+        formatStart=formatTime(start,'-').trim().split(' ');
+    let end=new Date(Date.now()+30*24*3600*1000),
+        formatEnd=formatTime(end,'-').trim().split(' ');
+    this.dateRange.start.date=formatStart[0];
+    this.dateRange.end.date=formatEnd[0];
+  }
+  initDateTime(){
+    Object.keys(this.list).map(key=>{
+      if(this.list[key].name==='date'){
+      this.list[key].value=this.dateRange.start.date;
+      }
+    })
+  }
+  methods={
+    submitNewAgainst(e){
+      let formData=e.detail.value,
+          date=formData.date,
+          time=formData.time,
+          combineTime=date+' '+time;
+      let newFormData={};
+      Object.keys(formData).map(key=>{
+        if(['time','date'].indexOf(key)===-1){
+          newFormData[key]=formData[key]
+        }
+      })
+      if(combineTime){
+        newFormData['time']=combineTime
+      }
+      this.submitNewAgainstInfo(newFormData);
+    }
+  }
+  submitNewAgainstInfo(formData){
+    this.newAgainstInfo.userid=this.openId;
+    this.newAgainstInfo.gamename=formData.theme;
+    this.newAgainstInfo.status=0;
+    this.newAgainstInfo.note="";
+    this.newAgainstInfo.address=formData.address;
+    this.newAgainstInfo.begintime=formData.time;
+
+    let url='https://kkiqq.cn/api/badminton/game',
+        method='POST',
+        data=this.newAgainstInfo,
+        success=function(){
+          wx.showToast({
+            title:'创建成功',
+            icon:'success',
+            duration:1500
+          })
+        },
+        fail=function(err){
+          wx.showModal({
+            title:'创建失败',
+            content:err.msg
+          })
+        };
+    wx.request({
+      url,method,data,success,fail
+    })
+  }
+}
+</script>

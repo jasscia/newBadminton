@@ -1,0 +1,166 @@
+<template>
+<view class="matchCard font" id="{{matchInfo.id}}" @tap.stop="turnoverCard" animation="{{matchInfo.animationData}}">
+  <view class="matchInfo" hidden="{{!matchInfo.ifShowInfo}}"> 
+    <view class="row row1">
+      <view class="status">报名中</view>
+      <view class="distance">距您1000.00km</view>
+    </view>
+    <view class="row row2">{{matchInfo.gamename}}</view>
+    <view class="row row3">{{matchInfo.begintime}}</view>
+    <view class="row row4">{{matchInfo.address}}</view>
+    <view class="row row5">
+      <view class="summery">{{matchInfo.count||0}}人已报名</view>
+      <view class="avatarList">
+        <repeat for="[1,2,3,4]" key="index" index="index" item="item">  
+          <image url="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
+        </repeat>
+      </view>
+    </view>
+  </view>
+  <view class="matchActive back" hidden="{{matchInfo.ifShowInfo}}">
+    <button @tap.stop="btnTap">点我报名</button>
+  </view>
+</view>
+</template>
+
+<style lang="less" scoped>
+@import '../util/util.less';
+.matchCard{
+  margin:20px;
+  padding:10px;
+  font-size: 12px;
+  color:#666;
+  background: @bgc-card;
+  border-radius: 10px;
+  position: relative;
+  height: 300rpx;
+  .matchInfo,.matchActive{
+    position: absolute;
+    border-radius: 10px;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+  }
+  .matchActive{
+    line-height: 300rpx;
+    text-align: center;
+    vertical-align: middle;
+    transform-origin: center center 0;
+    transform: rotateX(180deg);
+    opacity: 0.5;
+    button{
+      margin:0;
+      display: inline-block;
+      background:@score-color;
+      vertical-align: middle;
+    }
+  }
+}
+  .row{
+    margin:10px;
+  }
+  .row1{
+    display: flex;
+    justify-content: space-between;
+    font-size:10px;
+    color:#333;
+    .status{
+      background: lightblue;
+      border-radius: 6px;
+      padding:0 2px;
+      height:12px;
+    }
+  }
+  .row2{
+    font-size: 18px;
+  }
+  .row5{
+    height:30px;
+    line-height: 15px;
+    display: flex;
+    justify-content: space-between;
+    .avatarList{
+      flex:1;
+      text-align: end;
+      image{
+        height:30px;
+        width:30px;
+        border-radius: 50%;
+        background-size: cover;
+      }
+    }
+  }
+  .row2::before{
+    content:'&#xf024;';
+  }
+  .row3::before{
+    content:'&#xf017;';
+  }
+ .row4::before{
+    content:'&#xf041;';
+  }
+  .row5::before{
+    content:'&#xf007;';
+  }
+  .row2::before,.row3::before,.row4::before,.row5::before{    
+    width:20px;
+    display: inline-block;
+    text-align: left;
+  }
+</style>
+<script>
+import wepy from 'wepy'
+export default class matchCard extends wepy.component{
+  props={
+    matchInfo:{
+      type:Object,
+      default:{
+        id: '',
+        userid: "",
+        gamename: "",
+        status: 0,
+        note: "",
+        address: "",
+        begintime: "",
+        created_at: "",
+        updated_at: "",
+        ifShowInfo:true,
+        animationData: {}
+        }
+     }
+  }
+  customData={
+    animation:'',
+    selector:''
+  }
+  onLoad(){
+    console.log('you',this.customData.animation)
+    this.customData.animation=wx.createAnimation({
+                          duration: 1000,
+                          timingFunction: 'ease-out',
+                        });
+    this.customData.selector=wx.createSelectorQuery()
+  }
+  methods={
+    turnoverCard(e){
+      this.matchInfo.ifShowInfo=!this. matchInfo.ifShowInfo;
+      this.$apply();
+      this.customData.animation.rotateX(this.matchInfo.ifShowInfo?0:180).step();
+      this.matchInfo.animationData=this.customData.animation.export();
+      this.$apply();
+      console.log(this.matchInfo.ifShowInfo,this.matchInfo.animationData)
+      // let selector=this.customData.selector,
+      //     font=selector.select('.font'),
+      //     back=selector.select('.back');
+      // font.setAttribute("color","red")
+    },
+    btnTap(e){
+      // e.target.setAttribute("color","red");
+      console.log('thank you')
+    }
+  }
+  
+}
+</script>
+

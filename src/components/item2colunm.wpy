@@ -1,0 +1,70 @@
+<template>
+    <view class="item">
+          <label >{{item.title}}</label>
+          <picker wx:if="{{(item.name==='date')||(item.name==='time')}}" 
+                  mode="{{item.name}}" 
+                  start="{{dateRange['start'][item.name]}}" 
+                  end="{{dateRange['end'][item.name]}}"
+                  value="{{item.value}}" @change="dateChange" name="{{item.name}}">
+                  <view class="picker">{{item.value}}</view>
+          </picker>
+          <input  wx:else type="{{item.type}}" value="{{item.value}}" name="{{item.name}}" />
+          
+    </view>
+</template>
+<style lang="less" scoped>
+@import '../util/util.less';
+.item{
+    font-size:30rpx;
+    background: @bgc-card;
+    margin:0 0 4px 0;
+    padding-left:30rpx;
+    border-bottom: 2px solid @bgc;
+    label{
+      width: 150rpx;
+      color: @color-side;
+      font-weight: lighter;
+    }
+    label,input,picker{
+      display: inline-block;
+      height: 60px;
+      line-height: 60px;
+      vertical-align: middle;
+    }
+    input,picker,.picker{
+      width:500rpx;
+    }
+  }
+</style>
+<script>
+import wepy from 'wepy';
+export default class Item2colunm extends wepy.component{
+  props={
+    item:{
+      type: Object, 
+      default: {
+        title:'',
+        name:'',
+        value:'',
+        type:''
+      }
+    },
+    dateRange:{
+      type:Object,
+      default:{
+          end:{time:"23:00",date:''},
+          start:{time:"04:00",date:''}
+        }
+    }
+  };
+  
+  methods={
+    dateChange: function(e) {
+      this.item.value= e.detail.value;
+      // this.$apply();
+    }
+  }
+}
+</script>
+
+

@@ -50,7 +50,7 @@
       rankingList:rankingList
     }
     data = {
-      activeBar:'rankingList',
+      activeBar:'nearMatch',
       rankingList:[]
     } 
     methods={
@@ -61,9 +61,5 @@
           this.activeBar='rankingList';         
       }
     }
-   onLoad(){
-     //请求资源，res
-
-   }
 }
 </script>

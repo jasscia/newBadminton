@@ -1,21 +1,42 @@
 
 <template>
-  <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
-    <matchCard :matchInfo.sync="item"></matchCard>
-  </repeat>
+  <view class="container">
+    <view class="hiddenPage" wx:if="{{pageHide}}">
+      没有
+    </view>
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
+      <matchCard :matchInfo.sync="item"></matchCard>
+    </repeat>
+  </view>
 </template>
 
 <style lang="less" >
-  
+  @import '../../util/util.less';
+  .container{
+    position: relative;
+    background: @bgc;
+    height:100%;
+    width:100%;
+    .hiddenPage{
+      position: absolute;
+      background: red;
+      right:0;
+      left:0;
+      top:0;
+      bottom:0;
+    }
+  }
+
 </style>
 
 <script>
   import wepy from 'wepy';
-  import {formateDate} from '../../util/util'
+  import {formateDate,htr} from '../../util/util'
   import matchCard from '../../components/matchCard';
 
   export default class Index extends wepy.page {
    data={
+     pageHide:true,
       openId:'',
       userInfo:{},
       matchInfoList:[],
@@ -25,6 +46,7 @@
         timingFunction: 'ease',
     })
    }
+   //测试用假数据
     mock={
       matchInfoList:[{
         id: 1,
@@ -53,15 +75,51 @@
     components = {
       matchCard:matchCard
     }
-  async onLoad(){
-
-          // this.matchInfoList=this.mock.matchInfoList;//假设没有比赛的情况下 先设置一个模拟数据
-    await this.downLoadUserInfo();
-    await this.downLoadMatchInfo();
+  onLoad(){
+    // this.matchInfoList=this.mock.matchInfoList;//假设没有比赛的情况下 先设置一个模拟数据
+    this.downLoadUserInfo();
+    this.downLoadMatchList();
+  }
+  onShow(){
+    this.downLoadMatchInfo();
   }
   downLoadUserInfo(){
     this.openId=wx.getStorageSync('openId');
     this.userPrivateInfo= wx.getStorageSync('userInfo');
+    if(this.openId){
+      this.pageHide=false;
+    }
+  }
+  async downLoadMatchList(){
+    let url='https://kkiqq.cn/api/badminton/game',
+        data={
+          userid:this.openId
+        },
+        method="GET";
+    let htrRes=await htr(url,method,data);
+    if(htrRes.statusCode >=400){console.log('htrRes.statusCode>=400',htrRes.statusCode);return}
+    if([200,206,304].indexOf(htrRes.statusCode)===-1){console.log("htrRes.statusCode not in [200,206,304]",htrRes.status);return}
+    if(htrRes.data.data && !htrRes.data.data.length){
+      wx.showToast({
+        title:'没有比赛',
+        duration:1500})
+      return
+    } 
+    this.matchInfoList=this.transformStatusAndTimeOfObject(htrRes.data.data);
+    this.matchInfoList.forEach(matchInfo=>{
+      matchInfo=this.downLoadMatchInfo(matchInfo.id);
+      matchInfo.ifShowInfo=true;
+      matchInfo.animationData='';
+    })
+    this.$apply();
+    console.log(this.matchInfoList)
+  }
+
+  downLoadMatchInfo(id){
+    let url="https://kkiqq.cn/api/badminton/game/"+id,
+        method="GET",
+        data={};
+    return htr(url,method,data)
   }
   transformStatusAndTimeOfObject(object){
     let status=['报名中','正在比赛','已结束'];    
@@ -74,42 +132,6 @@
       value.updated_at=formateDate(new Date(value.updated_at));
     })
     return object;
-  }
-  downLoadMatchInfo(){
-    let url='https://kkiqq.cn/api/badminton/game?userid='+this.openId,
-        method='GET',
-        success=res=>{
-          console.log(res.data.data,res.data.statusCode)
-          if(res.data.statusCode >=400){
-            console.log(res);
-            return;
-          }
-          if(!(res.data.statusCode in [200,206,304])){
-            return
-          } 
-          if(res.data.data && !res.data.data.length){
-            wx.showToast({
-              title:'没有比赛',
-              duration:1500
-            })
-            return
-          }
-          this.matchInfoList=this.transformStatusAndTimeOfObject(res.data.data);
-          this.matchInfoList.forEach(matchInfo=>{
-            // matchInfo.ifShowInfo=true;
-            // mat
-          })
-          this.$apply();
-        },
-        fail=err=>{
-          console.log('err',err)
-        };
-    
-    try{
-      wx.request({url,method,success,fail})
-    }catch(err){
-      fail(err)
-    }
   }
   }
 </script>

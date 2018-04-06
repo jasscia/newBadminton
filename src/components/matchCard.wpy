@@ -18,7 +18,7 @@
     </view>
   </view>
   <view class="matchActive back" hidden="{{matchInfo.ifShowInfo}}">
-    <button @tap.stop="btnTap">点我报名</button>
+    <button @tap.stop="btnTap" data-id="{{match.id}}">点我报名</button>
   </view>
 </view>
 </template>
@@ -110,7 +110,8 @@
   }
 </style>
 <script>
-import wepy from 'wepy'
+import wepy from 'wepy';
+import {htr} from '../util/util'
 export default class matchCard extends wepy.component{
   props={
     matchInfo:{
@@ -127,7 +128,8 @@ export default class matchCard extends wepy.component{
         updated_at: "",
         ifShowInfo:true,
         animationData: {}
-        }
+        },
+      twoWay:true,
      }
   }
   customData={
@@ -150,14 +152,16 @@ export default class matchCard extends wepy.component{
       this.matchInfo.animationData=this.customData.animation.export();
       this.$apply();
       console.log(this.matchInfo.ifShowInfo,this.matchInfo.animationData)
-      // let selector=this.customData.selector,
-      //     font=selector.select('.font'),
-      //     back=selector.select('.back');
-      // font.setAttribute("color","red")
     },
     btnTap(e){
-      // e.target.setAttribute("color","red");
-      console.log('thank you')
+      console.log('thank you');
+      let url="https://kkiqq.cn/api/badminton/game/addplayer",
+          method="POST",
+          data={
+            userid:wx.getStorageSync('openId'),
+            gameid:e.target.dataset.comIndex
+          };
+      htr(url,method,data);
     }
   }
   

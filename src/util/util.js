@@ -39,7 +39,6 @@ const getUserInfo=function(){
   return new Promise((resolve,reject)=>{
     console.log('进入userInfo fn');
     wx.getUserInfo({
-      url,
       success:resolve,
       fail:reject
     })

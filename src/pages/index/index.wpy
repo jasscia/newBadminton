@@ -4,9 +4,7 @@
       <view  @tap.stop="nearMatchTap" class="{{activeBar==='nearMatch'?'active':''}}">附近的比赛</view>
       <view  @tap.stop="rankingListTap" class="{{activeBar==='rankingList'?'active':''}}">球员排行榜</view>
     </view>
-    <repeat for='[1,2,3]' key='index'  wx:if="{{activeBar==='nearMatch'}}">
-      <nearMatch></nearMatch>
-    </repeat>
+    <nearMatch wx:if="{{activeBar==='nearMatch'}}"></nearMatch>
     <repeat for='{{rankingList}}' key='index' wx:if="{{activeBar==='rankingList'}}">
       <rankingList :item.sync="item"></rankingList>
     </repeat> 
@@ -15,7 +13,7 @@
 <style lang="less" scoped>
 @import  '../../util/util.less';
 #index{
-  background: #eee;
+  background: @bgc;
 }
 .header{
   margin:0px;
@@ -56,7 +54,7 @@
       rankingList:[]
     } 
     methods={
-      nearMatchTap(){console.log(this.data.activeBar);
+      nearMatchTap(){
           this.activeBar='nearMatch';
       },
       rankingListTap(){console.log(this.data.activeBar);

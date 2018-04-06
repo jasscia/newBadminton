@@ -11,13 +11,6 @@ import wepy from 'wepy';
 
 export default class Message extends wepy.page {
     config = {};
-
-    data = {};
-    methods = {};
-
-    events = {};
-    onLoad() {};
-    // Other properties
 }
 </script>
 

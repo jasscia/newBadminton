@@ -1,68 +1,116 @@
 
 <template>
-  <view class="nearMatch"> 
-    <view class="row row1">
-      <view class="status">报名中</view>
-      <view class="distance">距您1000.00km</view>
-    </view>
-    <view class="row row2">葛洲坝青少年宫-双打排位赛</view>
-    <view class="row">时间 03-17 周六 19：30</view>
-    <view class="row">葛洲坝青少年宫三楼</view>
-    <view class="row row5">
-      <view class="summery">3人已报名</view>
-      <view class="avatarList">12345</view>
-    </view>
-  </view>
+  <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
+    <matchCard :matchInfo.sync="item"></matchCard>
+  </repeat>
 </template>
 
-<style lang="less" scoped>
-.nearMatch{
-  margin:20px;
-  padding:10px;
-  background:#fff;
-  border-radius: 10px;
-  font-size: 12px;
-  color:#666;
-  .row{
-    margin:10px;
-  }
-  .row1{
-    display: flex;
-    justify-content: space-between;
-    font-size:10px;
-    color:#333;
-    .status{
-      background: lightblue;
-      border-radius: 6px;
-      padding:0 2px;
-      height:12px;
-    }
-  }
-  .row2{
-    font-size: 18px;
-  }
-  .row5{
-    height:30px;
-    line-height: 15px;
-    display: flex;
-    justify-content: space-between;
-    .avatarList{
-      flex:1;
-      text-align: end;
-    }
-  }
-}
+<style lang="less" >
+  
 </style>
 
 <script>
   import wepy from 'wepy';
-  // import 'wepy-async-function';
+  import {formateDate} from '../../util/util'
+  import matchCard from '../../components/matchCard';
 
   export default class Index extends wepy.page {
-   
-    components = {
-      // itemPerson:itemPerson
+   data={
+      openId:'',
+      userInfo:{},
+      matchInfoList:[],
+      animationData: {},
+      animation:wx.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease',
+    })
+   }
+    mock={
+      matchInfoList:[{
+        id: 1,
+        userid: "",
+        gamename: "",
+        status: 0,
+        note: "",
+        address: "",
+        begintime: "",
+        created_at: "",
+        updated_at: "",
+        ifShowInfo:true
+     },{
+        id: 2,
+        userid: "",
+        gamename: "",
+        status: 0,
+        note: "",
+        address: "",
+        begintime: "",
+        created_at: "",
+        updated_at: "",
+        ifShowInfo:true
+     }]
     }
+    components = {
+      matchCard:matchCard
+    }
+  async onLoad(){
+
+          // this.matchInfoList=this.mock.matchInfoList;//假设没有比赛的情况下 先设置一个模拟数据
+    await this.downLoadUserInfo();
+    await this.downLoadMatchInfo();
+  }
+  downLoadUserInfo(){
+    this.openId=wx.getStorageSync('openId');
+    this.userPrivateInfo= wx.getStorageSync('userInfo');
+  }
+  transformStatusAndTimeOfObject(object){
+    let status=['报名中','正在比赛','已结束'];    
+    object.forEach((value)=>{
+      if(status[value.status]){
+        value.status=status[value.status]
+      };
+      value.begintime=formateDate(new Date(value.begintime));
+      value.created_at=formateDate(new Date(value.created_at));
+      value.updated_at=formateDate(new Date(value.updated_at));
+    })
+    return object;
+  }
+  downLoadMatchInfo(){
+    let url='https://kkiqq.cn/api/badminton/game?userid='+this.openId,
+        method='GET',
+        success=res=>{
+          console.log(res.data.data,res.data.statusCode)
+          if(res.data.statusCode >=400){
+            console.log(res);
+            return;
+          }
+          if(!(res.data.statusCode in [200,206,304])){
+            return
+          } 
+          if(res.data.data && !res.data.data.length){
+            wx.showToast({
+              title:'没有比赛',
+              duration:1500
+            })
+            return
+          }
+          this.matchInfoList=this.transformStatusAndTimeOfObject(res.data.data);
+          this.matchInfoList.forEach(matchInfo=>{
+            // matchInfo.ifShowInfo=true;
+            // mat
+          })
+          this.$apply();
+        },
+        fail=err=>{
+          console.log('err',err)
+        };
+    
+    try{
+      wx.request({url,method,success,fail})
+    }catch(err){
+      fail(err)
+    }
+  }
   }
 </script>
 

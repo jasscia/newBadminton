@@ -66,7 +66,7 @@
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchList,downLoadMatchInfo} from '../../common/common';
+import {initUserInfo,downLoadMatchList,downLoadMatchInfo,share} from '../../common/common';
 import matchCard from '../../components/matchCard';
 export default class myGameList extends wepy.page{
   config={
@@ -91,6 +91,10 @@ export default class myGameList extends wepy.page{
   }
   onShow(){   
     this.getMatchList();
+  }
+  async onShareAppMessage(res){
+    await initUserInfo();
+    return share('/pages/main/main.wpy')
   }
   async getMatchList(){
     let matchList=await downLoadMatchList(this.token);

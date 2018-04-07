@@ -123,6 +123,19 @@ const formatTime =(date,mark='/') => {
 
   return [year, month, day].map(formatNumber).join(mark) + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
+const share=function(path){
+  return {
+      title: 'CGGC羽球赛',
+      path: path,
+      // imgUrl:'../image/src.jpg',
+      success: function(res) {
+        console.log("转发成功")
+      },
+      fail: function(res) {
+        console.log("转发失败")
+      }
+    }
+}
 export {downLoadMatchList,
         downLoadMatchInfo,
         updateMatchInfo,
@@ -130,4 +143,5 @@ export {downLoadMatchList,
         addPlayer,
         changeRealname,
         createGame,
-        formatTime}
+        formatTime,
+        share}

@@ -17,7 +17,7 @@ export default class extends wepy.app {
       backgroundColor: '#eeeeee',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#eeeeee',
-      navigationBarTitleText: '羽球赛'
+      navigationBarTitleText: 'CGGC羽球赛'
     },
     tabBar: {
       list: [

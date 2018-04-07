@@ -38,7 +38,7 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {initUserInfo} from '../../common/common';
+import {initUserInfo,share} from '../../common/common';
 import againstTable from './againstTable';
 import result from './result';
 import 'wepy-async-function';
@@ -57,6 +57,10 @@ export default class Main extends wepy.page {
       initUserInfo();
     };
   onShow(options) {};
+  async onShareAppMessage(res){
+    await initUserInfo();
+    return share('/pages/main/detail.wpy')
+  }
   getPersonList() {};
 
   watch = {};

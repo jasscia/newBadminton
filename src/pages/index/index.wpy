@@ -39,7 +39,7 @@
 </style>
 <script>
   import wepy from 'wepy';
-  // import {initUserInfo} from '../../common/common'
+  import {initUserInfo,share} from '../../common/common'
   import nearMatch from './nearMatch';
   import rankingList from './rankingList';
   import 'wepy-async-function';
@@ -55,8 +55,12 @@
       rankingList:[]
     }
     onLoad(){
-      // initUserInfo();
     }
+
+  async onShareAppMessage(res){
+    await initUserInfo();
+    return share('/pages/index/index.wpy')
+  }
     methods={
       nearMatchTap(){
           this.activeBar='nearMatch';

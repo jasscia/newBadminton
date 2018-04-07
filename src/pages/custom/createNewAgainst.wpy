@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="search">搜索附近的比赛</view>
-    <form @submit="submitNewAgainst">
+    <form @submit="submit">
       <repeat for="{{list}}" key="index" index="index" item="item">    
         <item2colunm :item.sync="item" :dateRange.sync="dateRange"></item2colunm>
       </repeat>
@@ -10,7 +10,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import '../../util/util.less';
+@import '../../common/common.less';
 .container{
   .search{
     height:300rpx;
@@ -32,8 +32,8 @@
 
 <script>
 import wepy from 'wepy';
-import {formatTime} from '../../util/util'
-import item2colunm from "../../components/item2colunm";
+import {formatTime,initUserInfo,createGame} from '../../common/common';
+import item2colunm from '../../components/item2colunm';
 export default class CreateNewAgain extends wepy.page {
   config={
     navigationBarTitleText:'创建比赛'
@@ -48,14 +48,14 @@ export default class CreateNewAgain extends wepy.page {
       end:{time:"23:00",date:''},
       start:{time:"04:00",date:''}
     },
-    newAgainstInfo:{
-      userid: "",
-      gamename: "",
-      status: 0,
-      note: "",
-      begintime: null,
-      address: ""
-    },
+    // newAgainstInfo:{
+    //   userid: "",
+    //   gamename: "",
+    //   status: 0,
+    //   note: "",
+    //   begintime: null,
+    //   address: ""
+    // },
     list:[
       {
         title:'主题',
@@ -80,16 +80,15 @@ export default class CreateNewAgain extends wepy.page {
       }
     ]
   }
-   onLoad(option){
-    this.downLoadUserInfo();
-    this.getDateRange();
-    this.initDateTime();
-  }
-  downLoadUserInfo(){
+  async onLoad(option){
+    await initUserInfo();
     this.openId=wx.getStorageSync('openId');
     this.userPrivateInfo= wx.getStorageSync('userInfo');
+    this.$apply();
+    this.calcDateRange();
+    this.initDateTime();
   }
-  getDateRange(){//只允许在未来的1个月内创建比赛
+  calcDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
     let start=new Date(Date.now()),
         formatStart=formatTime(start,'-').trim().split(' ');
     let end=new Date(Date.now()+30*24*3600*1000),
@@ -98,57 +97,56 @@ export default class CreateNewAgain extends wepy.page {
     this.dateRange.end.date=formatEnd[0];
   }
   initDateTime(){
-    Object.keys(this.list).map(key=>{
+    Object.keys(this.list).map(key=>{//按照 Data range 范围，对于date的item 初始化其中的数值
       if(this.list[key].name==='date'){
       this.list[key].value=this.dateRange.start.date;
       }
     })
   }
   methods={
-    submitNewAgainst(e){
+    submit(e){
       let formData=e.detail.value,
           date=formData.date,
-          time=formData.time,
-          combineTime=date+' '+time;
-      let newFormData={};
+          time=formData.time;
+          console.log(formData,this.openId);
+      let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
       Object.keys(formData).map(key=>{
         if(['time','date'].indexOf(key)===-1){
           newFormData[key]=formData[key]
         }
       })
-      if(combineTime){
-        newFormData['time']=combineTime
-      }
-      this.submitNewAgainstInfo(newFormData);
+      if(time){newFormData['time']=date+' '+time+':00'}
+      // this.submitNewAgainstInfo(newFormData);
+      createGame(newFormData,this.openId);
     }
   }
-  submitNewAgainstInfo(formData){
-    this.newAgainstInfo.userid=this.openId;
-    this.newAgainstInfo.gamename=formData.theme;
-    this.newAgainstInfo.status=0;
-    this.newAgainstInfo.note="";
-    this.newAgainstInfo.address=formData.address;
-    this.newAgainstInfo.begintime=formData.time;
+  // submitNewAgainstInfo(formData){
+  //   this.newAgainstInfo.userid=this.openId;
+  //   this.newAgainstInfo.gamename=formData.theme;
+  //   this.newAgainstInfo.status=0;
+  //   this.newAgainstInfo.note="";
+  //   this.newAgainstInfo.address=formData.address;
+  //   this.newAgainstInfo.begintime=formData.time;
 
-    let url='https://kkiqq.cn/api/badminton/game',
-        method='POST',
-        data=this.newAgainstInfo,
-        success=function(){
-          wx.showToast({
-            title:'创建成功',
-            icon:'success',
-            duration:1500
-          })
-        },
-        fail=function(err){
-          wx.showModal({
-            title:'创建失败',
-            content:err.msg
-          })
-        };
-    wx.request({
-      url,method,data,success,fail
-    })
-  }
+  //   let url='https://kkiqq.cn/api/badminton/game',
+  //       method='POST',
+  //       data=this.newAgainstInfo,
+  //       success=function(){
+  //         wx.showToast({
+  //           title:'创建成功',
+  //           icon:'success',
+  //           duration:1500
+  //         })
+  //       },
+  //       fail=function(err){
+  //         wx.showModal({
+  //           title:'创建失败',
+  //           content:err.msg
+  //         })
+  //       };
+  //   wx.request({
+  //     url,method,data,success,fail
+  //   })
+  // }
 }
 </script>

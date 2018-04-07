@@ -4,12 +4,10 @@
   </view>
 </template>
 <style lang="less">
-@import '../../util/util.less';
+@import '../../common/common.less';
 </style>
 
 <script>
 import wepy from 'wepy';
-export default class ItemList extends wepy.page {
-  
-}
+export default class ItemList extends wepy.page {}
 </script>

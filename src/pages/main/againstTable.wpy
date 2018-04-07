@@ -39,7 +39,7 @@
 </view>
 </template>
 <style lang="less" scoped>
-@import '../../util/util.less';
+@import '../../common/common.less';
 .wrapper{
   background: @bgc;
 }

@@ -11,7 +11,7 @@
 </template>
 
 <style lang="less" >
-  @import '../../util/util.less';
+  @import '../../common/common.less';
   .container{
     position: relative;
     background: @bgc;
@@ -31,52 +31,22 @@
 
 <script>
   import wepy from 'wepy';
-  import {formateDate,htr} from '../../util/util'
+  import {initUserInfo} from '../../common/common';
+  import {downLoadMatchInfo,downLoadMatchList} from '../../common/common'
   import matchCard from '../../components/matchCard';
 
   export default class Index extends wepy.page {
    data={
-     pageHide:true,
+      pageHide:true,
       openId:'',
       userInfo:{},
-      matchInfoList:[],
-      animationData: {},
-      animation:wx.createAnimation({
-        duration: 1000,
-        timingFunction: 'ease',
-    })
+      matchInfoList:[]
    }
-   //测试用假数据
-    mock={
-      matchInfoList:[{
-        id: 1,
-        userid: "",
-        gamename: "",
-        status: 0,
-        note: "",
-        address: "",
-        begintime: "",
-        created_at: "",
-        updated_at: "",
-        ifShowInfo:true
-     },{
-        id: 2,
-        userid: "",
-        gamename: "",
-        status: 0,
-        note: "",
-        address: "",
-        begintime: "",
-        created_at: "",
-        updated_at: "",
-        ifShowInfo:true
-     }]
-    }
     components = {
       matchCard:matchCard
     }
-  onLoad(){
-    // this.matchInfoList=this.mock.matchInfoList;//假设没有比赛的情况下 先设置一个模拟数据
+  async onLoad(){
+    await initUserInfo();  
     this.downLoadUserInfo();
     this.downLoadMatchList();
   }
@@ -90,48 +60,29 @@
       this.pageHide=false;
     }
   }
-  async downLoadMatchList(){
-    let url='https://kkiqq.cn/api/badminton/game',
-        data={
-          userid:this.openId
-        },
-        method="GET";
-    let htrRes=await htr(url,method,data);
-    if(htrRes.statusCode >=400){console.log('htrRes.statusCode>=400',htrRes.statusCode);return}
-    if([200,206,304].indexOf(htrRes.statusCode)===-1){console.log("htrRes.statusCode not in [200,206,304]",htrRes.status);return}
-    if(htrRes.data.data && !htrRes.data.data.length){
-      wx.showToast({
-        title:'没有比赛',
-        duration:1500})
-      return
-    } 
-    this.matchInfoList=this.transformStatusAndTimeOfObject(htrRes.data.data);
-    this.matchInfoList.forEach(matchInfo=>{
-      matchInfo=this.downLoadMatchInfo(matchInfo.id);
+  async downLoadMatchList(){  
+    let matchList=await downLoadMatchList(this.openId);
+    if(!matchList){return}
+    console.log('matchList',matchList);
+    for(let match of matchList){
+      let matchInfo = await downLoadMatchInfo(match.id);
+      let ifIn=false;//判断是否已经报名了
+      console.log("matchInfo",matchInfo)
+      if(matchInfo.badplayers.length){
+        matchInfo.badplayers.map(player=>{
+          if(player.userid=this.openId){
+            ifIn=true;
+          }
+        })
+      }
+      //为返回的数组添加参数，用于控制组件
       matchInfo.ifShowInfo=true;
       matchInfo.animationData='';
-    })
+      matchInfo.ifIn=ifIn;
+      this.matchInfoList.push(matchInfo);;
+    }
     this.$apply();
-    console.log(this.matchInfoList)
-  }
-
-  downLoadMatchInfo(id){
-    let url="https://kkiqq.cn/api/badminton/game/"+id,
-        method="GET",
-        data={};
-    return htr(url,method,data)
-  }
-  transformStatusAndTimeOfObject(object){
-    let status=['报名中','正在比赛','已结束'];    
-    object.forEach((value)=>{
-      if(status[value.status]){
-        value.status=status[value.status]
-      };
-      value.begintime=formateDate(new Date(value.begintime));
-      value.created_at=formateDate(new Date(value.created_at));
-      value.updated_at=formateDate(new Date(value.updated_at));
-    })
-    return object;
+    console.log('when nearMatch load',this.matchInfoList);
   }
   }
 </script>

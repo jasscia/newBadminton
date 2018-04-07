@@ -13,7 +13,7 @@
     </view>
 </template>
 <style lang="less" scoped>
-@import '../util/util.less';
+@import '../common/common.less';
 .item{
     font-size:30rpx;
     background: @bgc-card;

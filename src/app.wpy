@@ -1,7 +1,7 @@
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import {login,getUserInfo,htr} from './util/util'
+import {initUserInfo} from './common/common'
 export default class extends wepy.app {
   config = {
     pages: [
@@ -33,54 +33,15 @@ export default class extends wepy.app {
     }
   };
 
-  globalData = {
-    userInfo: null,
-    openId: ''
-  };
   onLaunch() {
-    this.initGlobalData();
+    this.setKeepScreenOn();
   }
   setKeepScreenOn(){
     wx.setKeepScreenOn({
       keepScreenOn:true,
-      success(){console.log('屏幕常亮')},
-      fail(){}
+      success(res){console.log('设置屏幕常亮 成功'),res},
+      fail(err){console.log('设置屏幕常亮 失败',err)}
     })
-  }
-  openIdChanged() {
-    wx.setStorage({
-      key: 'openId',
-      data: this.openId
-    });
-  }
-  userInfoChanged() {
-    wx.setStorage({
-      key: 'userInfo',
-      data: this.userInfo
-    });
-  }
-  async initGlobalData() {
-    this.openId = wx.getStorageSync('openId');
-    this.userInfo = wx.getStorageSync('userInfo');
-    if (!this.openId) {
-      let loginRes=await login();
-      let code=loginRes.code;
-
-      let getuserInfoRes= await getUserInfo();
-      this.userInfo = {
-                nickName:getuserInfoRes.userInfo.nickName,
-                avatar:getuserInfoRes.userInfo.avatarUrl,
-                gender:getuserInfoRes.userInfo.gender
-            };
-      this.userInfoChanged();
-
-      let getOpenIdUrl='https://kkiqq.cn/api/badminton/qlogin';
-      let data={code:code,
-                nickName:this.userInfo.nickName};
-      let htrRes=await htr(getOpenIdUrl,"get",data);
-      this.openId = htrRes.data.openid;
-      this.openIdChanged();
-    }
   }
 }
 </script>

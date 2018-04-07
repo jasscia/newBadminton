@@ -7,7 +7,7 @@
   </form>
 </template>
 <style lang="less">
-@import '../../util/util.less';
+@import '../../common/common.less';
 .container{
   button{
     margin:20px auto;
@@ -19,6 +19,7 @@
 
 <script>
 import wepy from 'wepy';
+import {changeRealname,initUserInfo} from '../../common/common';
 import item2colunm from '../../components/item2colunm';
 export default class BaseInfo extends wepy.page {
   config = {
@@ -33,46 +34,43 @@ export default class BaseInfo extends wepy.page {
     list:[
       {title:'姓名',
         name:'realName',
-        value:'张三',
+        value:'',
         type:'string'
       },
       {title:'年龄',
         name:'age',
-        value:0,
+        value:null,
         type:'number'
       },
       {title:'身高',
         name:'tall',
-        value:0,
+        value:null,
         type:'number'
       },
       {title:'体重',
         name:'weight',
-        value:0,
+        value:null,
         type:'number'
       }
     ]
   }
-  onLoad(option){
+async  onLoad(option){
+    await initUserInfo();
     this.openId=wx.getStorageSync('openId');
     this.userPrivateInfo= wx.getStorageSync('userInfo');
   }
   methods={
-    submitBaseInfo(e){
-      console.log(e.detail.value);
-      let url='https://kkiqq.cn/api/badminton/game?userid='+this.openId,//错误接口
-          method='GET',
-          success=function(res){
-            console.log('success:',res)
-          },
-          fail=function(err={}){
-            console.log('fail,',err)
-          };
-      if(this.openId){
-        wx.request({url,method,success,fail})
-      }else{
-        fail();
-      }
+    async submitBaseInfo(e){
+      changeRealname(this.openId,e.detail.value.realName);
+    //   let url='https://kkiqq.cn/api/badminton/userrename',
+    //       method='POST',
+    //       data={userid:this.openId,
+    //             realName:e.detail.value.realName};
+    //   console.log(data);
+    //   if(this.openId){
+    //     let res=await htr(url,method,data);
+    //     console.log(res);
+    //   }
     }
   }
 }

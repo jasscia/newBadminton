@@ -16,6 +16,7 @@
   </view>
 </template>
 <style lang="less" scoped>
+@import '../../common/common.less';
 /* pages/result/result.wxss */
   .wrapper{
     margin:20px;
@@ -39,8 +40,6 @@
 </style>
 <script>
 import wepy from 'wepy';
-import '../../util/util.js'
-
 export default class Result extends wepy.page  {
   //logs.js
   data= {

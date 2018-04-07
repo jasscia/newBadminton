@@ -17,7 +17,7 @@
       </view>
 </template>
 <style lang="less">
-@import '../util/util.less';
+@import '../common/common.less';
 .cycleProgressBar {
   text-align: center;
 }

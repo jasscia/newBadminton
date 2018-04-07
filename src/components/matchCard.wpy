@@ -2,29 +2,31 @@
 <view class="matchCard font" id="{{matchInfo.id}}" @tap.stop="turnoverCard" animation="{{matchInfo.animationData}}">
   <view class="matchInfo" hidden="{{!matchInfo.ifShowInfo}}"> 
     <view class="row row1">
-      <view class="status">报名中</view>
-      <view class="distance">距您1000.00km</view>
+      <view class="status">{{matchInfo.status}}qqq</view>
+      <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
+      <!-- <view class="distance">距您1000.00km</view> -->
     </view>
     <view class="row row2">{{matchInfo.gamename}}</view>
     <view class="row row3">{{matchInfo.begintime}}</view>
     <view class="row row4">{{matchInfo.address}}</view>
     <view class="row row5">
-      <view class="summery">{{matchInfo.count||0}}人已报名</view>
+      <view class="summery">{{matchInfo.badplayers?matchInfo.badplayers.length:0}}人已报名</view>
       <view class="avatarList">
-        <repeat for="[1,2,3,4]" key="index" index="index" item="item">  
-          <image url="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
+        <repeat for="{{matchInfo.badplayers}}" key="index" index="index" item="item">  
+          {{item.realName||item.nickName||'吴青'}}
+          <!-- <image src="matchInfo.badplayers.nickName" /> -->
         </repeat>
       </view>
     </view>
   </view>
   <view class="matchActive back" hidden="{{matchInfo.ifShowInfo}}">
-    <button @tap.stop="btnTap" data-id="{{match.id}}">点我报名</button>
+    <button @tap.stop="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
   </view>
 </view>
 </template>
 
 <style lang="less" scoped>
-@import '../util/util.less';
+@import '../common/common.less';
 .matchCard{
   margin:20px;
   padding:10px;
@@ -48,7 +50,6 @@
     vertical-align: middle;
     transform-origin: center center 0;
     transform: rotateX(180deg);
-    opacity: 0.5;
     button{
       margin:0;
       display: inline-block;
@@ -84,8 +85,8 @@
       flex:1;
       text-align: end;
       image{
-        height:30px;
-        width:30px;
+        height:20px;
+        width:20px;
         border-radius: 50%;
         background-size: cover;
       }
@@ -111,7 +112,7 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {htr} from '../util/util'
+import {addPlayer,updateMatchInfo} from '../common/common'
 export default class matchCard extends wepy.component{
   props={
     matchInfo:{
@@ -126,6 +127,7 @@ export default class matchCard extends wepy.component{
         begintime: "",
         created_at: "",
         updated_at: "",
+        ifIn:false,
         ifShowInfo:true,
         animationData: {}
         },
@@ -137,7 +139,6 @@ export default class matchCard extends wepy.component{
     selector:''
   }
   onLoad(){
-    console.log('you',this.customData.animation)
     this.customData.animation=wx.createAnimation({
                           duration: 1000,
                           timingFunction: 'ease-out',
@@ -147,24 +148,22 @@ export default class matchCard extends wepy.component{
   methods={
     turnoverCard(e){
       this.matchInfo.ifShowInfo=!this. matchInfo.ifShowInfo;
-      this.$apply();
       this.customData.animation.rotateX(this.matchInfo.ifShowInfo?0:180).step();
       this.matchInfo.animationData=this.customData.animation.export();
-      this.$apply();
-      console.log(this.matchInfo.ifShowInfo,this.matchInfo.animationData)
     },
-    btnTap(e){
-      console.log('thank you');
-      let url="https://kkiqq.cn/api/badminton/game/addplayer",
-          method="POST",
-          data={
-            userid:wx.getStorageSync('openId'),
-            gameid:e.target.dataset.comIndex
-          };
-      htr(url,method,data);
+    async addplayer(e){
+      console.log(this.matchInfo.ifIn);
+      if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
+        let res=await addPlayer(e);
+        if(res==='ok'){
+          let gameid=e.target.dataset.gameid;
+          let originMatchInfo=this.matchInfo;
+          updateMatchInfo(gameid,originMatchInfo);
+          // this.$apply();
+        }
+      }
     }
   }
-  
 }
 </script>
 

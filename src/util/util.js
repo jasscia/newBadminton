@@ -44,22 +44,9 @@ const getUserInfo=function(){
     })
   })
 }
-const htr=function(url,method,data){
-  return new Promise((resolve,reject)=>{
-    console.log('进入htr fn');
-    wx.request({
-      url,
-      method,
-      data,
-      success:resolve,
-      fail:reject
-    })
-  })
-}
 module.exports = {
   formatTime: formatTime,
   formateDate:formateDate,
-  htr:htr,
   login:login,
   getUserInfo:getUserInfo,
 }

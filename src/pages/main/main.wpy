@@ -10,8 +10,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import '../../util/util.less';
-
+@import '../../common/common.less';
 #main {
   background: @bgc;
 }
@@ -39,6 +38,7 @@
 </style>
 <script>
 import wepy from 'wepy';
+import {initUserInfo} from '../../common/common';
 import againstTable from './againstTable';
 import result from './result';
 import 'wepy-async-function';
@@ -53,7 +53,9 @@ export default class Main extends wepy.page {
     result: result
   };
 
-  onLoad(options) {};
+  onLoad(options) {
+      initUserInfo();
+    };
   onShow(options) {};
   getPersonList() {};
 

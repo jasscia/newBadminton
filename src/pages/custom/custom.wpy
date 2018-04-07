@@ -2,7 +2,7 @@
   <view class="custom">
     <view class="part part1">
       <view class="item" @tap.stop="tap">
-        <image class="avatar" src="{{userPrivate.avatar}}"/>
+        <image class="avatar" src="{{userPrivate.avatarUrl}}"/>
         <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
         <view class="nickname">{{userPrivate.nickName}}</view>
         <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
@@ -72,9 +72,9 @@
     </view>
   </view>
 </template>
-</script>
+
 <style lang="less" scoped>
-@import '../../util/util.less';
+@import '../../common/common.less';
 .custom{
   background: @bgc;
   margin:0;
@@ -187,6 +187,7 @@
 </style>
 <script>
 import wepy from 'wepy';
+import {initUserInfo} from '../../common/common';
 import itemList from "./itemList";
 import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Custom extends wepy.page {
@@ -207,6 +208,17 @@ export default class Custom extends wepy.page {
       fans:'3000',
       diamond:'56'
     };
+
+  async onLoad() {
+      await initUserInfo();
+      wx.getStorage({
+        key:'userInfo',
+        success:(res)=>{
+          this.userPrivate=res.data;
+          this.$apply();
+        }
+      })
+    };
     methods = {
       navigateToBaseInfoPage(){
         wx.navigateTo({
@@ -219,20 +231,5 @@ export default class Custom extends wepy.page {
         })
       }
     };
-
-    events = {};
-    onLoad() {
-      wx.getStorage({
-        key:'userInfo',
-        success:(res)=>{
-          this.userPrivate=res.data;
-        }
-      })
-    };
 }
 </script>
-
-
-<style lang="less">
-/** less **/
-</style>

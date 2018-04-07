@@ -11,7 +11,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import  '../../util/util.less';
+@import  '../../common/common.less';
 #index{
   background: @bgc;
 }
@@ -39,6 +39,7 @@
 </style>
 <script>
   import wepy from 'wepy';
+  // import {initUserInfo} from '../../common/common'
   import nearMatch from './nearMatch';
   import rankingList from './rankingList';
   import 'wepy-async-function';
@@ -52,7 +53,10 @@
     data = {
       activeBar:'nearMatch',
       rankingList:[]
-    } 
+    }
+    onLoad(){
+      // initUserInfo();
+    }
     methods={
       nearMatchTap(){
           this.activeBar='nearMatch';

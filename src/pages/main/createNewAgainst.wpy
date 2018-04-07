@@ -42,20 +42,12 @@ export default class CreateNewAgain extends wepy.page {
     item2colunm:item2colunm
   }
   data={
-    openId:'',
+    token:'',
     userInfo:{},
     dateRange:{
       end:{time:"23:00",date:''},
       start:{time:"04:00",date:''}
     },
-    // newAgainstInfo:{
-    //   userid: "",
-    //   gamename: "",
-    //   status: 0,
-    //   note: "",
-    //   begintime: null,
-    //   address: ""
-    // },
     list:[
       {
         title:'主题',
@@ -82,7 +74,7 @@ export default class CreateNewAgain extends wepy.page {
   }
   async onLoad(option){
     await initUserInfo();
-    this.openId=wx.getStorageSync('openId');
+    this.token=wx.getStorageSync('token');
     this.userPrivateInfo= wx.getStorageSync('userInfo');
     this.$apply();
     this.calcDateRange();
@@ -108,45 +100,16 @@ export default class CreateNewAgain extends wepy.page {
       let formData=e.detail.value,
           date=formData.date,
           time=formData.time;
-          console.log(formData,this.openId);
+          console.log(formData,this.token);
       let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
       Object.keys(formData).map(key=>{
         if(['time','date'].indexOf(key)===-1){
           newFormData[key]=formData[key]
         }
       })
-      if(time){newFormData['time']=date+' '+time+':00'}
-      // this.submitNewAgainstInfo(newFormData);
-      createGame(newFormData,this.openId);
+      if(time){newFormData['begintime']=date+' '+time+':00'}
+      createGame(newFormData,this.token);
     }
   }
-  // submitNewAgainstInfo(formData){
-  //   this.newAgainstInfo.userid=this.openId;
-  //   this.newAgainstInfo.gamename=formData.theme;
-  //   this.newAgainstInfo.status=0;
-  //   this.newAgainstInfo.note="";
-  //   this.newAgainstInfo.address=formData.address;
-  //   this.newAgainstInfo.begintime=formData.time;
-
-  //   let url='https://kkiqq.cn/api/badminton/game',
-  //       method='POST',
-  //       data=this.newAgainstInfo,
-  //       success=function(){
-  //         wx.showToast({
-  //           title:'创建成功',
-  //           icon:'success',
-  //           duration:1500
-  //         })
-  //       },
-  //       fail=function(err){
-  //         wx.showModal({
-  //           title:'创建失败',
-  //           content:err.msg
-  //         })
-  //       };
-  //   wx.request({
-  //     url,method,data,success,fail
-  //   })
-  // }
 }
 </script>

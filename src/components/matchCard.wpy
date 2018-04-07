@@ -119,7 +119,7 @@ export default class matchCard extends wepy.component{
       type:Object,
       default:{
         id: '',
-        userid: "",
+        token: "",
         gamename: "",
         status: 0,
         note: "",
@@ -147,6 +147,7 @@ export default class matchCard extends wepy.component{
   }
   methods={
     turnoverCard(e){
+      if(this.matchInfo.animationData===false){return}
       this.matchInfo.ifShowInfo=!this. matchInfo.ifShowInfo;
       this.customData.animation.rotateX(this.matchInfo.ifShowInfo?0:180).step();
       this.matchInfo.animationData=this.customData.animation.export();

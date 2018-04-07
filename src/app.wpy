@@ -10,7 +10,7 @@ export default class extends wepy.app {
       'pages/message/message',
       'pages/custom/custom',
       'pages/custom/baseInfo',
-      'pages/custom/createNewAgainst'
+      'pages/main/createNewAgainst'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -24,7 +24,7 @@ export default class extends wepy.app {
         {pagePath: 'pages/index/index',
           text: '首页'},
         {pagePath: 'pages/main/main',
-          text: '比赛'},
+          text: '赛事'},
         {pagePath: 'pages/message/message',
           text: '消息'},
         {pagePath: 'pages/custom/custom',

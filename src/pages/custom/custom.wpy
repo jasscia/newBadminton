@@ -49,10 +49,6 @@
         <view class="side left">我的积分</view>
         <view class="side right">200</view>
       </view>
-      <view class="item"  @tap.stop="createNewAgainst">
-        <view class="side left">创建赛事</view>
-        <view class="side right"></view>
-      </view>
       <view class="item" @tap.stop="tap">
         <view class="side left">扫一扫</view>
         <view class="side right">0</view>
@@ -223,11 +219,6 @@ export default class Custom extends wepy.page {
       navigateToBaseInfoPage(){
         wx.navigateTo({
           url:"/pages/custom/baseInfo"
-        })
-      },
-      createNewAgainst(){
-        wx.navigateTo({
-          url:"/pages/custom/createNewAgainst"
         })
       }
     };

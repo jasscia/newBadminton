@@ -29,7 +29,7 @@ export default class BaseInfo extends wepy.page {
     item2colunm:item2colunm
   }
   data={
-    openId:'',
+    token:'',
     userPrivateInfo:{},
     list:[
       {title:'姓名',
@@ -56,21 +56,12 @@ export default class BaseInfo extends wepy.page {
   }
 async  onLoad(option){
     await initUserInfo();
-    this.openId=wx.getStorageSync('openId');
+    this.token=wx.getStorageSync('token');
     this.userPrivateInfo= wx.getStorageSync('userInfo');
   }
   methods={
     async submitBaseInfo(e){
-      changeRealname(this.openId,e.detail.value.realName);
-    //   let url='https://kkiqq.cn/api/badminton/userrename',
-    //       method='POST',
-    //       data={userid:this.openId,
-    //             realName:e.detail.value.realName};
-    //   console.log(data);
-    //   if(this.openId){
-    //     let res=await htr(url,method,data);
-    //     console.log(res);
-    //   }
+      changeRealname(this.token,e.detail.value.realName);
     }
   }
 }

@@ -2,7 +2,7 @@
 <template>
   <view class="container">
     <view class="hiddenPage" wx:if="{{pageHide}}">
-      没有
+      没有正在报名的比赛
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
       <matchCard :matchInfo.sync="item"></matchCard>
@@ -13,17 +13,24 @@
 <style lang="less" >
   @import '../../common/common.less';
   .container{
-    position: relative;
     background: @bgc;
-    height:100%;
-    width:100%;
+    position: absolute;
+    z-index:-1;
+    right:0;
+    left:0;
+    top:0;
+    bottom:0;
     .hiddenPage{
-      position: absolute;
-      background: red;
-      right:0;
-      left:0;
-      top:0;
-      bottom:0;
+      margin:120rpx auto 0;
+      height:200rpx;
+      width: 90%;
+      line-height: 200rpx;
+      text-align: center;
+      vertical-align: middle;
+      background: @bgc-card;
+      border-radius: 20rpx;
+
+      letter-spacing: 5rpx;
     }
   }
 
@@ -31,14 +38,13 @@
 
 <script>
   import wepy from 'wepy';
-  import {initUserInfo} from '../../common/common';
-  import {downLoadMatchInfo,downLoadMatchList} from '../../common/common'
+  import {initUserInfo,downLoadMatchInfo,downLoadMatchList} from '../../common/common';
   import matchCard from '../../components/matchCard';
 
   export default class Index extends wepy.page {
    data={
       pageHide:true,
-      openId:'',
+      token:'',
       userInfo:{},
       matchInfoList:[]
    }
@@ -46,43 +52,38 @@
       matchCard:matchCard
     }
   async onLoad(){
-    await initUserInfo();  
-    this.downLoadUserInfo();
-    this.downLoadMatchList();
+    await initUserInfo();    
+    this.token=wx.getStorageSync('token');
+    this.userPrivateInfo= wx.getStorageSync('userInfo');
+    if(this.token){
+      this.pageHide=false;
+    } 
+    this.$apply();
+    this.getMatchList();
   }
   onShow(){
-    this.downLoadMatchInfo();
+    this.getMatchInfo();
   }
-  downLoadUserInfo(){
-    this.openId=wx.getStorageSync('openId');
-    this.userPrivateInfo= wx.getStorageSync('userInfo');
-    if(this.openId){
-      this.pageHide=false;
-    }
-  }
-  async downLoadMatchList(){  
-    let matchList=await downLoadMatchList(this.openId);
+  async getMatchList(){  
+    let matchList=await downLoadMatchList(this.token);
     if(!matchList){return}
-    console.log('matchList',matchList);
     for(let match of matchList){
       let matchInfo = await downLoadMatchInfo(match.id);
       let ifIn=false;//判断是否已经报名了
-      console.log("matchInfo",matchInfo)
-      if(matchInfo.badplayers.length){
-        matchInfo.badplayers.map(player=>{
-          if(player.userid=this.openId){
+      if(matchInfo.players && matchInfo.players.length){
+        matchInfo.players.map(player=>{
+          if(player.token=this.token){
             ifIn=true;
           }
         })
       }
       //为返回的数组添加参数，用于控制组件
       matchInfo.ifShowInfo=true;
-      matchInfo.animationData='';
+      matchInfo.animationData=true;
       matchInfo.ifIn=ifIn;
-      this.matchInfoList.push(matchInfo);;
+      this.matchInfoList.push(matchInfo);
     }
     this.$apply();
-    console.log('when nearMatch load',this.matchInfoList);
   }
   }
 </script>

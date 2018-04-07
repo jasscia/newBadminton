@@ -27,23 +27,23 @@ const setStorage=function(key,data) {
       })
     })
   }
-  const getOpenId=async function(code,nickName,avatarUrl){
-    console.log('进入getOPenId fn');
-    let url=URLList.getOpenIdURl,
+  const getToken=async function(code,nickName,avatarUrl){
+    console.log('进入getToken fn');
+    let url=URLList.getTokenURl,
         method="GET",
         data={code:code,
               nick_name:nickName,
               avatar_url:avatarUrl}
     let res=await htr(url,method,data);
-    if(res.data.openid){
+    if(res.data.token){
       return res.data.token;
     }else{
-      console.log('getOpenId failed');
+      console.log('getToken failed');
     }
   }
 
 const transformStatusAndTimeOfMatchInfo=function(matchInfo){
-  let status=['报名中','正在比赛','已结束'];  
+  let status=['报名中','报名结束','正在比赛','比赛结束'];  
     if(status[matchInfo.status]){
       matchInfo.status=status[matchInfo.status]
     };
@@ -79,14 +79,14 @@ const htr=function(url,method,data){
 const URLList={
   getGameInfoURL:"https://kkiqq.cn/api/badminton/game",
   addplayerURL:"https://kkiqq.cn/api/badminton/game/addplayer",
-  getOpenIdURl:'https://kkiqq.cn/api/badminton/qlogin',
+  getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',
   changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename'
 };
 export {URLList,
         htr,
         formateDate,
         transformStatusAndTimeOfMatchInfo,
-        getOpenId,
+        getToken,
         getUserInfo,
         login,
         formatNumber,

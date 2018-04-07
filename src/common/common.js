@@ -1,13 +1,17 @@
 import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
-        getOpenId,getUserInfo,login,formatNumber,setStorage} from './util';
+        getToken,getUserInfo,login,formatNumber,setStorage} from './util';
 
 const downLoadMatchList=async function(token){
   let url=URLList.getGameInfoURL,
       data={token},
       method="GET";
   let res=await htr(url,method,data);
-  if(res.statusCode >=400){console.log('res.statusCode>=400',res.statusCode);return}
-  if([200,206,304].indexOf(res.statusCode)===-1){console.log("res.statusCode not in [200,206,304]",res.status);return}
+  if(res.statusCode >=400){
+    console.log('res.statusCode>=400',res.statusCode);
+    return}
+  if([200,206,304].indexOf(res.statusCode)===-1){
+    console.log("res.statusCode not in [200,206,304]",res.status);
+    return}
   if(res.data.data && !res.data.data.length){
     wx.showToast({
       title:'没有比赛',
@@ -45,24 +49,24 @@ const updateMatchInfo=async function(gameid,originMatchInfo){
 }
  
 const initUserInfo=async function() {
-  let openId = wx.getStorageSync('openId');
+  let token = wx.getStorageSync('token');
   let userInfo = wx.getStorageSync('userInfo');
-  if (!openId) {
+  if (!token) {
     let loginRes=await login();
     let code=loginRes.code;
     let getuserInfoRes= await getUserInfo();
     let {nickName,avatarUrl,gender}=getuserInfoRes.userInfo;
     let userInfo={nickName,avatarUrl,gender};
     setStorage('userInfo',userInfo);
-    openId=await getOpenId(code,userInfo.nickName,userInfo.avatarUrl);
-    setStorage('openId',openId);
+    token=await getToken(code,userInfo.nickName,userInfo.avatarUrl);
+    setStorage('token',token);
   }
 }
 const addPlayer=async function(e){
   let url=URLList.addplayerURL,
       method="POST",
       data={
-        token:wx.getStorageSync('openId'),
+        token:wx.getStorageSync('token'),
         gameid:e.target.dataset.gameid
       };
   let res=await htr(url,method,data);
@@ -70,32 +74,36 @@ const addPlayer=async function(e){
     return 'ok';
   }
 }
-const changeRealname=async function(openId,realName){
+const changeRealname=async function(token,realName){
   console.log('进入 changeRealname fn');
-  if(openId){
+  if(token){
     let url=URLList.changeRealnameURl,
         method='POST',
-        data={token:openId,
+        data={token:token,
               realName:realName};
       let res=await htr(url,method,data);
       console.log(res,data);
       return res
   }
 }
-const createGame=async function(formData,openId){
-  // formData.token=openId;
-  // formData.gamename=formData.theme;
-  // formData.status=0;
-  // formData.note="";
-  // formData.address=formData.address;
-  // formData.begintime=formData.time;
-  // console.log(formData);
-  const success=function(){
-    wx.showToast({
-      title:'创建成功',
+const createGame=async function(formData,token){
+  let url=URLList.getGameInfoURL,
+      method="POST",
+      data={
+        token:token,
+        gamename:formData.theme,
+        status:0,
+        note:null,
+        address:formData.address,
+        begintime:formData.begintime
+      };
+  const success=async function(){
+    await wx.showToast({
+      title:'创建成功,返回赛事列表',
       icon:'success',
       duration:1500
     })
+    wx.navigateBack({delta: 1})
   },
   fail=function(err){
     wx.showModal({
@@ -103,16 +111,6 @@ const createGame=async function(formData,openId){
       content:err.msg
     })
   };
-  let url=URLList.getGameInfoURL,
-      method="POST",
-      data={
-        token:openId,
-        gamename:formData.theme,
-        status:0,
-        note:null,
-        address:formData.address,
-        begintime:formData.time
-      };
   htr(url,method,data).then(success,fail)
 }
 const formatTime =(date,mark='/') => {

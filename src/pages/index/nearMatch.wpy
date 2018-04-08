@@ -65,7 +65,7 @@
     this.getMatchInfo();
   }
   async getMatchList(){  
-    let matchList=await downLoadMatchList(this.token);
+    let matchList=await downLoadMatchList(this.token,'All');
     if(!matchList){return}
     for(let match of matchList){
       let matchInfo = await downLoadMatchInfo(match.id);

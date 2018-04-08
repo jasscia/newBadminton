@@ -2,19 +2,21 @@
 <view class="matchCard font" id="{{matchInfo.id}}" @tap.stop="turnoverCard" animation="{{matchInfo.animationData}}">
   <view class="matchInfo" hidden="{{!matchInfo.ifShowInfo}}"> 
     <view class="row row1">
-      <view class="status">{{matchInfo.status}}qqq</view>
+      <view class="status">{{matchInfo.status}}</view>
       <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
       <!-- <view class="distance">距您1000.00km</view> -->
     </view>
-    <view class="row row2">{{matchInfo.gamename}}</view>
+    <view class="row row2">{{matchInfo.gamename}}
+      <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
+    </view>
     <view class="row row3">{{matchInfo.begintime}}</view>
     <view class="row row4">{{matchInfo.address}}</view>
     <view class="row row5">
-      <view class="summery">{{matchInfo.badplayers?matchInfo.badplayers.length:0}}人已报名</view>
+      <view class="summery">{{matchInfo.players.length}}人已报名</view>
       <view class="avatarList">
-        <repeat for="{{matchInfo.badplayers}}" key="index" index="index" item="item">  
-          {{item.realName||item.nickName||'吴青'}}
-          <!-- <image src="matchInfo.badplayers.nickName" /> -->
+        <repeat for="{{matchInfo.players}}" key="index" index="index" item="item">  
+          <!-- {{item.realName||item.nickName}} -->
+          <image src="matchInfo.players.matchInfo.owner.realName" />
         </repeat>
       </view>
     </view>
@@ -75,6 +77,11 @@
   }
   .row2{
     font-size: 18px;
+    .owner{
+      font-size: 12px;
+      display: inline;
+      font-weight: lighter;
+    }
   }
   .row5{
     height:30px;
@@ -153,16 +160,18 @@ export default class matchCard extends wepy.component{
       this.matchInfo.animationData=this.customData.animation.export();
     },
     async addplayer(e){
-      console.log(this.matchInfo.ifIn);
-      if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
+      // if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
         let res=await addPlayer(e);
         if(res==='ok'){
           let gameid=e.target.dataset.gameid;
           let originMatchInfo=this.matchInfo;
-          updateMatchInfo(gameid,originMatchInfo);
-          // this.$apply();
+          let newMatchInfo=await updateMatchInfo(gameid,originMatchInfo);
+          if(newMatchInfo){
+            this.matchInfo=newMatchInfo;
+            this.$apply();
+          }
         }
-      }
+      // }
     }
   }
 }

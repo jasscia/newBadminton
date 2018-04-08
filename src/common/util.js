@@ -53,6 +53,7 @@ const transformStatusAndTimeOfMatchInfo=function(matchInfo){
   return matchInfo;
 }
 const formateDate=(time)=>{
+  // console.log('进入formdata fn',time);
   const days=['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
   const day = days[time.getDay()]
   const month = time.getMonth() + 1
@@ -78,6 +79,9 @@ const htr=function(url,method,data){
 }
 const URLList={
   getGameInfoURL:"https://kkiqq.cn/api/badminton/game",
+  postGameInfoURL:"https://kkiqq.cn/api/badminton/game",
+  getGameListMyURL:"https://kkiqq.cn/api/badminton/game",
+  getGameListAllURL:"https://kkiqq.cn/api/badminton/gamelist",
   addplayerURL:"https://kkiqq.cn/api/badminton/game/addplayer",
   getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',
   changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename'

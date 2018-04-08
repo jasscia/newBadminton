@@ -1,9 +1,9 @@
 import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
         getToken,getUserInfo,login,formatNumber,setStorage} from './util';
 
-const downLoadMatchList=async function(token){
-  let url=URLList.getGameInfoURL,
-      data={token},
+const downLoadMatchList=async function(token,type='my'){
+  let url=(type==="my"?URLList.getGameListMyURL:URLList.getGameListAllURL);
+  let data={token},
       method="GET";
   let res=await htr(url,method,data);
   if(res.statusCode >=400){
@@ -34,8 +34,8 @@ const downLoadMatchInfo=async function(gameid){
     return transformStatusAndTimeOfMatchInfo(matchInfo);
   } 
 }
-const updateMatchInfo=async function(gameid,originMatchInfo){   
-    let newMatchInfo=await downLoadMatchInfo;
+const updateMatchInfo =async function(gameid,originMatchInfo){
+    let newMatchInfo=await downLoadMatchInfo(gameid);
     if(newMatchInfo){
       let originMatchInfoKeys=Object.keys(originMatchInfo),
           newMatchInfoKeys=Object.keys(newMatchInfo);
@@ -44,6 +44,7 @@ const updateMatchInfo=async function(gameid,originMatchInfo){
           originMatchInfo[key]=newMatchInfo[key]
         }
       })
+      // console.log(originMatchInfo);
       return originMatchInfo
   }
 }
@@ -87,7 +88,7 @@ const changeRealname=async function(token,realName){
   }
 }
 const createGame=async function(formData,token){
-  let url=URLList.getGameInfoURL,
+  let url=URLList.postGameInfoURL,
       method="POST",
       data={
         token:token,
@@ -97,6 +98,7 @@ const createGame=async function(formData,token){
         address:formData.address,
         begintime:formData.begintime
       };
+  
   const success=async function(){
     await wx.showToast({
       title:'创建成功,返回赛事列表',

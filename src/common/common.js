@@ -98,7 +98,7 @@ const createGame=async function(formData,token){
         address:formData.address,
         begintime:formData.begintime
       };
-  
+  console.log(data);
   const success=async function(){
     await wx.showToast({
       title:'创建成功,返回赛事列表',

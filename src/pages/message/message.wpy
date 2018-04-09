@@ -1,11 +1,12 @@
-<style lang="less">
-</style>
+
 <template>
   <view class="container"> 
     <p>message</p>
   </view>
 </template>
-
+<style lang="less" scoped>
+  @import '../../common/common.less';
+</style>
 <script>
 import wepy from 'wepy';
 

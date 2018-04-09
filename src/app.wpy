@@ -38,9 +38,7 @@ export default class extends wepy.app {
   }
   setKeepScreenOn(){
     wx.setKeepScreenOn({
-      keepScreenOn:true,
-      success(res){console.log('设置屏幕常亮 成功'),res},
-      fail(err){console.log('设置屏幕常亮 失败',err)}
+      keepScreenOn:true
     })
   }
 }

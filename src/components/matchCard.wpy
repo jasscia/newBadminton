@@ -14,9 +14,8 @@
     <view class="row row5">
       <view class="summery">{{matchInfo.players.length}}人已报名</view>
       <view class="avatarList">
-        <repeat for="{{matchInfo.players}}" key="index" index="index" item="item">  
-          <!-- {{item.realName||item.nickName}} -->
-          <image src="matchInfo.players.matchInfo.owner.realName" />
+        <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
+          <image src="{{player.user.avatar_url}}" />
         </repeat>
       </view>
     </view>
@@ -84,16 +83,17 @@
     }
   }
   .row5{
-    height:30px;
+    height:60px;
     line-height: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;   
+    overflow: hidden;
     .avatarList{
       flex:1;
       text-align: end;
       image{
-        height:20px;
-        width:20px;
+        height:25px;
+        width:25px;
         border-radius: 50%;
         background-size: cover;
       }
@@ -160,7 +160,7 @@ export default class matchCard extends wepy.component{
       this.matchInfo.animationData=this.customData.animation.export();
     },
     async addplayer(e){
-      // if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
+      if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
         let res=await addPlayer(e);
         if(res==='ok'){
           let gameid=e.target.dataset.gameid;
@@ -170,8 +170,9 @@ export default class matchCard extends wepy.component{
             this.matchInfo=newMatchInfo;
             this.$apply();
           }
+          console.log(newMatchInfo);
         }
-      // }
+      }
     }
   }
 }

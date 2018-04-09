@@ -1,9 +1,6 @@
 <template>
   <view class="container">
-    <view class="header"> 
-      <view  @tap.stop="myCreatedTap" class="{{activeBar==='myCreated'?'active':''}}">我创建de比赛</view>
-      <view  @tap.stop="myJoinedTap" class="{{activeBar==='myJoined'?'active':''}}">我参与de比赛</view>
-    </view>
+    <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
     <view class="add" @tap.stop="createNewAgainst">
       <button>创建赛事</button>
     </view>   
@@ -16,33 +13,6 @@
   @import '../../common/common.less';
   .container{
     background: @bgc;
-    position: absolute;
-    right:0;
-    left:0;
-    top:0;
-    bottom:0;
-    
-  .header{
-    margin:0px;
-    padding-top:10px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    
-  .active::after {
-    content: '';
-    position: absolute;
-    left:50%;
-    transform: translateX(-50%);
-    bottom:-5px;
-    width:60px;
-    color:cadetblue;
-    border-bottom:5px solid;
-    }
-    .active{
-      position: relative;
-    }
-  }
     .add{
       margin-top:40rpx;
       border-radius: 10px;
@@ -68,6 +38,7 @@
 import wepy from "wepy";
 import {initUserInfo,downLoadMatchList,downLoadMatchInfo,share} from '../../common/common';
 import matchCard from '../../components/matchCard';
+import header from '../../components/header';
 export default class myGameList extends wepy.page{
   config={
     navigationBarTitleText:'我的赛事列表'
@@ -76,11 +47,13 @@ export default class myGameList extends wepy.page{
       token:'',
       userInfo:{},
       matchInfoList:[],
-      activeBar:'myCreated',
+      activeBar:'我创建de比赛',
+      titleList:['我创建的比赛','我参与的比赛'],
       rankingList:[]
    }
     components = {
-      matchCard:matchCard
+      matchCard:matchCard,
+      header:header
     }
   async onLoad(){
     await initUserInfo(); 
@@ -118,12 +91,6 @@ export default class myGameList extends wepy.page{
     this.$apply();
   }
   methods={
-      myCreatedTap(){
-          this.activeBar='myCreated';
-      },
-      myJoinedTap(){console.log(this.data.activeBar);
-          this.activeBar='myJoined';         
-      },
       createNewAgainst(){
         wx.navigateTo({
           url:"/pages/main/createNewAgainst"

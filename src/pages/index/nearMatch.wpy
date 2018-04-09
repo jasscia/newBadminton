@@ -1,6 +1,6 @@
 
 <template>
-  <view class="container">
+  <view class="wrapper">
     <view class="hiddenPage" wx:if="{{pageHide}}">
       没有正在报名的比赛
     </view>
@@ -12,16 +12,9 @@
 
 <style lang="less" >
   @import '../../common/common.less';
-  .container{
-    background: @bgc;
-    position: absolute;
-    z-index:-1;
-    right:0;
-    left:0;
-    top:0;
-    bottom:0;
+  .wrapper{
     .hiddenPage{
-      margin:120rpx auto 0;
+      margin:100rpx auto 0;
       height:200rpx;
       width: 90%;
       line-height: 200rpx;
@@ -29,7 +22,7 @@
       vertical-align: middle;
       background: @bgc-card;
       border-radius: 20rpx;
-
+      color:#666;
       letter-spacing: 5rpx;
     }
   }

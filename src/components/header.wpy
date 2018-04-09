@@ -1,0 +1,63 @@
+<template>
+<view  class="header"  @tap="selectItem" >
+    <repeat wx:for="{{titleList}}" wx:for-index="index" wx:key="index"> 
+      <view class="{{selectedItem===item?'selectedItem':''}}" data-titleName="{{item}}">{{item}}</view>
+    </repeat>
+</view>
+</template>
+
+<style lang="less" >
+@import '../common/common.less';
+.header{
+  margin:0px;
+  padding-top:20rpx;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  
+.selectedItem::after {
+  content: '';
+  position: absolute;
+  left:50%;
+  transform: translateX(-50%);
+  bottom:-5px;
+  width:120rpx;
+  color:cadetblue;
+  border-bottom:10rpx solid;
+  }
+  .selectedItem{
+    position: relative;
+  }
+}
+</style>
+<script>
+  import wepy from 'wepy';
+export default class Header extends wepy.component{
+  props={
+    titleList:{
+      type:Object,
+      default:[]
+    },
+    selectedItem:{
+      type:String,
+      default:null,
+      twoWay:true
+    }
+  }
+  onLoad(){
+    if(this.titleList && this.titleList.length){
+    this.selectedItem=this.titleList[0]}
+  }
+  methods={
+    selectItem(e){
+      let titlename=e.target.dataset.titlename;
+      if(titlename){
+        this.selectedItem=titlename;
+        console.log(this.selectedItem)
+      }
+    }
+  }
+
+}
+</script>
+

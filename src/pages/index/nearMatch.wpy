@@ -5,7 +5,12 @@
       没有正在报名的比赛
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
-      <matchCard :matchInfo.sync="item"></matchCard>
+      <view class="matchCard">
+         <twoSide>
+            <matchInfo slot='frontSide' :matchInfo.sync="item"></matchInfo>
+            <matchActive slot='backSide' :matchInfo.sync="item"></matchActive>
+        </twoSide>
+      </view>
     </repeat>
   </view>
 </template>
@@ -25,6 +30,16 @@
       color:#666;
       letter-spacing: 5rpx;
     }
+    .matchCard{    
+      margin:20px;
+      padding:10px;
+      font-size: 12px;
+      color:#666;
+      background: @bgc-card;
+      border-radius: 10px;
+      position: relative;
+      height: 300rpx;
+    }
   }
 
 </style>
@@ -32,7 +47,10 @@
 <script>
   import wepy from 'wepy';
   import {initUserInfo,downLoadMatchInfo,downLoadMatchList} from '../../common/common';
-  import matchCard from '../../components/matchCard';
+  // import matchCard from '../../components/matchCard';
+  import twoSide from '../../components/twoSide';
+  import matchInfo from '../../components/matchInfo';
+  import matchActive from '../../components/matchActive';
 
   export default class Index extends wepy.page {
    data={
@@ -42,7 +60,10 @@
       matchInfoList:[]
    }
     components = {
-      matchCard:matchCard
+      // matchCard:matchCard
+      twoSide:twoSide,
+      matchInfo:matchInfo,
+      matchActive:matchActive
     }
   async onLoad(){
     await initUserInfo();    

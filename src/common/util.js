@@ -11,7 +11,7 @@ const setStorage=function(key,data) {
   }
   const login=function(){
     return new Promise((resolve,reject)=>{
-      console.log('进入login fn');
+      // console.log('进入login fn');
       wx.login({
         success:resolve,
         fail:reject
@@ -20,7 +20,7 @@ const setStorage=function(key,data) {
   }
   const getUserInfo=function(){
     return new Promise((resolve,reject)=>{
-      console.log('进入userInfo fn');
+      // console.log('进入userInfo fn');
       wx.getUserInfo({
         success:resolve,
         fail:reject
@@ -28,7 +28,7 @@ const setStorage=function(key,data) {
     })
   }
   const getToken=async function(code,nickName,avatarUrl){
-    console.log('进入getToken fn');
+    // console.log('进入getToken fn');
     let url=URLList.getTokenURl,
         method="GET",
         data={code:code,
@@ -67,7 +67,7 @@ const formateDate=(time)=>{
 }
 const htr=function(url,method,data){
   return new Promise((resolve,reject)=>{
-    console.log('进入htr fn');
+    // console.log('进入htr fn');
     wx.request({
       url,
       method,

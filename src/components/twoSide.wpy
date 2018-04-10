@@ -1,0 +1,57 @@
+<template>
+<view class="warp" @tap.stop="turnoverCard" animation="{{animationData}}">
+    <slot name="frontSide" class="frontSide side" hidden="{{!ifShowfrontSide}}"></slot>
+    <slot name="backSide" class="backSide side" hidden="{{ifShowfrontSide}}"></slot>
+</view>
+</template>
+
+<style lang="less" scoped>
+@import '../common/common.less';
+.warp{
+  margin:20px;
+  padding:10px;
+  font-size: 12px;
+  color:#666;
+  background: @bgc-card;
+  border-radius: 10px;
+  position: relative;
+  height: 300rpx;
+  .side{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    transform-origin: center center 0;
+    transform: rotateX(180deg);
+  }
+}
+</style>
+<script>
+import wepy from 'wepy';
+export default class twoSide extends wepy.component{
+    data={
+        animationData:null,
+        ifShowfrontSide:true
+    }
+    customData={
+        animation:null
+    }
+  onLoad(){
+    this.customData.animation=wx.createAnimation({
+                        duration: 1000,
+                        timingFunction: 'ease-out',
+                    });
+  }
+  methods={
+    turnoverCard(e){
+      let sides= wx.createSelectorQuery().select('.side').boundingClientRect()._queue.length;
+      if(sides!==2){return}
+      this.ifShowfrontSide=!this.ifShowfrontSide;
+      this.customData.animation.rotateX(this.ifShowfrontSide?0:180).step();
+      this.animationData=this.customData.animation.export();
+    }
+  }
+}
+</script>
+

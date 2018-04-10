@@ -1,0 +1,116 @@
+
+
+<template>
+<view class="matchInfo"> 
+    <view class="row row1">
+      <view class="status">{{matchInfo.status}}</view>
+      <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
+      <!-- <view class="distance">距您1000.00km</view> -->
+    </view>
+    <view class="row row2">{{matchInfo.gamename}}
+      <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
+    </view>
+    <view class="row row3">{{matchInfo.begintime}}</view>
+    <view class="row row4">{{matchInfo.address}}</view>
+    <view class="row row5">
+      <view class="summery">{{matchInfo.players.length}}人已报名</view>
+      <view class="avatarList">
+        <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
+          <image src="{{player.user.avatar_url}}" />
+        </repeat>
+      </view>
+    </view>
+  </view>
+</template>
+
+<style lang="less" scoped>
+@import '../common/common.less';
+  .matchInfo{
+    border-radius: 10px;
+  }
+  .row{
+    margin:10px;
+  }
+  .row1{
+    display: flex;
+    justify-content: space-between;
+    font-size:10px;
+    color:#333;
+    .status{
+      background: lightblue;
+      border-radius: 6px;
+      padding:0 2px;
+      height:12px;
+    }
+  }
+  .row2{
+    font-size: 18px;
+    .owner{
+      font-size: 12px;
+      display: inline;
+      font-weight: lighter;
+    }
+  }
+  .row5{
+    height:60px;
+    line-height: 15px;
+    display: flex;
+    justify-content: space-between;   
+    overflow: hidden;
+    .avatarList{
+      flex:1;
+      text-align: end;
+      image{
+        height:25px;
+        width:25px;
+        border-radius: 50%;
+        background-size: cover;
+      }
+    }
+  }
+  .row2::before{
+    content:'&#xf024;';
+  }
+  .row3::before{
+    content:'&#xf017;';
+  }
+ .row4::before{
+    content:'&#xf041;';
+  }
+  .row5::before{
+    content:'&#xf007;';
+  }
+  .row2::before,.row3::before,.row4::before,.row5::before{    
+    width:20px;
+    display: inline-block;
+    text-align: left;
+  }
+</style>
+<script>
+import wepy from 'wepy';
+import {addPlayer,updateMatchInfo} from '../common/common'
+export default class matchInfo extends wepy.component{
+
+  props={
+    matchInfo:{
+      type:Object,
+      default:{
+        id: '',
+        token: "",
+        gamename: "",
+        status: 0,
+        note: "",
+        address: "",
+        begintime: "",
+        created_at: "",
+        updated_at: "",
+        ifIn:false,
+        // ifShowInfo:true,
+        // animationData: {}
+        },
+      twoWay:true,
+     }
+  }
+}
+</script>
+

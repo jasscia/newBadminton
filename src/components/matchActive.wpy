@@ -1,0 +1,71 @@
+
+
+<template>
+ 
+  <view class="matchActive back">
+    <button @tap.stop="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
+  </view>
+</template>
+
+<style lang="less" scoped>
+@import '../common/common.less';
+  .matchActive{
+    border-radius: 10px;
+  }
+  .matchActive{
+    line-height: 300rpx;
+    text-align: center;
+    vertical-align: middle;
+    transform-origin: center center 0;
+    transform: rotateX(180deg);
+    button{
+      margin:0;
+      display: inline-block;
+      background:@score-color;
+      vertical-align: middle;
+    }
+  }
+</style>
+<script>
+import wepy from 'wepy';
+export default class matchActive extends wepy.component{
+ props={  
+    matchInfo:{
+      type:Object,
+      default:{
+        id: '',
+        token: "",
+        gamename: "",
+        status: 0,
+        note: "",
+        address: "",
+        begintime: "",
+        created_at: "",
+        updated_at: "",
+        ifIn:false,
+        // ifShowInfo:true,
+        // animationData: {}
+        },
+      twoWay:true,
+     }
+ }
+  methods={
+    async addplayer(e){
+      if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
+        let res=await addPlayer(e);
+        if(res==='ok'){
+          let gameid=e.target.dataset.gameid;
+          let originMatchInfo=this.matchInfo;
+          let newMatchInfo=await updateMatchInfo(gameid,originMatchInfo);
+          if(newMatchInfo){
+            this.matchInfo=newMatchInfo;
+            this.$apply();
+          }
+          console.log(newMatchInfo);
+        }
+      }
+    }
+  }
+}
+</script>
+

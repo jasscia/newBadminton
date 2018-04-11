@@ -81,7 +81,8 @@
     content:'&#xf041;';
   }
   .row5::before{
-    content:'&#xf007;';
+    font-family: "iconfont";
+    content:"\f012d";
   }
   .row2::before,.row3::before,.row4::before,.row5::before{    
     width:20px;

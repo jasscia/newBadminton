@@ -49,10 +49,10 @@ const updateMatchInfo =async function(gameid,originMatchInfo){
   }
 }
  
-const initUserInfo=async function() {
-  let token = wx.getStorageSync('token');
+const initUserInfo=async function() {//
+  let token = wx.getStorageSync('token');//先从本地存储中获取token和用户的一些其他信息 名称 头像等
   let userInfo = wx.getStorageSync('userInfo');
-  if (!token) {
+  if (!token) {//如果没有找到 就去登录 然后存储用户的信息
     let loginRes=await login();
     let code=loginRes.code;
     let getuserInfoRes= await getUserInfo();

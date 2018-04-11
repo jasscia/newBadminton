@@ -6,7 +6,7 @@
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
       <view class="matchCard">
-         <twoSide :matchInfo.sync="item">
+         <twoSide :index.sync="index">
             <block slot='frontSide'>
               <matchInfo  :matchInfo.sync="item"></matchInfo>
             </block>
@@ -36,7 +36,7 @@
     }
     .matchCard{    
       margin:20px;
-      // padding:10px;
+      padding:10px;
       font-size: 12px;
       color:#666;
       background: @bgc-card;
@@ -61,7 +61,7 @@
       pageHide:true,
       token:'',
       userInfo:{},
-      matchInfoList:[]
+      matchInfoList:[],
    }
     components = {
       // matchCard:matchCard

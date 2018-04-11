@@ -1,9 +1,9 @@
 <template>
-<view class="warp" @tap.stop="turnoverCard" animation="{{matchInfo.animationData}}">
-  <view class="frontSide side" hidden="{{!matchInfo.ifShowfrontSide}}">
+<view class="warp" @tap.stop="turnoverCard" animation="{{animationData[index]}}">
+  <view class="frontSide side" hidden="{{ifShowbackSide[index]}}">
     <slot name="frontSide" ></slot>
   </view>
-  <view  class="backSide side" hidden="{{matchInfo.ifShowfrontSide}}">
+  <view  class="backSide side" hidden="{{!ifShowbackSide[index]}}">
     <slot name="backSide"></slot>
     </view>
 </view>
@@ -12,16 +12,17 @@
 <style lang="less" scoped>
 @import '../common/common.less';
 .warp{
-  position: relative;
-  margin: 0 auto;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
   .side{
-    margin:0;
-    padding:0;
-    // position: absolute;
-    // top:0;
-    // left:0;
-    // right:0;
-    // bottom:0;
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
   }
   .backSide{
     transform-origin: center center;
@@ -33,30 +34,38 @@
 import wepy from 'wepy';
 export default class twoSide extends wepy.component{
     props={
-    matchInfo:{
-      type:Object,
-      default:{
-        animationData:{},
-        ifShowfrontSide:true
-        },
-      twoWay:true,
-     }
+      index:{
+        type:Number,
+        default:0
+      }
     }
-    customData={
-        animation:''
-    }
+    data={animationData:[],
+        ifShowbackSide:[],
+        animation:'',}
   onLoad(){
-    this.customData.animation=wx.createAnimation({
-                        duration: 1000,
-                        timingFunction: 'ease-out',
-                        transformOrigin: '50% 50%'
-                    });
+    this.animation=wx.createAnimation({
+                    duration: 800,
+                    timingFunction: 'ease-out',
+                    transformOrigin: '50% 50% 0'
+                });
   }
   methods={
     turnoverCard(e){
-      this.matchInfo.ifShowfrontSide=!this.matchInfo.ifShowfrontSide;
-      this.customData.animation.rotateX(this.matchInfo.ifShowfrontSide?0:180).step();
-      this.matchInfo.animationData=this.customData.animation.export();
+      if(this.index!==undefined){
+        if(this.animationData[this.index]===undefined){
+          this.animationData[this.index]={};
+        }
+        if(this.ifShowbackSide[this.index]===undefined){
+          this.ifShowbackSide[this.index]=true;
+        }
+      }else{
+        return
+      }
+      this.ifShowbackSide[this.index]=!this.ifShowbackSide[this.index];
+      let rotateDeg=(this.ifShowbackSide[this.index]?180:0);
+        this.animation.rotateX(rotateDeg).step();
+        this.animationData[this.index]=this.animation.export();
+        
     }
   }
 }

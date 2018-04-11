@@ -12,16 +12,13 @@
     border-radius: 10px;
     margin: 0;
     padding:0;
-  }
-  .matchActive{
-    line-height: 300rpx;
-    text-align: center;
-    vertical-align: middle;
+    height: 100%;
+    // text-align: center;
+    display: flex;
+    align-items: center;
     button{
-      margin:0;
-      display: inline-block;
       background:@score-color;
-      vertical-align: middle;
+      text-align: center;
     }
   }
 </style>
@@ -51,17 +48,20 @@ export default class matchActive extends wepy.component{
  }
   methods={
     async addplayer(e){
+      // console.log('进入报名函数')
       if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
+      // console.log('是否已经报名',this.matchInfo.ifIn)
         let res=await addPlayer(e);
+        // console.log('请求报名接口 返回结果是',res)
         if(res==='ok'){
+          // console.log('请求成功',res);
+          // console.log('原数组是',this.matchInfo.begintime,this.matchInfo.ifIn,this.matchInfo.players);
           let gameid=e.target.dataset.gameid;
-          let originMatchInfo=this.matchInfo;
-          let newMatchInfo=await updateMatchInfo(gameid,originMatchInfo);
-          if(newMatchInfo){
-            this.matchInfo=newMatchInfo;
+          this.matchInfo.ifIn=true;
+          await updateMatchInfo(gameid,this.matchInfo);
+            console.log('新数组是',this.matchInfo.begintime,this.matchInfo.ifIn,this.matchInfo.players);
             this.$apply();
-          }
-          console.log(newMatchInfo,this.matchInfo);
+          // }
         }
       }
     }

@@ -100,7 +100,7 @@ export default class CreateNewAgain extends wepy.page {
       let formData=e.detail.value,
           date=formData.date,
           time=formData.time;
-      console.log('not IN,now in submit fn',formData,this.token);
+      // console.log('not IN,now in submit fn',formData,this.token);
       let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
       Object.keys(formData).map(key=>{
         if(['time','date'].indexOf(key)===-1){

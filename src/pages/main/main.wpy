@@ -5,9 +5,9 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
-      <block>
-        <matchInfo :matchInfo.sync="item" class="matchCard"></matchInfo>
-      </block>
+      <view  class="matchCard">
+        <matchInfo :matchInfo.sync="item"></matchInfo>
+      </view>
     </repeat>
   </view> 
 </template>
@@ -36,7 +36,7 @@
     }
     .matchCard{    
       margin:20px;
-      // padding:10px;
+      padding:10px;
       font-size: 12px;
       color:#666;
       background: @bgc-card;

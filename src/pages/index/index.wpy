@@ -2,9 +2,7 @@
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
     <nearMatch wx:if="{{activeBar===titleList[0]}}"></nearMatch>
-    <repeat for='{{rankingList}}' key='index' wx:if="{{activeBar==='rankingList'}}">
-      <rankingList :item.sync="item"></rankingList>
-    </repeat> 
+    <rankingList  wx:if="{{activeBar===titleList[1]}}"></rankingList>
   </view>
 </template>
 <style lang="less" scoped>
@@ -13,24 +11,19 @@
 </style>
 <script>
   import wepy from 'wepy';
-  import {initUserInfo,share} from '../../common/common';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
-  // import twoSide from "../../components/twoSide";
   import rankingList from './rankingList';
   import 'wepy-async-function';
 
   export default class Index extends wepy.page {
-  
     components = {
       header:header,
       nearMatch:nearMatch,
       rankingList:rankingList,
-      // twoSide:twoSide
     }
     data = {
       activeBar:'附近的比赛',
-      rankingList:[],
       titleList:['附近的比赛','球员排行榜']
     }
     onLoad(){

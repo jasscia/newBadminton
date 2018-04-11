@@ -1,9 +1,8 @@
 
 
 <template>
- 
-  <view class="matchActive back">
-    <button @tap.stop="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
+  <view class="matchActive">
+    <button @tap="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
   </view>
 </template>
 
@@ -11,13 +10,13 @@
 @import '../common/common.less';
   .matchActive{
     border-radius: 10px;
+    margin: 0;
+    padding:0;
   }
   .matchActive{
     line-height: 300rpx;
     text-align: center;
     vertical-align: middle;
-    transform-origin: center center 0;
-    transform: rotateX(180deg);
     button{
       margin:0;
       display: inline-block;
@@ -28,6 +27,7 @@
 </style>
 <script>
 import wepy from 'wepy';
+import {addPlayer,updateMatchInfo} from '../common/common'
 export default class matchActive extends wepy.component{
  props={  
     matchInfo:{
@@ -43,8 +43,8 @@ export default class matchActive extends wepy.component{
         created_at: "",
         updated_at: "",
         ifIn:false,
-        // ifShowInfo:true,
-        // animationData: {}
+        ifShowFront:true,
+        animationData: {}
         },
       twoWay:true,
      }
@@ -61,7 +61,7 @@ export default class matchActive extends wepy.component{
             this.matchInfo=newMatchInfo;
             this.$apply();
           }
-          console.log(newMatchInfo);
+          console.log(newMatchInfo,this.matchInfo);
         }
       }
     }

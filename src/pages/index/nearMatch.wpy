@@ -6,9 +6,13 @@
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
       <view class="matchCard">
-         <twoSide>
-            <matchInfo slot='frontSide' :matchInfo.sync="item"></matchInfo>
-            <matchActive slot='backSide' :matchInfo.sync="item"></matchActive>
+         <twoSide :matchInfo.sync="item">
+            <block slot='frontSide'>
+              <matchInfo  :matchInfo.sync="item"></matchInfo>
+            </block>
+            <block slot='backSide'>
+              <matchActive :matchInfo.sync="item"></matchActive>
+            </block>
         </twoSide>
       </view>
     </repeat>
@@ -32,7 +36,7 @@
     }
     .matchCard{    
       margin:20px;
-      padding:10px;
+      // padding:10px;
       font-size: 12px;
       color:#666;
       background: @bgc-card;
@@ -92,7 +96,7 @@
         })
       }
       //为返回的数组添加参数，用于控制组件
-      matchInfo.ifShowInfo=true;
+      matchInfo.ifShowfrontSide=true;
       matchInfo.animationData=true;
       matchInfo.ifIn=ifIn;
       this.matchInfoList.push(matchInfo);

@@ -1,5 +1,3 @@
-
-
 <template>
 <view class="matchInfo"> 
     <view class="row row1">
@@ -16,7 +14,7 @@
       <view class="summery">{{matchInfo.players.length}}人已报名</view>
       <view class="avatarList">
         <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
-          <image src="{{player.user.avatar_url}}" />
+          <image src="{{player.user.avatar_url}}"/>
         </repeat>
       </view>
     </view>
@@ -27,6 +25,8 @@
 @import '../common/common.less';
   .matchInfo{
     border-radius: 10px;
+    margin:0;
+    padding:0;
   }
   .row{
     margin:10px;
@@ -45,6 +45,9 @@
   }
   .row2{
     font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .owner{
       font-size: 12px;
       display: inline;
@@ -52,14 +55,14 @@
     }
   }
   .row5{
-    height:60px;
-    line-height: 15px;
+    height:30px;
+    // line-height: 25px;
     display: flex;
-    justify-content: space-between;   
-    overflow: hidden;
+    justify-content: space-between;
     .avatarList{
       flex:1;
-      text-align: end;
+      text-align: end;   
+      overflow: hidden;
       image{
         height:25px;
         width:25px;
@@ -88,7 +91,7 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {addPlayer,updateMatchInfo} from '../common/common'
+import {updateMatchInfo} from '../common/common'
 export default class matchInfo extends wepy.component{
 
   props={
@@ -105,8 +108,8 @@ export default class matchInfo extends wepy.component{
         created_at: "",
         updated_at: "",
         ifIn:false,
-        // ifShowInfo:true,
-        // animationData: {}
+        ifShowfrontSide:true,
+        animationData: {}
         },
       twoWay:true,
      }

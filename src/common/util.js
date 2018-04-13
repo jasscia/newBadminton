@@ -18,7 +18,7 @@ const setStorage=function(key,data) {
       })
     })
   }
-  const getUserInfo=function(){
+  const getUserInfoWithoutToken=function(){
     return new Promise((resolve,reject)=>{
       // console.log('进入userInfo fn');
       wx.getUserInfo({
@@ -27,19 +27,19 @@ const setStorage=function(key,data) {
       })
     })
   }
-  const getToken=async function(code,nickName,avatarUrl){
-    // console.log('进入getToken fn');
+  const getUserInfoWithToken=async function(code,nickName,avatarUrl){
     let url=URLList.getTokenURl,
         method="GET",
         data={code:code,
               nick_name:nickName,
               avatar_url:avatarUrl}
     let res=await htr(url,method,data);
-    if(res.data.token){
-      return res.data.token;
-    }else{
-      console.log('getToken failed');
-    }
+    // if(res.status===200 || res.status===206 ||res.status===304){
+      return res.data;
+      //包含字段{uid,toktn,real_name,nick_name,avatar_url,created_at,updated_at}
+    // }else{
+    //   console.log('getUserInfo failed');
+    // }
   }
 
 const transformStatusAndTimeOfMatchInfo=function(matchInfo){
@@ -90,8 +90,8 @@ export {URLList,
         htr,
         formateDate,
         transformStatusAndTimeOfMatchInfo,
-        getToken,
-        getUserInfo,
+        getUserInfoWithToken,
+        getUserInfoWithoutToken,
         login,
         formatNumber,
         setStorage}

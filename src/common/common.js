@@ -1,7 +1,6 @@
 import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
-        getToken,getUserInfo,login,formatNumber,setStorage} from './util';
-
-const downLoadMatchList=async function(token,type='my'){
+        getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
+const downLoadMatchInfoList=async function(token,type='my'){
   let url=(type==="my"?URLList.getGameListMyURL:URLList.getGameListAllURL);
   let data={token},
       method="GET";
@@ -10,19 +9,21 @@ const downLoadMatchList=async function(token,type='my'){
     console.log('res.statusCode>=400',res.statusCode);
     return}
   if([200,206,304].indexOf(res.statusCode)===-1){
-    console.log("res.statusCode not in [200,206,304]",res.status);
+    console.log("res.statusCode not in [200,206,304]",res.statusCode);
     return}
-  if(res.data.data && !res.data.data.length){
-    wx.showToast({
-      title:'没有比赛',
-      duration:1500})
-    return
+  // if(res.data.data && !res.data.data.length){
+  //   wx.showToast({
+  //     title:'没有比赛',
+  //     duration:1500})
+  //   return
+  // }
+  let matchInfoList=res.data.data;
+  for(let matchInfo of matchInfoList){
+    matchInfo.ifIn=judgeIfIn(matchInfo)
+    transformStatusAndTimeOfMatchInfo(matchInfo);
   }
-  let matchList=res.data.data;
-  for(let match of matchList){
-    transformStatusAndTimeOfMatchInfo(match);
-  }
-  return matchList;
+  console.log('download matchinfolist fn',matchInfoList)
+  return matchInfoList;
 }
 const downLoadMatchInfo=async function(gameid){
   let url=URLList.getGameInfoURL+'\/'+gameid,
@@ -31,48 +32,73 @@ const downLoadMatchInfo=async function(gameid){
   let res= await htr(url,method,data);
   let matchInfo=res.data.data;
   if(matchInfo){
-    return transformStatusAndTimeOfMatchInfo(matchInfo);
+    matchInfo.ifIn=judgeIfIn(matchInfo)
   } 
+  console.log('download matchinfo fn',matchInfo)
+  return transformStatusAndTimeOfMatchInfo(matchInfo);
 }
-const updateMatchInfo =async function(gameid,originMatchInfo){
-    let newMatchInfo=await downLoadMatchInfo(gameid);
-    if(newMatchInfo){
-      let originMatchInfoKeys=Object.keys(originMatchInfo),
-          newMatchInfoKeys=Object.keys(newMatchInfo);
-      originMatchInfoKeys.forEach(key=>{
-        if(newMatchInfoKeys.includes(key)){
-          originMatchInfo[key]=newMatchInfo[key]
-        }
-      })
-      // console.log(originMatchInfo);
-      return originMatchInfo
+
+const judgeIfIn=function(matchInfo){
+    let players=matchInfo.players
+    let uid=wx.getStorageSync('userInfo').uid
+    let ifIn=false;
+    if(Array.isArray(players)){ 
+      ifIn=players.some((player)=>{return player.user.uid===uid})
+    }
+    return ifIn
   }
+const updateMatchInfo =async function(gameid,originMatchInfo){
+  //   let newMatchInfo=await downLoadMatchInfo(gameid);
+  //   if(newMatchInfo){
+  //     let originMatchInfoKeys=Object.keys(originMatchInfo),
+  //         newMatchInfoKeys=Object.keys(newMatchInfo);
+  //     originMatchInfoKeys.forEach(key=>{
+  //       if(newMatchInfoKeys.includes(key)){
+  //         originMatchInfo[key]=newMatchInfo[key]
+  //       }
+  //     })
+  //     return originMatchInfo
+  // }
 }
  
-const initUserInfo=async function() {//
-  let token = wx.getStorageSync('token');//先从本地存储中获取token和用户的一些其他信息 名称 头像等
-  let userInfo = wx.getStorageSync('userInfo');
-  if (!token) {//如果没有找到 就去登录 然后存储用户的信息
-    let loginRes=await login();
-    let code=loginRes.code;
-    let getuserInfoRes= await getUserInfo();
-    let {nickName,avatarUrl,gender}=getuserInfoRes.userInfo;
-    let userInfo={nickName,avatarUrl,gender};
-    setStorage('userInfo',userInfo);
-    token=await getToken(code,userInfo.nickName,userInfo.avatarUrl);
-    setStorage('token',token);
+const initUserInfo=async function() {
+  let userInfo=wx.getStorageSync('userInfo')
+  let token=userInfo.token;
+  if(userInfo && token){
+    return userInfo
+  }
+  if(!userInfo || !token){
+    let resOfcode=await login();
+    let resOfuserInfo=await getUserInfoWithoutToken();
+    console.log('when login ,return data=',resOfcode)
+    console.log('when get userinfo ,return data=',resOfuserInfo)
+    if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){
+      return
+    }
+    let code=resOfcode.code;
+    let nickName=resOfuserInfo.userInfo.nickName;
+    let avatarUrl=resOfuserInfo.userInfo.avatarUrl//这里是登录的时候拿到的用户信息，下一步根据用户的信息去调 用户唯一识别符
+  
+    userInfo=await getUserInfoWithToken(code,nickName,avatarUrl)
+    console.log('when get userinfo from oppenId ,return data=',userInfo)
+    if(!userInfo.token){//标示拿到了带有openid的 用户信息
+      return
+    }
+    setStorage('userInfo',userInfo)
+    return userInfo
   }
 }
-const addPlayer=async function(e){
+const addPlayer=async function(token,gameid){
   let url=URLList.addplayerURL,
       method="POST",
       data={
-        token:wx.getStorageSync('token'),
-        gameid:e.target.dataset.gameid
+        token:token,
+        gameid:gameid
       };
   let res=await htr(url,method,data);
-  if(res.errMsg==="request:ok"){
-    return 'ok';
+  console.log('addPlayer fn,res=',res.data)
+  if(res.data.code===1){
+    return res.data.data;//其实是matchInfoList,只有gameid 和 user 信息列表
   }
 }
 const changeRealname=async function(token,realName){
@@ -98,7 +124,7 @@ const createGame=async function(formData,token){
         address:formData.address,
         begintime:formData.begintime
       };
-  console.log(data);
+  // console.log(data);
   const success=async function(){
     await wx.showToast({
       title:'创建成功,返回赛事列表',
@@ -138,9 +164,10 @@ const share=function(path){
       }
     }
 }
-export {downLoadMatchList,
+export {downLoadMatchInfoList,
         downLoadMatchInfo,
         updateMatchInfo,
+        judgeIfIn,
         initUserInfo,
         addPlayer,
         changeRealname,

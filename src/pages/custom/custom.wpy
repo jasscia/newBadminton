@@ -4,12 +4,12 @@
       <view class="item" @tap.stop="tap">
         <image class="avatar" src="{{userPrivate.avatarUrl}}"/>
         <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
-        <view class="nickname">{{userPrivate.nickName}}</view>
+        <view class="nickname">{{userPrivateInfo.nickName}}</view>
         <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
-          <view class="item">{{userPrivate.gender===1?'男':'女'}}</view>
-          <view class="item">年龄{{userPublic.age}}</view>
-          <view class="item">身高{{userPublic.tall}}</view>
-          <view class="item">体重{{userPublic.weight}}</view>
+          <view class="item">{{userPrivateInfo.gender===1?'男':'女'}}</view>
+          <view class="item">姓名{{userPublicInfo.realName}}</view>
+          <view class="item">身高{{userPublicInfo.tall}}</view>
+          <view class="item">体重{{userPublicInfo.weight}}</view>
         </view>
         <view class="other">
           <view class="item">{{on}}关注</view>
@@ -194,9 +194,9 @@ export default class Custom extends wepy.page {
     };
     data = {
       value:80,
-      userPrivate:{},
-      userPublic:{
-        age:'20',
+      userPrivateInfo:{},
+      userPublicInfo:{
+        realName:'',
         tall:'180cm',
         weight:'45kg',
       },
@@ -207,13 +207,8 @@ export default class Custom extends wepy.page {
 
   async onLoad() {
       await initUserInfo();
-      wx.getStorage({
-        key:'userInfo',
-        success:(res)=>{
-          this.userPrivate=res.data;
-          this.$apply();
-        }
-      })
+      this.userPrivateInfo=wx.getStorageSync('userPrivateInfo').data
+      this.userPublicInfo=wx.getStorageSync('userPublicInfo').data
     };
     methods = {
       navigateToBaseInfoPage(){

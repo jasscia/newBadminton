@@ -4,9 +4,9 @@
     <view class="add" @tap.stop="createNewAgainst">
       <button>创建赛事</button>
     </view>   
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view  class="matchCard">
-        <matchInfo :matchInfo.sync="item"></matchInfo>
+        <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
       </view>
     </repeat>
   </view> 
@@ -48,7 +48,7 @@
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchList,downLoadMatchInfo,share} from '../../common/common';
+import {initUserInfo,downLoadMatchInfoList,downLoadMatchInfo,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
 import header from '../../components/header';
 export default class myGameList extends wepy.page{
@@ -56,7 +56,6 @@ export default class myGameList extends wepy.page{
     navigationBarTitleText:'我的赛事列表'
   }
     data={
-      token:'',
       userInfo:{},
       matchInfoList:[],
       activeBar:'我创建de比赛',
@@ -68,40 +67,42 @@ export default class myGameList extends wepy.page{
       header:header
     }
   async onLoad(){
-    await initUserInfo(); 
-    this.token=wx.getStorageSync('token');
-    this.userPrivateInfo= wx.getStorageSync('userInfo');
-    this.$apply();
-    this.getMatchList();
+     this.userInfo=await initUserInfo()
+    let token=this.userInfo.token;
+    if(token){
+      this.pageHide=false
+      this.matchInfoList = await downLoadMatchInfoList(token)
+      this.$apply()
+    }
   }
   onShow(){   
-    this.getMatchList();
+    // this.getMatchList();
   }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')
   }
-  async getMatchList(){
-    let matchList=await downLoadMatchList(this.token);
-    if(!matchList){return}
-    for(let match of matchList){
-      let matchInfo = await downLoadMatchInfo(match.id);
-      let ifIn=false;//判断是否已经报名了
-      if(matchInfo.players && matchInfo.players.length){
-        matchInfo.players.map(player=>{
-          if(player.token=this.token){
-            ifIn=true;
-          }
-        })
-      }
-      //为返回的数组添加参数，用于控制组件
-      matchInfo.ifShowInfo=true;
-      matchInfo.animationData=false;
-      matchInfo.ifIn=ifIn;
-      this.matchInfoList.push(matchInfo);;
-    }
-    this.$apply();
-  }
+  // async getMatchList(){
+  //   let matchList=await downLoadMatchInfoList(this.token);
+  //   if(!matchList){return}
+  //   for(let match of matchList){
+  //     let matchInfo = await downLoadMatchInfo(match.id);
+  //     let ifIn=false;//判断是否已经报名了
+  //     if(matchInfo.players && matchInfo.players.length){
+  //       matchInfo.players.map(player=>{
+  //         if(player.token=this.token){
+  //           ifIn=true;
+  //         }
+  //       })
+  //     }
+  //     //为返回的数组添加参数，用于控制组件
+  //     matchInfo.ifShowInfo=true;
+  //     matchInfo.animationData=false;
+  //     matchInfo.ifIn=ifIn;
+  //     this.matchInfoList.push(matchInfo);;
+  //   }
+  //   this.$apply();
+  // }
   methods={
       createNewAgainst(){
         wx.navigateTo({

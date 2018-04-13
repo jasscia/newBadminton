@@ -1,8 +1,8 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <nearMatch wx:if="{{activeBar===titleList[0]}}"></nearMatch>
-    <rankingList  wx:if="{{activeBar===titleList[1]}}"></rankingList>
+    <nearMatch wx:if="{{activeBar===titleList[0]}}" :matchInfoList.sync="matchInfoList"></nearMatch>
+    <rankingList  wx:if="{{activeBar===titleList[1]}}" :matchInfoList.sync="matchInfoList"></rankingList>
   </view>
 </template>
 <style lang="less" scoped>
@@ -11,6 +11,7 @@
 </style>
 <script>
   import wepy from 'wepy';
+  import {initUserInfo,downLoadMatchInfo,downLoadMatchInfoList,transformStatusAndTimeOfMatchInfo,judgeIfIn} from '../../common/common';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
   import rankingList from './rankingList';
@@ -23,15 +24,35 @@
       rankingList:rankingList,
     }
     data = {
+      pageHide:true,
+      userInfo:{},
+      matchInfoList:[],
       activeBar:'附近的比赛',
       titleList:['附近的比赛','球员排行榜']
     }
-    onLoad(){
+  async onLoad(){
+    this.userInfo=await initUserInfo()
+    let token=this.userInfo.token;
+    if(token){
+      this.pageHide=false
+      this.matchInfoList = await downLoadMatchInfoList(token,'All')
+      console.log('index page,matchInfoList=',this.matchInfoList)
+      this.$apply()
     }
-
+  }
   async onShareAppMessage(res){
-    await initUserInfo();
     return share('/pages/index/index.wpy')
+  }
+  events={
+    // updateMatchInfoList(gameid,newMatchInfo){
+    //   console.log('emit update fn,params=',gameid,newMatchInfo)
+    //   for(let matchInfo of this.matchInfoList){
+    //     if(matchInfo.gameid===gameid){
+    //       matchInfo=newMatchInfo
+    //     }
+    //   }
+    //   this.$apply()
+    // }
   }
 }
 </script>

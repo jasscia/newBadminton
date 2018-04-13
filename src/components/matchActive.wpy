@@ -1,5 +1,3 @@
-
-
 <template>
   <view class="matchActive">
     <button @tap="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
@@ -24,46 +22,30 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {addPlayer,updateMatchInfo} from '../common/common'
+import {addPlayer, downLoadMatchInfo,initUserInfo} from '../common/common'
 export default class matchActive extends wepy.component{
  props={  
     matchInfo:{
       type:Object,
-      default:{
-        id: '',
-        token: "",
-        gamename: "",
-        status: 0,
-        note: "",
-        address: "",
-        begintime: "",
-        created_at: "",
-        updated_at: "",
-        ifIn:false,
-        ifShowFront:true,
-        animationData: {}
-        },
+      default:{},
       twoWay:true,
      }
  }
+ data={
+   userInfo:{}
+ }
+ async onLoad(){
+   this.userInfo=await initUserInfo()
+ }
   methods={
     async addplayer(e){
-      // console.log('进入报名函数')
-      if(!this.matchInfo.ifIn){//如果已经报名了 就不进行任何操作
-      // console.log('是否已经报名',this.matchInfo.ifIn)
-        let res=await addPlayer(e);
-        // console.log('请求报名接口 返回结果是',res)
-        if(res==='ok'){
-          // console.log('请求成功',res);
-          // console.log('原数组是',this.matchInfo.begintime,this.matchInfo.ifIn,this.matchInfo.players);
-          let gameid=e.target.dataset.gameid;
-          this.matchInfo.ifIn=true;
-          await updateMatchInfo(gameid,this.matchInfo);
-            console.log('新数组是',this.matchInfo.begintime,this.matchInfo.ifIn,this.matchInfo.players);
-            this.$apply();
-          // }
-        }
-      }
+      let token=this.userInfo.token
+      let gameid=e.target.dataset.gameid
+      let matchInfoList=await addPlayer(token,gameid);//是{gameid,user:{id}}的集合
+      this.matchInfo.ifIn=true
+      this.matchInfo.players.push({user:this.userInfo})
+      this.$apply()
+      // this.$emit('updateMatchInfoList')
     }
   }
 }

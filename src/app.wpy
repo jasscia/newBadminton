@@ -24,11 +24,11 @@ export default class extends wepy.app {
         {pagePath: 'pages/index/index',
           text: '首页'},
         {pagePath: 'pages/main/main',
-          text: '赛事'},
+          text: '我的赛事'},
         {pagePath: 'pages/message/message',
-          text: '消息'},
+          text: '赛事直播'},
         {pagePath: 'pages/custom/custom',
-          text: '我的'}
+          text: '个人中心'}
       ]
     }
   };

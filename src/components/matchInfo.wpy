@@ -72,47 +72,33 @@
     }
   }
   .row2::before{
-    content:'&#xf024;';
+    content:"\e6fe";
   }
   .row3::before{
-    content:'&#xf017;';
+    content:"\e735";
   }
  .row4::before{
-    content:'&#xf041;';
+    content:"\e6ec";
   }
   .row5::before{
-    font-family: "iconfont";
     content:"\f012d";
   }
   .row2::before,.row3::before,.row4::before,.row5::before{    
     width:20px;
     display: inline-block;
     text-align: left;
+    font-family: "iconfont";
+    font-size: 30rpx;
   }
 </style>
 <script>
 import wepy from 'wepy';
 import {updateMatchInfo} from '../common/common'
 export default class matchInfo extends wepy.component{
-
   props={
     matchInfo:{
       type:Object,
-      default:{
-        id: '',
-        token: "",
-        gamename: "",
-        status: 0,
-        note: "",
-        address: "",
-        begintime: "",
-        created_at: "",
-        updated_at: "",
-        ifIn:false,
-        ifShowfrontSide:true,
-        animationData: {}
-        },
-      twoWay:true,
+      default:{},
      }
   }
 }

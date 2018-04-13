@@ -2,8 +2,8 @@
   <view class="container">
     <view class="search">搜索附近的比赛</view>
     <form @submit="submit">
-      <repeat for="{{list}}" key="index" index="index" item="item">    
-        <item2colunm :item.sync="item" :dateRange.sync="dateRange"></item2colunm>
+      <repeat for="{{titleList}}" key="index" index="index" item="title">    
+        <item2colunm :item.sync="title" :dateRange.sync="dateRange"></item2colunm>
       </repeat>
       <button formType="submit">确定</button>
     </form>
@@ -48,9 +48,9 @@ export default class CreateNewAgain extends wepy.page {
       end:{time:"23:00",date:''},
       start:{time:"04:00",date:''}
     },
-    list:[
+    titleList:[
       {
-        title:'主题',
+        title:'团体',
         name:'theme',
         value:'勘测设计羽协',
         type:'strng',
@@ -73,25 +73,23 @@ export default class CreateNewAgain extends wepy.page {
     ]
   }
   async onLoad(option){
-    await initUserInfo();
-    this.token=wx.getStorageSync('token');
-    this.userPrivateInfo= wx.getStorageSync('userInfo');
-    this.$apply();
-    this.calcDateRange();
+    this.userInfo=await initUserInfo();
+    this.initDateRange();
     this.initDateTime();
   }
-  calcDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
-    let start=new Date(Date.now()),
-        formatStart=formatTime(start,'-').trim().split(' ');
+  initDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
+    let start=new Date(Date.now()+1*24*3600*1000),
+        formatStart=formatTime(start,'-').trim().split(' ');//formatTime输出的格式为 年-月-日 时：分：秒
     let end=new Date(Date.now()+30*24*3600*1000),
         formatEnd=formatTime(end,'-').trim().split(' ');
     this.dateRange.start.date=formatStart[0];
     this.dateRange.end.date=formatEnd[0];
+    this.titleList[3].date=this.dateRange+start.date
   }
   initDateTime(){
-    Object.keys(this.list).map(key=>{//按照 Data range 范围，对于date的item 初始化其中的数值
-      if(this.list[key].name==='date'){
-      this.list[key].value=this.dateRange.start.date;
+    Object.keys(this.titleList).map(key=>{//按照 Data range 范围，对于date的item 初始化其中的数值
+      if(this.titleList[key].name==='date'){
+      this.titleList[key].value=this.dateRange.start.date;
       }
     })
   }
@@ -108,7 +106,7 @@ export default class CreateNewAgain extends wepy.page {
         }
       })
       if(time){newFormData['begintime']=date+' '+time+':00'}
-      createGame(newFormData,this.token);
+      createGame(newFormData,this.userInfo.token);
     }
   }
 }

@@ -19,7 +19,7 @@
 
 <script>
 import wepy from 'wepy';
-import {changeRealname,initUserInfo} from '../../common/common';
+import {changeRealname,initUserInfo,setStorage} from '../../common/common';
 import item2colunm from '../../components/item2colunm';
 export default class BaseInfo extends wepy.page {
   config = {
@@ -31,6 +31,7 @@ export default class BaseInfo extends wepy.page {
   data={
     token:'',
     userPrivateInfo:{},
+    userPublicInfo:{},
     list:[
       {title:'姓名',
         name:'realName',
@@ -57,11 +58,17 @@ export default class BaseInfo extends wepy.page {
 async  onLoad(option){
     await initUserInfo();
     this.token=wx.getStorageSync('token');
-    this.userPrivateInfo= wx.getStorageSync('userInfo');
+    this.userPrivateInfo= wx.getStorageSync('userPrivateInfo');
+    this.userPublicInfo= wx.getStorageSync('userPublicInfo');
   }
   methods={
     async submitBaseInfo(e){
-      changeRealname(this.token,e.detail.value.realName);
+      let res=await changeRealname(this.token,e.detail.value.realName);
+      if(res.realname){
+        this.userPublicInfo.realName=res.realname;
+        setStorage('userPublicInfo');
+      }
+      console.log('sub',res);
     }
   }
 }

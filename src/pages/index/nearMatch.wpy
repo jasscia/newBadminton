@@ -1,7 +1,7 @@
 
 <template>
   <view class="wrapper">
-    <view class="hiddenPage" wx:if="{{pageHide}}">
+    <view class="hiddenPage" wx:if="{{matchInfoList.length===0}}">
       没有正在报名的比赛
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
@@ -50,60 +50,55 @@
 
 <script>
   import wepy from 'wepy';
-  import {initUserInfo,downLoadMatchInfo,downLoadMatchList} from '../../common/common';
   // import matchCard from '../../components/matchCard';
   import twoSide from '../../components/twoSide';
   import matchInfo from '../../components/matchInfo';
   import matchActive from '../../components/matchActive';
 
   export default class Index extends wepy.page {
+    props={
+      matchInfoList:{
+        type:'Array',
+        default:[],
+        twoWay:true
+      }
+    }
    data={
       pageHide:true,
-      token:'',
-      userInfo:{},
-      matchInfoList:[],
+      // userInfo:{},
+      // matchInfoList:[],
    }
     components = {
-      // matchCard:matchCard
       twoSide:twoSide,
       matchInfo:matchInfo,
       matchActive:matchActive
     }
   async onLoad(){
-    await initUserInfo();    
-    this.token=wx.getStorageSync('token');
-    this.userPrivateInfo= wx.getStorageSync('userInfo');
-    if(this.token){
-      this.pageHide=false;
-    } 
-    this.$apply();
-    this.getMatchList();
+    // this.userInfo=await initUserInfo()
+    // let token=this.userInfo.token;
+    // if(token){
+    //   this.pageHide=false
+    //   this.matchInfoList = await downLoadMatchInfoList(token,'All')
+    // }
   }
   onShow(){
-    this.getMatchInfo();
+    // this.getMatchInfo();
   }
-  async getMatchList(){  
-    let matchList=await downLoadMatchList(this.token,'All');
-    if(!matchList){return}
-    for(let match of matchList){
-      let matchInfo = await downLoadMatchInfo(match.id);
-      let ifIn=false;//判断是否已经报名了
-      if(matchInfo.players && matchInfo.players.length){
-        matchInfo.players.map(player=>{
-          if(player.token=this.token){
-            ifIn=true;
-          }
-        })
-      }
-      //为返回的数组添加参数，用于控制组件
-      matchInfo.ifShowfrontSide=true;
-      matchInfo.animationData=true;
-      matchInfo.ifIn=ifIn;
-      this.matchInfoList.push(matchInfo);
-    }
-    this.$apply();
-  }
-  }
+  // async getMatchList(token){
+  //   let matchList=await downLoadMatchInfoList(token,'All')
+  //   console.log('matchlist=',matchInfoList)
+  //   let matchInfoList=[];
+  //   if(!matchList){return}
+  //   for(let match of matchList){
+  //     let matchInfo = await downLoadMatchInfo(match.id)
+  //     console.log('matchInfo=',matchInfo)
+  //     matchInfoList.push(matchInfo)
+  //   }
+  //   console.log('matchInfolist=',matchInfoList)
+  //   this.matchInfoList=matchInfoList
+  //   this.$apply();
+  // }
+}
 </script>
 
 

@@ -157,7 +157,7 @@ import badmin from '../../common/makeGroup'
 export default class AgainstTable extends wepy.page {
   props={
     groupList:{
-      type:'Array',
+      type:Array,
       default:[],
       twoWay:true
     }

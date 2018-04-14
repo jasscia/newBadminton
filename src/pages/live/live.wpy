@@ -1,7 +1,7 @@
 
 <template>
   <view class="container">
-    <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
+    <!-- <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header> -->
     <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList" :groupList="groupList"></baseData>
     <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList"></againstTable>
     <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList"></result>
@@ -16,8 +16,8 @@
 <script>
 import wepy from 'wepy'
 import header from '../../components/header'
-import baseData from "./baseData"
-import againstTable from "./againstTable"
+import baseData from './baseData'
+import againstTable from './againstTable'
 import result from "./result"
 export default class Live extends wepy.page {
   config = {

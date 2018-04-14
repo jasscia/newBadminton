@@ -58,7 +58,7 @@
   export default class Index extends wepy.page {
     props={
       matchInfoList:{
-        type:'Array',
+        type:Array,
         default:[],
         twoWay:true
       }

@@ -68,11 +68,11 @@ import badmin from '../../common/makeGroup'
 export default class BaseData extends wepy.page {
   props={
     personList:{
-      type:'Array',
+      type:Array,
       default:[]
     },
     groupList:{
-      type:'Array',
+      type:Array,
       default:[],
       twoWay:true
     }

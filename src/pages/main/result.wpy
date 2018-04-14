@@ -42,43 +42,30 @@
 import wepy from 'wepy';
 export default class Result extends wepy.page  {
   //logs.js
-  props= {
-    groupList: {
-      type:'Array',
-      default:[]
-    }
-  }
-  data={
-    result:{}
-  }
+  data= {
+    result: {}
+  };
   onLoad () {
-    let calcedScore = this.calcScore(this.groupList);
-    let orderedScore = this.orderScore(calcedScore);
-    this.result= orderedScore;
-  }
+    wx.getStorage({
+      key: 'scoreList',
+      success: res => {
+        let calcedScore = this.calcScore(res.data);
+        let orderedScore = this.orderScore(calcedScore);
+        this.result= orderedScore;
+        this.$apply();
+      },
+    })
+  };
   onShow () {
-    let calcedScore = this.calcScore(this.groupList);
-    let orderedScore = this.orderScore(calcedScore);
-    this.result= orderedScore;
-  }
-  calcScore(groupList) {
-    let result = {};
-    for (let item of groupList) {
-      for (let i = 0; i < 4; i++) {
-        result[item[i]] = result[item[i]] || [0, 0, 0];
-        if (i < 2) {
-          result[item[i]][0] += (item[4] - item[5]);
-          result[item[i]][1] += (item[4] > item[5] ? 1 : 0);
-          result[item[i]][2] += (item[4] < item[5] ? 1 : 0);
-        } else {
-          result[item[i]][0] += (item[5] - item[4]);//[0]是净胜分
-          result[item[i]][1] += (item[4] < item[5] ? 1 : 0);//[1]胜的场次
-          result[item[i]][2] += (item[4] > item[5] ? 1 : 0);//[2]是败胜分
-        }
-        result[item[i]][3] = result[item[i]][1] - result[item[i]][2];//[3]是胜-败的比值率
-      }
-    }
-    return result;
+    wx.getStorage({
+      key: 'scoreList',
+      success: res => {
+        let calcedScore = this.calcScore(res.data);
+        let orderedScore = this.orderScore(calcedScore);
+        this.result= orderedScore;
+        this.$apply();
+      },
+    })
   }
   orderScore(obj) {
     let keys = Object.keys(obj);
@@ -118,7 +105,25 @@ export default class Result extends wepy.page  {
     }
     return key_of_max;
   }
-
+  calcScore(array) {
+    let result = {};
+    for (let item of array) {
+      for (let i = 0; i < 4; i++) {
+        result[item[i]] = result[item[i]] || [0, 0, 0];
+        if (i < 2) {
+          result[item[i]][0] += (item[4] - item[5]);
+          result[item[i]][1] += (item[4] > item[5] ? 1 : 0);
+          result[item[i]][2] += (item[4] < item[5] ? 1 : 0);
+        } else {
+          result[item[i]][0] += (item[5] - item[4]);//[0]是净胜分
+          result[item[i]][1] += (item[4] < item[5] ? 1 : 0);//[1]胜的场次
+          result[item[i]][2] += (item[4] > item[5] ? 1 : 0);//[2]是败胜分
+        }
+        result[item[i]][3] = result[item[i]][1] - result[item[i]][2];//[3]是胜-败的比值率
+      }
+    }
+    return result;
+  }
 }
 </script>
 

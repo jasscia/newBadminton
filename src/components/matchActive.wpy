@@ -1,6 +1,12 @@
 <template>
   <view class="matchActive">
-    <button @tap="addplayer" data-gameid="{{matchInfo.id}}">点我报名</button>
+    <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
+      <view class="info">
+          <image src="{{player.user.avatar_url}}"/>
+          <view class="name">{{player.user.realname||player.user.nickname}}</view>
+      </view>
+    </repeat>
+    <button @tap="addplayer" data-gameid="{{matchInfo.id}}">{{'点我报名'}}</button>
   </view>
 </template>
 

@@ -1,9 +1,9 @@
 <template>
-<view  class="header"  @tap="selectItem" >
-    <repeat wx:for="{{titleList}}" wx:for-index="index" wx:key="index"> 
+  <view  class="header"  @tap="selectItem" >
+    <repeat for="{{titleList}}" index="index" key="index"> 
       <view class="{{selectedItem===item?'selectedItem':''}}" data-titleName="{{item}}">{{item}}</view>
     </repeat>
-</view>
+  </view>
 </template>
 
 <style lang="less" >
@@ -32,32 +32,31 @@
 </style>
 <script>
   import wepy from 'wepy';
-export default class Header extends wepy.component{
-  props={
-    titleList:{
-      type:'Array',
-      default:[]
-    },
-    selectedItem:{
-      type:'String',
-      default:null,
-      twoWay:true
+  export default class Header extends wepy.component {
+    props={
+      titleList:{
+        type:Array,
+        default:[]
+      },
+      selectedItem:{
+        type:String,
+        default:null,
+        twoWay:true
+      }
     }
-  }
-  onLoad(){
-    if(this.titleList && this.titleList.length){
-    this.selectedItem=this.titleList[0]}
-  }
-  methods={
-    selectItem(e){
-      let titlename=e.target.dataset.titlename;
-      if(titlename){
-        this.selectedItem=titlename;
-        console.log(this.selectedItem)
+    onLoad(){
+      // if(this.titleList && this.titleList.length){
+      // this.selectedItem=this.titleList[0]}
+    }
+    methods={
+      selectItem(e){
+        let titlename=e.target.dataset.titlename;
+        if(titlename){
+          this.selectedItem=titlename;
+          console.log(this.selectedItem)
+        }
       }
     }
   }
-
-}
 </script>
 

@@ -113,16 +113,17 @@ export default class myGameList extends wepy.page{
         let dataset=e.target.dataset
         if(e.target.dataset.tag==='cardTap'){
           let gameid=dataset.gameid
-          let personList=[] 
+          let personList=[]
+          console.log('dataset=',dataset,'personList',dataset.personlist)
           dataset.personlist.forEach(userInfo => {
-            personList.push(userInfo.uid)
+            personList.push(userInfo.user.uid)
           });
           wx.setStorageSync('gameid',e.target.dataset.gameid)
           wx.setStorageSync('playerList',e.target.dataset.personlist)
           wx.navigateTo({
             url:`/pages/live/live?personList=${personList.join('+')}&gameid=${gameid}`,
             success(res){          
-              console.log(res,'----',personList,gameid)
+              console.log('go to live,with',personList,gameid)
             }
           })
         }

@@ -19,13 +19,13 @@
     vertical-align: middle;
     border-bottom-left-radius:50% 10%;
     border-bottom-right-radius:50% 10%;
-    background: @score-color;
+    background: @btn-em;
     margin-bottom: 60rpx;
   }
   button{
     margin:60rpx auto;
     width: 375rpx;
-    background: @score-color;
+    background: @btn-em;
   }
 }
 </style>

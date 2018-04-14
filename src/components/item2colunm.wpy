@@ -22,7 +22,7 @@
     border-bottom: 2px solid @bgc;
     label{
       width: 150rpx;
-      color: @color-side;
+      color: @font-side;
       font-weight: lighter;
     }
     label,input,picker{

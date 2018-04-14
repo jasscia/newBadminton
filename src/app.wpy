@@ -7,7 +7,7 @@ export default class extends wepy.app {
     pages: [
       'pages/index/index',
       'pages/main/main',
-      'pages/message/message',
+      // 'pages/message/message',
       'pages/custom/custom',
       'pages/live/live',
       'pages/custom/baseInfo',
@@ -26,8 +26,8 @@ export default class extends wepy.app {
           text: '首页'},
         {pagePath: 'pages/main/main',
           text: '我的赛事'},
-        {pagePath: 'pages/message/message',
-          text: '赛事直播'},
+        // {pagePath: 'pages/message/message',
+        //   text: '赛事直播'},
         {pagePath: 'pages/custom/custom',
           text: '个人中心'}
       ]

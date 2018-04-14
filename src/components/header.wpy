@@ -35,11 +35,11 @@
 export default class Header extends wepy.component{
   props={
     titleList:{
-      type:Object,
+      type:'Array',
       default:[]
     },
     selectedItem:{
-      type:String,
+      type:'String',
       default:null,
       twoWay:true
     }

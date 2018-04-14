@@ -12,7 +12,7 @@
   button{
     margin:20px auto;
     width: 375rpx;
-    background: @score-color;
+    background: @btn-em;
   }
 }
 </style>

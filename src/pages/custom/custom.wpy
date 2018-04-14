@@ -81,7 +81,7 @@
   font-size: 16px;
 }
 .part1{
-  background: @score-color;
+  background: @btn-em;
   padding:50px 30px 10px;
   text-align: center;
   margin-bottom:0;
@@ -142,7 +142,7 @@
   .right{
     flex:1;
     text-align: right;
-    color:@color-side;
+    color:@font-side;
     font-size: 14px;
   }
   .right::after{
@@ -167,7 +167,7 @@
     line-height: 40px;
     font-size: 40px;
     padding-top:15px;
-    background: @score-color;
+    background: @font;
     font-family:"Arial Narrow";
   }
   .row2{

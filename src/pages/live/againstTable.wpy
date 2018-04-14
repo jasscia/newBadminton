@@ -1,0 +1,190 @@
+
+<template>
+  <view class="warp"> 
+  <repeat for="{{groupList}}" key="index" index="index" item="item" if="{{state===1}}">
+    <view class="againstTable">
+    <view class="againstItem {{item[6]}} {{activedItem===index?'selected':''}}" @tap.capture='selectItem' data-id="{{index}}">
+      <view class="side">
+        <view class="name">{{item[0]}}</view>
+        <view class="name">{{item[1]}}</view>
+      </view>
+      <!-- <view class="score"> -->
+      <view class="handleBtnGroup">
+        <button @tap='scoreChange' data-id="{{index}}" data-side="A" data-way="more"  hover-class="hover">+</button>
+        <button @tap='scoreChange' data-id="{{index}}" data-side="A" data-way="less"  hover-class="hover">-</button>
+      </view>
+      <view class="score scoreL">{{item[4]}}</view>
+      <view class="sub" bindtap="finish" data-id="{{index}}">
+        <view>第{{index+1}}场</view>
+        <view wx:if="{{item[6]==='undone'}}"  class="finishBtn">结束比赛</view> 
+        <view wx:else  class="finishBtn">查看比赛</view>
+      </view>
+      <view class="score scoreR">{{item[5]}}</view>
+      <view class="handleBtnGroup">
+        <button @tap='scoreChange' data-id="{{index}}" data-side="B" data-way="more" hover-class="hover">+</button>
+        <button @tap='scoreChange' data-id="{{index}}" data-side="B" data-way="less"  hover-class="hover">-</button>
+      </view>
+      <!-- </view> -->
+      <view class="side">
+        <view class="name">{{item[2]}}</view>
+        <view class="name">{{item[3]}}</view>
+      </view>
+    </view>
+  </view>
+  </repeat>
+  <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import '../../common/common.less';
+.againstTable{
+  width:100%;
+  box-sizing: border-box;
+  padding-left:20rpx;
+  padding-right:20rpx;
+  .againstItem{
+    font-size:36rpx;
+    height:200rpx;
+    background-color: @bgc-card;
+    display: flex;
+    align-items: center;
+    margin:40rpx 0;
+    border-radius: 20rpx;
+    position: relative;
+    .side,
+    .handleBtnGroup,
+    .score,
+    .sub{
+      display: inline-block;
+      text-align: center;
+      box-sizing: border-box;
+      padding:0;
+    }
+
+/* 总宽 750rpx
+padding:20px 0;
+其余的 分别宽 160 70 70 110 */
+    .side{
+      width:160rpx;
+      .name{
+      width:100%;
+      margin: 10px 0;
+      text-align: center;
+      white-space:nowrap;
+      overflow: hidden;
+      }
+    }
+    .handleBtnGroup{
+      width:70rpx;
+      }
+    .score{
+      width: 70rpx;
+    }
+    .sub{
+      width:110rpx;
+    }
+    .handleBtnGroup button{
+      width:100%;
+      height:60rpx;
+      line-height: 60rpx;
+      margin:10rpx 0;
+      text-align: center;
+      display: inline-block;
+    }
+    .score{
+      height:160rpx;
+      text-align: center; 
+      line-height: 160rpx;
+      font-size:60rpx; 
+      background:@btn; 
+    }
+    .scoreL{
+      border-bottom-left-radius: 50%;
+      border-top-left-radius: 50%;
+    }
+    .scoreR{
+      border-bottom-right-radius: 50%;
+      border-top-right-radius: 50%;
+    }
+    .sub{
+      font-size: 25rpx;
+      letter-spacing: -2rpx;
+      text-align: center;
+      .finishBtn{
+      margin:5rpx;
+      background: gold;
+      border-radius: 20%;
+      } 
+    }
+  }  
+}
+.done::before{
+  content: '结束';
+  position: absolute;
+  left:0;
+  right:420rpx;
+  bottom:0;
+  top:0;
+}
+.done::after{
+  content: '结束';
+  position: absolute;
+  left:405rpx;
+  right:0;
+  bottom:0;
+  top:0;
+}
+.done::before,.done::after{
+  background: @btn-em;
+  text-align: center;
+  line-height: 95px;
+  vertical-align: middle;
+  z-index: 999;
+  border-radius: 20rpx;
+}
+.selected{
+  background:lightgreen;
+  transform:scaleY(1.3);
+  transition: transform 0.5s;
+}
+</style>
+
+
+<script>
+import wepy from 'wepy';
+import badmin from '../../common/makeGroup'
+export default class AgainstTable extends wepy.page {
+  props={
+    groupList:{
+      type:'Array',
+      default:[],
+      twoWay:true
+    }
+  }
+  data={
+    activedItem:null
+  }
+  onLoad(options){}
+  methods={
+     scoreChange(e){
+      let id = e.target.dataset.id;
+      let side=(e.target.dataset.side==='A'?4:5);
+      let way=e.target.dataset.way;
+      if (way === "more") {
+        this.groupList[id][side]++
+      } else if (this.groupList[id][side]!==0){
+        this.groupList[id][side]--
+      }
+    },
+    selectItem(e){
+        this.activedItem=e.currentTarget.dataset.id
+    },
+    finish(e){
+      let index = e.currentTarget.dataset.id;
+      let tag=(this.groupList[index][6]==='done'?'undone':'done')
+      this.groupList[index][6]=tag
+    }
+  }
+}
+</script>

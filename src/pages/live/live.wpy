@@ -1,134 +1,42 @@
 
 <template>
-  <view class="container"> 
-  <view class="item">
-      <label for="personNum">人数</label>
-      <input type="number" name="" id="personNum" value="{{personList.length}}" />
-  </view>
-  <view class="item">
-      <label for="roundPer">每人场数</label>
-      <input type="number" name="" id="roundCount" value="{{roundCount}}" @input="changeRoundCount"/>
-  </view>
-  <button id="btn" @tap="makeGroup">生产对阵表</button>
-  <!-- <view class="result">  </view> -->
-  <repeat for="{{groupList}}" key="index" index="index" item="group" if="{{state===1}}">
-    <view class="item group" >
-      <view class="side">
-        <view class="side1">{{group[0]}}</view>
-        <view class="side2">{{group[1]}}</view>
-      </view>
-      <view class="mark">
-        <view>第{{index}}场</view>
-        <view>VS</view>
-      </view>
-      <view class="side">
-        <view class="side3">{{group[2]}}</view>
-        <view class="side4">{{group[3]}}</view>
-      </view>
-    </view>
-  </repeat>
-  <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
+  <view class="container">
+    <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
+    <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList" :groupList="groupList"></baseData>
+    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList"></againstTable>
+    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList"></result>
   </view>
 </template>
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .item{
-    font-size:30rpx;
-    background: @bgc-card;
-    margin:0 0 4px 0;
-    padding-left:30rpx;
-    border-bottom: 2px solid @bgc;
-    label{
-      width: 150rpx;
-      color: @font-side;
-      font-weight: lighter;
-    }
-    label,input{
-      display: inline-block;
-      height: 60px;
-      line-height: 60px;
-      vertical-align: middle;
-    }
-    input{
-      width:500rpx;
-    }
-  }
-   .result{
-     font-size: 14px;
-   }
-   .result .err{
-     text-align: center;
-   }
-  .result .item{
-      margin: 10px auto;
-      padding:5px;
-      display: flex;
-      justify-content: space-around;
-      border-bottom:5px solid #eee;
-     }
-  .result .side{
-    flex:1;
-    font-size:20px;
-    text-align: center;
-  }
-  .result .mark p{
-    margin:0;
-    padding:0;
-    text-align: center;
-  }
-  .proup{
-    display: flex;
-    .side,.mark{
-      width:200rpx;
-    }
-  }
 </style>
 
 
 <script>
-import wepy from 'wepy';
-import badmin from '../../common/makeGroup'
+import wepy from 'wepy'
+import header from '../../components/header'
+import baseData from "./baseData"
+import againstTable from "./againstTable"
+import result from "./result"
 export default class Live extends wepy.page {
   config = {
-    navigatorBatText:'对阵表'
-  };
+    navigatorBatText:'比赛实况'
+  }
+  components={
+    baseData:baseData,
+    againstTable:againstTable,
+    result:result
+  }
   data={
-    personList:['一','二二','三三','四四','五','六六','七七','八八八'],
-    roundCount:4,
+    personList:[],
     groupList:[],
-    msg:['努力计算中','','对不起，这次没有找到合适的对阵模式，点我重试'],
-    state:0
+    titleList:['设置','对阵表','时实战况'],
+    activeBar:'设置'
   }
   onLoad(options){
-    // this.personList=options.personList.script('+')
+    this.personList=options.personList.split('+')
     this.gameid=options.gameid
-  }
-  methods={
-    makeGroup(){
-      this.state=0;
-      let personNum=this.personList.length
-      let roundCount=this.roundCount
-      let data=(new badmin(personNum,roundCount)).result
-      console.table(data[1].length)
-      console.log(data[1])
-      if(typeof data ==='string'){
-        this.state=2;
-        return
-      }else{
-      for(let i=0,len=data[1].length;i<len;i++){
-        let p1=this.personList[data[1][i]-1];
-        let p2=this.personList[data[2][i]-1];
-        let p3=this.personList[data[3][i]-1];
-        let p4=this.personList[data[4][i]-1];
-        this.groupList.push([p1,p2,p3,p4])
-      }
-    }
-    },
-    changeRoundCount(e){
-      console.log(e.detail.value)
-      this.roundCount=e.detail.value
-    }
   }
 }
 </script>

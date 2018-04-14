@@ -22,7 +22,7 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {addPlayer, downLoadMatchInfo,initUserInfo} from '../common/common'
+import {addPlayer,initUserInfo} from '../common/common'
 export default class matchActive extends wepy.component{
  props={  
     matchInfo:{
@@ -45,7 +45,6 @@ export default class matchActive extends wepy.component{
       this.matchInfo.ifIn=true
       this.matchInfo.players.push({user:this.userInfo})
       this.$apply()
-      // this.$emit('updateMatchInfoList')
     }
   }
 }

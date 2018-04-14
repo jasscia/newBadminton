@@ -9,6 +9,7 @@ export default class extends wepy.app {
       'pages/main/main',
       'pages/message/message',
       'pages/custom/custom',
+      'pages/live/live',
       'pages/custom/baseInfo',
       'pages/main/createNewAgainst'
     ],

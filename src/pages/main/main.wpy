@@ -5,7 +5,7 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard">
+      <view  class="matchCard" @tap="goToLive" data-tag="cardTap" data-gameid="{{matchInfo.id}}" data-personlist="{{matchInfo.players}}">
         <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
       </view>
     </repeat>
@@ -108,6 +108,24 @@ export default class myGameList extends wepy.page{
         wx.navigateTo({
           url:"/pages/main/createNewAgainst"
         })
+      },
+      goToLive(e){
+        let dataset=e.target.dataset
+        if(e.target.dataset.tag==='cardTap'){
+          let gameid=dataset.gameid
+          let personList=[] 
+          dataset.personlist.forEach(userInfo => {
+            personList.push(userInfo.uid)
+          });
+          wx.setStorageSync('gameid',e.target.dataset.gameid)
+          wx.setStorageSync('playerList',e.target.dataset.personlist)
+          wx.navigateTo({
+            url:`/pages/live/live?personList=${personList.join('+')}&gameid=${gameid}`,
+            success(res){          
+              console.log(res,'----',personList,gameid)
+            }
+          })
+        }
       }
     }
 }

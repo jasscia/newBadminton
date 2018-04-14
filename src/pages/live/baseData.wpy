@@ -114,14 +114,10 @@ export default class BaseData extends wepy.page {
     personList:{
       type:Array,
       default:[]
-    },
-    groupList:{
-      type:Array,
-      default:[],
-      twoWay:true
     }
   }
   data={
+      groupList:[],
       roundCount:4,
       msg:['努力计算中','','对不起，这次没有找到合适的对阵模式，点我重试'],
       state:1
@@ -145,6 +141,7 @@ export default class BaseData extends wepy.page {
           let p4=this.personList[data[4][i]-1];
           this.groupList.push([p1,p2,p3,p4,0,0,'undone'])
         }
+        this.$emit('updataGroupList',this.groupList)
         this.$emit('changeActiveBar','from baseData')
       }
     },
@@ -152,5 +149,6 @@ export default class BaseData extends wepy.page {
       this.roundCount=e.detail.value
     }
   }
+  // posttGroupList()
 }
 </script>

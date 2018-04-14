@@ -2,7 +2,7 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList" :groupList="groupList"></baseData>
+    <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList"></baseData>
     <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList"></againstTable>
     <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList"></result>
   </view>
@@ -44,6 +44,10 @@ export default class Live extends wepy.page {
       if(from==='from baseData'){
         this.activeBar=this.titleList[1]
       }
+    },
+    updataGroupList(newArray){
+      this.groupList=newArray
+      console.log(this.groupList)
     }
   }
 }

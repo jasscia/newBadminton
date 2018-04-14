@@ -7,9 +7,9 @@
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view  class="matchCard">
         <matchInfo :matchInfo.sync="matchInfo" :ifSlot.sync="true">
-          <view slot="contoller" @tap="goToLive" 
+          <button slot="contoller" @tap="goToLive" 
                 data-tag="cardTap" data-gameid="{{matchInfo.id}}" 
-                data-personlist="{{matchInfo.players}}">去开赛</view>
+                data-personlist="{{matchInfo.players}}" disabled="{{matchInfo.players.length<4}}">去开赛</button>
         </matchInfo>
       </view>
     </repeat>
@@ -38,7 +38,7 @@
         color:@bgc;
       }
     }
-    .matchCard{    
+    .matchCard{ 
       margin:20px;
       padding:10px;
       font-size: 12px;
@@ -47,6 +47,11 @@
       border-radius: 10px;
       position: relative;
       height: 300rpx;
+      button{
+        height:70rpx;
+        padding:0;
+        background: @btn-em;
+      }
     }
   }
 </style>

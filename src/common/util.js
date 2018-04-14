@@ -79,12 +79,16 @@ const htr=function(url,method,data){
 }
 const URLList={
   getGameInfoURL:"https://kkiqq.cn/api/badminton/game",
+  putGameInfoURL:"https://kkiqq.cn/api/badminton/game",
   postGameInfoURL:"https://kkiqq.cn/api/badminton/game",
   getGameListMyURL:"https://kkiqq.cn/api/badminton/game",
   getGameListAllURL:"https://kkiqq.cn/api/badminton/gamelist",
   addplayerURL:"https://kkiqq.cn/api/badminton/game/addplayer",
   getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',
-  changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename'
+  changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename',
+  postGroupListURl:'https://kkiqq.cn/api/badminton/group',
+  postGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
+  putGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
 };
 export {URLList,
         htr,

@@ -1,42 +1,79 @@
 <!--pages/result/result.wxml-->
 <template>   
   <view class="wrapper">
-    <view class="item itemHead">
+    <button wx:if="{{ifShowBtn}}" @tap="getResult">获取排名结果</button>
+     <view class="itemHead"  wx:if="{{!ifShowBtn}}">
       <view class='item1'>姓名</view>
       <view class='item3'>胜-负</view>
       <view class='item2'>净胜分</view>
       <view class='item4'>名次</view>
     </view>
-    <view wx:for="{{result}}" wx:key="{{item}}"  class="item itemBody">
-        <view class='item1'>{{index}}</view>
+    <repeat wx:for="{{result}}" wx:key="{{item}}">
+      <view  class="item itemBody"  wx:if="{{!ifShowBtn}}">
+        <view class='item1 NO-{{item[4]}}'>{{index}}</view>
         <view class='item3'>{{item[1]}}-{{item[2]}}</view>
-        <view class='item2'>{{item[0]}}</view>
-        <view class='item4'>{{item[4]}}</view>
-    </view>
+        <view class='item2'>{{item[0]}}</view>            
+        <view class='item4 NO-{{item[4]}}'>{{item[4]}}</view>
+      </view>
+  </repeat>
   </view>
 </template>
 <style lang="less" scoped>
 @import '../../common/common.less';
-/* pages/result/result.wxss */
-  .wrapper{
-    margin:20px;
-    display: grid;
-    grid-row-gap: 15px;
-    grid-template-columns:100%;
-  }
-  .item{
-  display:grid;
-  grid-template-columns:3fr 3fr 3fr 2fr;
-  justify-items: center;
-  height:40px;
-  line-height: 40px;
-  }
-  .itemBody{
-    background: #ccc;
-  }
-  .itemHead{
-    background: #44aa44;
-  }
+.itemHead{
+  display: flex;
+  width:700rpx;
+  margin:0 auto;
+  height:80rpx;
+  line-height: 80rpx;
+  background: lightgreen;
+  margin-top: 40rpx;
+  margin-bottom: -10rpx;
+  // border-bottom: 10rpx solid cadetblue;
+}
+.item{
+  display: flex;
+  width:700rpx;
+  margin:25rpx auto;
+  height:80rpx;
+  line-height: 80rpx;
+  border-radius: 20rpx;
+  background: #fff;
+}
+.item1{
+  white-space:nowrap;
+  overflow: hidden;
+}
+.item1,.item2,.item3,.item4{
+  text-align: center;
+  vertical-align: middle; 
+}
+.item1,.item2,.item3{
+  width:180px
+}
+.item4{width:170rpx}
+.NO-1,.NO-2,.NO-3{
+  position: relative;
+}
+.NO-1::after,.NO-2::after,.NO-3::after{
+  font-family: "iconfont";
+  content: "\e725";
+  font-size: 40rpx;
+  position: absolute;
+  /* top:0;
+  right:0;
+  z-index: 999; */
+}
+.NO-1::after{ 
+  color: gold;
+}
+.NO-2::after{ 
+  color: coral;
+}
+.NO-3::after{ 
+  color: chartreuse;
+}
+
 </style>
 <script>
 import wepy from 'wepy';
@@ -49,17 +86,27 @@ export default class Result extends wepy.page  {
     }
   }
   data={
-    result:{}
+    result:{},
+    ifShowBtn:true
   }
   onLoad () {
-    let calcedScore = this.calcScore(this.groupList);
-    let orderedScore = this.orderScore(calcedScore);
-    this.result= orderedScore;
   }
   onShow () {
+  }
+  onUnload(){
+    this.ifShowBtn=true
+  }
+  onHide(){
+    this.ifShowBtn=true
+  }
+  methods={
+    getResult(){
+      this.ifShowBtn=false
+
     let calcedScore = this.calcScore(this.groupList);
     let orderedScore = this.orderScore(calcedScore);
     this.result= orderedScore;
+    }
   }
   calcScore(groupList) {
     let result = {};

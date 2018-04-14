@@ -117,7 +117,6 @@ const createGame=async function(formData,token){
         address:formData.address,
         begintime:formData.begintime
       };
-  // console.log(data);
   const success=async function(){
     await wx.showToast({
       title:'创建成功,返回赛事列表',
@@ -133,6 +132,38 @@ const createGame=async function(formData,token){
     })
   };
   htr(url,method,data).then(success,fail)
+}
+
+const postGroupList=function(token,gameid,list){
+  let url=URLList.postGroupListURl,
+      method="POST",
+      data={
+        token:token,
+        gameid:gameid,
+        list:list
+      };
+    htr(url,method,data)
+}
+const getGroupInfo=function(token,gameid){
+  let url=URLList.postGroupListURl,
+      method="GET",
+      data={
+        token:token,
+        gameid:gameid
+      };
+    htr(url,method,data)
+}
+const putGroupInfo=function(token,gameid,groupid,scoreA,scoreB,status){
+  let url=URLList.postGroupListURl+'\/'+groupid,
+      method="PUT",
+      data={
+        token:token,
+        gameid:gameid,
+        score_a:scoreA,
+        score_b:scoreB,
+        status:status
+      };
+    htr(url,method,data)
 }
 const formatTime =(date,mark='/') => {
   const year = date.getFullYear()
@@ -166,4 +197,7 @@ export {downLoadMatchInfoList,
         changeRealname,
         createGame,
         formatTime,
-        share}
+        share,
+        postGroupList,
+        getGroupInfo,
+        putGroupInfo}

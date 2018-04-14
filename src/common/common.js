@@ -47,18 +47,11 @@ const judgeIfIn=function(matchInfo){
     }
     return ifIn
   }
-const updateMatchInfo =async function(gameid,originMatchInfo){
-  //   let newMatchInfo=await downLoadMatchInfo(gameid);
-  //   if(newMatchInfo){
-  //     let originMatchInfoKeys=Object.keys(originMatchInfo),
-  //         newMatchInfoKeys=Object.keys(newMatchInfo);
-  //     originMatchInfoKeys.forEach(key=>{
-  //       if(newMatchInfoKeys.includes(key)){
-  //         originMatchInfo[key]=newMatchInfo[key]
-  //       }
-  //     })
-  //     return originMatchInfo
-  // }
+const updateMatchInfo =async function(gameid,options){
+  let url=URLList.putGameInfoURL+'\/'+gameid,
+      method="PUT",
+      data=options;
+  let res=await htr(url,method,data)
 }
  
 const initUserInfo=async function() {

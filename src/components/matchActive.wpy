@@ -1,12 +1,11 @@
 <template>
   <view class="matchActive">
-    <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
-      <view class="info">
-          <image src="{{player.user.avatar_url}}"/>
-          <view class="name">{{player.user.realname||player.user.nickname}}</view>
-      </view>
-    </repeat>
-    <button @tap="addplayer" data-gameid="{{matchInfo.id}}">{{'点我报名'}}</button>
+    <view class="tips">
+      <view class="tip">比赛将于<text>{{matchInfo.begintime}}</text> 在 <text>{{matchInfo.address}}</text>进行，欢迎您的参与！</view>
+      <view class="tip">请及时到场，如果不能到场请于创建者<text>{{matchInfo.owner.real_name||matchInfo.nick_name}}</text>联系!</view>
+      <view class="tip">比赛采用<text>’轮转’-通过轮换对手和队友的方式</text>，循环比赛，并统计胜负情况，兼具竞技性和趣味性。</view>
+    </view>
+    <button @tap="addplayer" data-gameid="{{matchInfo.id}}" disabled="{{matchInfo.ifIn || matchInfo.status!=='报名中'}}">{{matchInfo.ifIn?'已经报名':(matchInfo.status!=='报名中'?'截止报名':'点我报名')}}</button>
   </view>
 </template>
 
@@ -17,12 +16,30 @@
     margin: 0;
     padding:0;
     height: 100%;
-    // text-align: center;
     display: flex;
     align-items: center;
     button{
-      background:@btn-em;
+      height:80%;
+      width:100rpx;
+      background:@btn;
       text-align: center;
+      line-height: 65rpx;
+      padding:10rpx;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .tips{
+      font-size:26rpx;
+      margin: 20rpx;
+      .tip{
+        margin:14rpx 0;
+      }
+    }
+    text{
+      color: @btn-em;
+      font-style: italic;
+      font-size: 28rpx;
+      font-weight: 200;
     }
   }
 </style>

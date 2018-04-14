@@ -5,8 +5,12 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="goToLive" data-tag="cardTap" data-gameid="{{matchInfo.id}}" data-personlist="{{matchInfo.players}}">
-        <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
+      <view  class="matchCard">
+        <matchInfo :matchInfo.sync="matchInfo" :ifSlot.sync="true">
+          <view slot="contoller" @tap="goToLive" 
+                data-tag="cardTap" data-gameid="{{matchInfo.id}}" 
+                data-personlist="{{matchInfo.players}}">去开赛</view>
+        </matchInfo>
       </view>
     </repeat>
   </view> 
@@ -48,7 +52,7 @@
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,downLoadMatchInfo,share} from '../../common/common';
+import {initUserInfo,downLoadMatchInfoList,downLoadMatchInfo,updateMatchInfo,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
 import header from '../../components/header';
 export default class myGameList extends wepy.page{
@@ -82,27 +86,6 @@ export default class myGameList extends wepy.page{
     await initUserInfo();
     return share('/pages/main/main.wpy')
   }
-  // async getMatchList(){
-  //   let matchList=await downLoadMatchInfoList(this.token);
-  //   if(!matchList){return}
-  //   for(let match of matchList){
-  //     let matchInfo = await downLoadMatchInfo(match.id);
-  //     let ifIn=false;//判断是否已经报名了
-  //     if(matchInfo.players && matchInfo.players.length){
-  //       matchInfo.players.map(player=>{
-  //         if(player.token=this.token){
-  //           ifIn=true;
-  //         }
-  //       })
-  //     }
-  //     //为返回的数组添加参数，用于控制组件
-  //     matchInfo.ifShowInfo=true;
-  //     matchInfo.animationData=false;
-  //     matchInfo.ifIn=ifIn;
-  //     this.matchInfoList.push(matchInfo);;
-  //   }
-  //   this.$apply();
-  // }
   methods={
       createNewAgainst(){
         wx.navigateTo({
@@ -114,15 +97,15 @@ export default class myGameList extends wepy.page{
         if(e.target.dataset.tag==='cardTap'){
           let gameid=dataset.gameid
           let personList=[]
-          console.log('dataset=',dataset,'personList',dataset.personlist)
           dataset.personlist.forEach(userInfo => {
             personList.push(userInfo.user.uid)
           });
-          wx.setStorageSync('gameid',e.target.dataset.gameid)
-          wx.setStorageSync('playerList',e.target.dataset.personlist)
+          // wx.setStorageSync('gameid',e.target.dataset.gameid)
+          // wx.setStorageSync('playerList',e.target.dataset.personlist)
           wx.navigateTo({
             url:`/pages/live/live?personList=${personList.join('+')}&gameid=${gameid}`,
-            success(res){          
+            success(res){
+              updateMatchInfo(gameid,{status:1})
               console.log('go to live,with',personList,gameid)
             }
           })

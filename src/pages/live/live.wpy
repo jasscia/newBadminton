@@ -1,7 +1,7 @@
 
 <template>
   <view class="container">
-    <!-- <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header> -->
+    <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
     <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList" :groupList="groupList"></baseData>
     <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList"></againstTable>
     <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList"></result>
@@ -24,6 +24,7 @@ export default class Live extends wepy.page {
     navigatorBatText:'比赛实况'
   }
   components={
+    LiveHeader:header,
     baseData:baseData,
     againstTable:againstTable,
     result:result
@@ -37,6 +38,13 @@ export default class Live extends wepy.page {
   onLoad(options){
     this.personList=options.personList.split('+')
     this.gameid=options.gameid
+  }
+  events={
+    changeActiveBar(from){
+      if(from==='from baseData'){
+        this.activeBar=this.titleList[1]
+      }
+    }
   }
 }
 </script>

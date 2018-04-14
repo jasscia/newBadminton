@@ -1,11 +1,16 @@
 
 <template>
   <view class="warp">
-  <view class="item">
-      <label for="personNum">人数</label>
-      <input type="number" name="" id="personNum" value="{{personList.length}}" />
+  <view class="personList">
+      <view class="label">参赛人为</view>
+      <view class="names">
+        <repeat for="{{personList}}" key="index">
+          <!-- <image scr="{{item.}}"> -->
+          <view class="name">{{index}}.{{item}}</view>
+        </repeat>
+      </view>
   </view>
-  <view class="item">
+  <view class="roundCount">
       <label for="roundPer">每人场数</label>
       <input type="number" name="" id="roundCount" value="{{roundCount}}" @input="changeRoundCount"/>
   </view>
@@ -15,10 +20,41 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .item{
+  .warp{
+    // margin:40rpx 0;
+  }
+  .personList{
     font-size:30rpx;
     background: @bgc-card;
-    margin:0 0 4px 0;
+    padding-left:30rpx;
+    border-radius: 20rpx;
+    margin:40rpx;
+    .label{
+      color: @font-side;
+      font-weight: lighter;
+      text-align: center;
+      padding:20rpx;
+    }
+    .names{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      min-height: 200rpx;
+      .name{
+        height: 40rpx;
+        line-height: 40rpx;
+        font-size:30rpx;
+        vertical-align: middle;
+        color: @font;
+        padding:10rpx;
+      }
+    }
+  }
+  .roundCount{
+    font-size:30rpx;
+    background: @bgc-card;
+    margin:40rpx 0;
     padding-left:30rpx;
     border-bottom: 2px solid @bgc;
     label{
@@ -57,6 +93,14 @@
   .result .mark p{
     margin:0;
     padding:0;
+    text-align: center;
+  }
+  #btn{
+    margin:40rpx auto;
+    width:450rpx;
+    height:100rpx;
+    line-height: 100rpx;
+    vertical-align: middle;
     text-align: center;
   }
 </style>
@@ -101,6 +145,7 @@ export default class BaseData extends wepy.page {
           let p4=this.personList[data[4][i]-1];
           this.groupList.push([p1,p2,p3,p4,0,0,'undone'])
         }
+        this.$emit('changeActiveBar','from baseData')
       }
     },
     changeRoundCount(e){

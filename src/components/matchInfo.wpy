@@ -3,7 +3,9 @@
     <view class="row row1">
       <view class="status">{{matchInfo.status}}</view>
       <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
-      <!-- <view class="distance">距您1000.00km</view> -->
+    </view>
+    <view class="contoller" wx:if="{{ifSlot}}">
+      <slot  name="contoller"></slot>
     </view>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -42,6 +44,20 @@
       padding:0 2px;
       height:12px;
     }
+  }
+  .contoller{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:60rpx;
+    line-height: 60rpx;
+    vertical-align: middle;
+    text-align: center;
+    background: @btn-em;
+    font-size:40rpx;
+    letter-spacing: 10rpx;
+    color:@font;
   }
   .row2{
     font-size: 18px;
@@ -99,7 +115,11 @@ export default class matchInfo extends wepy.component{
     matchInfo:{
       type:Object,
       default:{},
-     }
+     },
+    ifSlot:{
+      type:Boolean,
+      default:false
+    }
   }
 }
 </script>

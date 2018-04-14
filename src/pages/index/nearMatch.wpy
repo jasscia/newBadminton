@@ -8,7 +8,7 @@
       <view class="matchCard">
          <twoSide :index.sync="index">
             <block slot='frontSide'>
-              <matchInfo  :matchInfo.sync="item"></matchInfo>
+              <matchInfo  :matchInfo.sync="item" :ifSlot.sync="true"></matchInfo>
             </block>
             <block slot='backSide'>
               <matchActive :matchInfo.sync="item"></matchActive>
@@ -65,6 +65,7 @@
     }
    data={
       pageHide:true,
+      // idSlot:false
       // userInfo:{},
       // matchInfoList:[],
    }

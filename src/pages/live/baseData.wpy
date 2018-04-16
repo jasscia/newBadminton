@@ -1,13 +1,21 @@
 
 <template>
   <view class="warp">
-  <view class="personList">
+  <view class="playersUidList">
       <view class="label">参赛人为</view>
-      <view class="names">
-        <repeat for="{{personList}}" key="index">
-          <!-- <image scr="{{item.}}"> -->
-          <view class="name">{{index}}.{{item}}</view>
+      <view class="playersList">
+        <repeat for="{{playersUidList}}" key="index">
+          <view class="playerInfo">
+            <!-- <image class="avatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" /> -->
+            <view class="name">{{index}}.{{item}}</view>
+          </view>
         </repeat>
+        <!-- <repeat for="{{[1,2,3,4,5]}}" key="index">
+          <view class="playerInfo">
+            <image class="atatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
+            <view class="name">{{index}}.{{item}}</view>
+          </view>
+        </repeat> -->
       </view>
   </view>
   <view class="roundCount">
@@ -20,35 +28,47 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .warp{
-    // margin:40rpx 0;
-  }
-  .personList{
-    font-size:30rpx;
+  .playersUidList{
     background: @bgc-card;
-    padding-left:30rpx;
-    border-radius: 20rpx;
     margin:40rpx;
+
     .label{
       color: @font-side;
       font-weight: lighter;
       text-align: center;
       padding:20rpx;
     }
-    .names{
+    .playersList{
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       min-height: 200rpx;
-      .name{
-        height: 40rpx;
-        line-height: 40rpx;
-        font-size:30rpx;
-        vertical-align: middle;
-        color: @font;
-        padding:10rpx;
+      .playerInfo{
+        width:80rpx;
+        text-align: center;
+        background-size: cover;
+        .avatar{
+          height:60rpx;
+          width:60rpx;
+          border-radius: 50%;
+        }
+        .name{
+          font-size: 24rpx;
+          width:80rpx;
+          height:30rpx;
+          line-height:30rpx;
+          vertical-align: middle;
+        }
       }
+      // .name{
+      //   height: 40rpx;
+      //   line-height: 40rpx;
+      //   font-size:30rpx;
+      //   vertical-align: middle;
+      //   color: @font;
+      //   padding:10rpx;
+      // }
     }
   }
   .roundCount{
@@ -107,13 +127,18 @@
 
 
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
+import { initUserInfo,postGroupList,updateMatchInfo} from "../../common/common";
 import badmin from '../../common/makeGroup'
 export default class BaseData extends wepy.page {
   props={
-    personList:{
+    playersUidList:{
       type:Array,
       default:[]
+    },
+    gameid:{
+      type:String,
+      default:null
     }
   }
   data={
@@ -122,27 +147,37 @@ export default class BaseData extends wepy.page {
       msg:['努力计算中','','对不起，这次没有找到合适的对阵模式，点我重试'],
       state:1
     }
-  onLoad(options){}
+  async onLoad(options){}
   methods={
-    makeGroup(){
+    async makeGroup(){
+      console.log(this.playersUidList,this.roundCount)
       this.state=0;
-      let personNum=this.personList.length
+      let playersNum=this.playersUidList.length
       let roundCount=this.roundCount
-      let data=(new badmin(personNum,roundCount)).result
+      let data=(new badmin(playersNum,roundCount)).result
       if(typeof data ==='string'){
         this.state=2;
         return
       }else{
         this.state=1;
         for(let i=0,len=data[1].length;i<len;i++){
-          let p1=this.personList[data[1][i]-1];
-          let p2=this.personList[data[2][i]-1];
-          let p3=this.personList[data[3][i]-1];
-          let p4=this.personList[data[4][i]-1];
-          this.groupList.push([p1,p2,p3,p4,0,0,'undone'])
+          let p1=this.playersUidList[data[1][i]-1];
+          let p2=this.playersUidList[data[2][i]-1];
+          let p3=this.playersUidList[data[3][i]-1];
+          let p4=this.playersUidList[data[4][i]-1];
+          this.groupList.push([p1,p2,p3,p4])
         }
-        this.$emit('updataGroupList',this.groupList)
-        this.$emit('changeActiveBar','from baseData')
+        this.groupList=await postGroupList(this.gameid,this.groupList)
+        if(this.groupList){
+          this.groupList.forEach(groupInfo => {
+            groupInfo.score_a=0
+            groupInfo.score_b=0
+            groupInfo.status=0
+          });
+          this.$emit('updataGroupList',this.groupList)
+          await updateMatchInfo(this.gameid,{status:2})
+          this.$emit('changeActiveBar','from baseData')
+        }
       }
     },
     changeRoundCount(e){

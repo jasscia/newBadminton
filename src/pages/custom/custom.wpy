@@ -194,21 +194,14 @@ export default class Custom extends wepy.page {
     };
     data = {
       value:80,
-      userPrivateInfo:{},
-      userPublicInfo:{
-        realName:'',
-        tall:'180cm',
-        weight:'45kg',
-      },
+      userInfo:{},
       on:'200',
       fans:'3000',
       diamond:'56'
     };
 
   async onLoad() {
-      await initUserInfo();
-      this.userPrivateInfo=wx.getStorageSync('userPrivateInfo').data
-      this.userPublicInfo=wx.getStorageSync('userPublicInfo').data
+      this.userInfo=await initUserInfo()
     };
     methods = {
       navigateToBaseInfoPage(){

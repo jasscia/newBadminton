@@ -24,21 +24,18 @@
       rankingList:rankingList,
     }
     data = {
-      pageHide:true,
-      userInfo:{},
       matchInfoList:[],
       activeBar:'附近的比赛',
       titleList:['附近的比赛','球员排行榜']
     }
-  async onLoad(){
-    this.userInfo=await initUserInfo()
-    let token=this.userInfo.token;
-    if(token){
-      this.pageHide=false
-      this.matchInfoList = await downLoadMatchInfoList(token,'All')
-      console.log('index page,matchInfoList=',this.matchInfoList)
-      this.$apply()
+    computed={
+      matchCount(){
+        return this.matchInfoList.length
+      }
     }
+  async onLoad(){
+    this.matchInfoList = await downLoadMatchInfoList('All')
+    this.$apply()
   }
   async onShareAppMessage(res){
     return share('/pages/index/index.wpy')

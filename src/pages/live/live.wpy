@@ -2,9 +2,9 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <baseData  wx:if="{{activeBar===titleList[0]}}" :personList.sync="personList"></baseData>
-    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList"></againstTable>
-    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList"></result>
+    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersUidList.sync="playersUidList" :gameid.sync="gameid"></baseData>
+    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"></againstTable>
+    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid"></result>
   </view>
 </template>
 
@@ -15,6 +15,7 @@
 
 <script>
 import wepy from 'wepy'
+import { getGroupInfo,getPlayersUidList } from "../../common/common";
 import header from '../../components/header'
 import baseData from './baseData'
 import againstTable from './againstTable'
@@ -30,14 +31,22 @@ export default class Live extends wepy.page {
     result:result
   }
   data={
-    personList:[],
+    playersUidList:[],
     groupList:[],
+    gameid:null,
     titleList:['设置','对阵表','时实战况'],
     activeBar:'设置'
   }
-  onLoad(options){
-    this.personList=options.personList.split('+')
-    this.gameid=options.gameid
+  async onLoad(options){
+    this.gameid= parseInt(options.gameid)
+    this.playersUidList=await getPlayersUidList(this.gameid)
+    this.$apply()
+    console.log('传参',this.gameid,this.playersUidList)
+  }
+  watch={
+    gameid(){
+      console.log('gameid chenged',this.gameid)
+    }
   }
   events={
     changeActiveBar(from){
@@ -45,9 +54,10 @@ export default class Live extends wepy.page {
         this.activeBar=this.titleList[1]
       }
     },
-    updataGroupList(newArray){
-      this.groupList=newArray
-      console.log(this.groupList)
+    async updataGroupList(newGroupList){
+      console.log('updataGroupList',newGroupList)
+      this.groupList=newGroupList
+      this.$apply()
     }
   }
 }

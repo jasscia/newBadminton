@@ -1,7 +1,7 @@
 
 <template>
   <view class="wrapper">
-    <view class="hiddenPage" wx:if="{{matchInfoList.length===0}}">
+    <view class="errPage" wx:if="{{matchCount===0}}">
       没有正在报名的比赛
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
@@ -22,7 +22,7 @@
 <style lang="less" >
   @import '../../common/common.less';
   .wrapper{
-    .hiddenPage{
+    .errPage{
       margin:100rpx auto 0;
       height:200rpx;
       width: 90%;
@@ -56,49 +56,26 @@
   import matchActive from '../../components/matchActive';
 
   export default class Index extends wepy.page {
-    props={
-      matchInfoList:{
-        type:Array,
-        default:[],
-        twoWay:true
-      }
+  props={
+    matchInfoList:{
+      type:Array,
+      default:[],
+      twoWay:true
     }
-   data={
-      pageHide:true,
-      // idSlot:false
-      // userInfo:{},
-      // matchInfoList:[],
-   }
-    components = {
-      twoSide:twoSide,
-      matchInfo:matchInfo,
-      matchActive:matchActive
+  }
+
+  computed={
+    matchCount(){
+      return this.matchInfoList.length
     }
-  async onLoad(){
-    // this.userInfo=await initUserInfo()
-    // let token=this.userInfo.token;
-    // if(token){
-    //   this.pageHide=false
-    //   this.matchInfoList = await downLoadMatchInfoList(token,'All')
-    // }
   }
-  onShow(){
-    // this.getMatchInfo();
+  components = {
+    twoSide:twoSide,
+    matchInfo:matchInfo,
+    matchActive:matchActive
   }
-  // async getMatchList(token){
-  //   let matchList=await downLoadMatchInfoList(token,'All')
-  //   console.log('matchlist=',matchInfoList)
-  //   let matchInfoList=[];
-  //   if(!matchList){return}
-  //   for(let match of matchList){
-  //     let matchInfo = await downLoadMatchInfo(match.id)
-  //     console.log('matchInfo=',matchInfo)
-  //     matchInfoList.push(matchInfo)
-  //   }
-  //   console.log('matchInfolist=',matchInfoList)
-  //   this.matchInfoList=matchInfoList
-  //   this.$apply();
-  // }
+  async onLoad(){  }
+  onShow(){}
 }
 </script>
 

@@ -34,12 +34,7 @@ const setStorage=function(key,data) {
               nick_name:nickName,
               avatar_url:avatarUrl}
     let res=await htr(url,method,data);
-    // if(res.status===200 || res.status===206 ||res.status===304){
-      return res.data;
-      //包含字段{uid,toktn,real_name,nick_name,avatar_url,created_at,updated_at}
-    // }else{
-    //   console.log('getUserInfo failed');
-    // }
+    return res.data;
   }
 
 const transformStatusAndTimeOfMatchInfo=function(matchInfo){

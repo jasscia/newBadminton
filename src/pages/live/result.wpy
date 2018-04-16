@@ -89,10 +89,6 @@ export default class Result extends wepy.page  {
     result:{},
     ifShowBtn:true
   }
-  onLoad () {
-  }
-  onShow () {
-  }
   onUnload(){
     this.ifShowBtn=true
   }
@@ -101,28 +97,29 @@ export default class Result extends wepy.page  {
   }
   methods={
     getResult(){
-      this.ifShowBtn=false
-
+    this.ifShowBtn=false
     let calcedScore = this.calcScore(this.groupList);
     let orderedScore = this.orderScore(calcedScore);
     this.result= orderedScore;
     }
   }
   calcScore(groupList) {
-    let result = {};
-    for (let item of groupList) {
+    let result = {}
+    let playerList=['user_a1','user_a2','user_b1','user_b2']
+    for (let groupInfo of groupList) {
       for (let i = 0; i < 4; i++) {
-        result[item[i]] = result[item[i]] || [0, 0, 0];
+        let player=groupInfo[playerList[i]].uid
+        result[player] = result[player] || [0, 0, 0,0];
         if (i < 2) {
-          result[item[i]][0] += (item[4] - item[5]);
-          result[item[i]][1] += (item[4] > item[5] ? 1 : 0);
-          result[item[i]][2] += (item[4] < item[5] ? 1 : 0);
+          result[player][0] += (groupInfo.score_a - groupInfo.score_a);
+          result[player][1] += (groupInfo.score_a > groupInfo.score_b? 1 : 0);
+          result[player][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
         } else {
-          result[item[i]][0] += (item[5] - item[4]);//[0]是净胜分
-          result[item[i]][1] += (item[4] < item[5] ? 1 : 0);//[1]胜的场次
-          result[item[i]][2] += (item[4] > item[5] ? 1 : 0);//[2]是败胜分
+          result[player][0] += (groupInfo.score_a - groupInfo.score_b);//[0]是净胜分
+          result[player][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);//[1]胜的场次
+          result[player][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);//[2]是败胜分
         }
-        result[item[i]][3] = result[item[i]][1] - result[item[i]][2];//[3]是胜-败的比值率
+        result[player][3] = result[player][1] - result[player][2];//[3]是胜-败的比值率
       }
     }
     return result;

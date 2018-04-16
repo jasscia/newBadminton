@@ -29,9 +29,7 @@ export default class BaseInfo extends wepy.page {
     item2colunm:item2colunm
   }
   data={
-    token:'',
-    userPrivateInfo:{},
-    userPublicInfo:{},
+    userInfo:{},
     list:[
       {title:'姓名',
         name:'realName',
@@ -56,19 +54,15 @@ export default class BaseInfo extends wepy.page {
     ]
   }
 async  onLoad(option){
-    await initUserInfo();
-    this.token=wx.getStorageSync('token');
-    this.userPrivateInfo= wx.getStorageSync('userPrivateInfo');
-    this.userPublicInfo= wx.getStorageSync('userPublicInfo');
+    this.userInfo=await initUserInfo();
   }
   methods={
     async submitBaseInfo(e){
-      let res=await changeRealname(this.token,e.detail.value.realName);
+      let res=await changeRealname(e.detail.value.realName);
       if(res.realname){
-        this.userPublicInfo.realName=res.realname;
-        setStorage('userPublicInfo');
+        this.userInfo.realName=res.realname;
+        setStorage('userInfo',this.userInfo);
       }
-      console.log('sub',res);
     }
   }
 }

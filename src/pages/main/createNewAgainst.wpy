@@ -32,7 +32,7 @@
 
 <script>
 import wepy from 'wepy';
-import {formatTime,initUserInfo,createGame} from '../../common/common';
+import {formatTime,createGame} from '../../common/common';
 import item2colunm from '../../components/item2colunm';
 export default class CreateNewAgain extends wepy.page {
   config={
@@ -42,8 +42,6 @@ export default class CreateNewAgain extends wepy.page {
     item2colunm:item2colunm
   }
   data={
-    token:'',
-    userInfo:{},
     dateRange:{
       end:{time:"23:00",date:''},
       start:{time:"04:00",date:''}
@@ -73,7 +71,6 @@ export default class CreateNewAgain extends wepy.page {
     ]
   }
   async onLoad(option){
-    this.userInfo=await initUserInfo();
     this.initDateRange();
     this.initDateTime();
   }
@@ -98,7 +95,6 @@ export default class CreateNewAgain extends wepy.page {
       let formData=e.detail.value,
           date=formData.date,
           time=formData.time;
-      // console.log('not IN,now in submit fn',formData,this.token);
       let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
       Object.keys(formData).map(key=>{
         if(['time','date'].indexOf(key)===-1){
@@ -106,7 +102,7 @@ export default class CreateNewAgain extends wepy.page {
         }
       })
       if(time){newFormData['begintime']=date+' '+time+':00'}
-      createGame(newFormData,this.userInfo.token);
+      createGame(newFormData);
     }
   }
 }

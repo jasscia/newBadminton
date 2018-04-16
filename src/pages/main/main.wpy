@@ -8,8 +8,8 @@
       <view  class="matchCard">
         <matchInfo :matchInfo.sync="matchInfo" :ifSlot.sync="true">
           <button slot="contoller" @tap="goToLive" 
-                data-tag="cardTap" data-gameid="{{matchInfo.id}}" 
-                data-personlist="{{matchInfo.players}}" disabled="{{matchInfo.players.length<4}}">去开赛</button>
+                data-tag="cardTap" data-gameid="{{matchInfo.id}}"
+                disabled="{{matchInfo.players.length<4}}"><text class="status">{{matchInfo.status}}</text>{{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看详情"}}</button>
         </matchInfo>
       </view>
     </repeat>
@@ -49,9 +49,19 @@
       height: 300rpx;
       button{
         height:70rpx;
+        line-height: 70rpx;
         padding:0;
         background: @btn-em;
       }
+    }
+    .status{
+      font-size: 24rpx;;
+      position:absolute;
+      right:0;
+      padding:0 10rpx;
+      display:inline-block;
+      background:cadetblue;
+
     }
   }
 </style>
@@ -76,16 +86,8 @@ export default class myGameList extends wepy.page{
       header:header
     }
   async onLoad(){
-     this.userInfo=await initUserInfo()
-    let token=this.userInfo.token;
-    if(token){
-      this.pageHide=false
-      this.matchInfoList = await downLoadMatchInfoList(token)
-      this.$apply()
-    }
-  }
-  onShow(){   
-    // this.getMatchList();
+    this.matchInfoList = await downLoadMatchInfoList()
+    this.$apply()
   }
   async onShareAppMessage(res){
     await initUserInfo();
@@ -97,22 +99,15 @@ export default class myGameList extends wepy.page{
           url:"/pages/main/createNewAgainst"
         })
       },
-      goToLive(e){
+      async goToLive(e){
         let dataset=e.target.dataset
         if(e.target.dataset.tag==='cardTap'){
           let gameid=dataset.gameid
-          let personList=[]
-          dataset.personlist.forEach(userInfo => {
-            personList.push(userInfo.user.uid)
-          });
-          // wx.setStorageSync('gameid',e.target.dataset.gameid)
-          // wx.setStorageSync('playerList',e.target.dataset.personlist)
+          await updateMatchInfo(gameid,{status:2})
+          this.matchInfoList = await downLoadMatchInfoList()
+          this.$apply()
           wx.navigateTo({
-            url:`/pages/live/live?personList=${personList.join('+')}&gameid=${gameid}`,
-            success(res){
-              updateMatchInfo(gameid,{status:1})
-              console.log('go to live,with',personList,gameid)
-            }
+            url:`/pages/live/live?gameid=${gameid}`
           })
         }
       }

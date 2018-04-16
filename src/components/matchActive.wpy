@@ -62,9 +62,8 @@ export default class matchActive extends wepy.component{
  }
   methods={
     async addplayer(e){
-      let token=this.userInfo.token
       let gameid=e.target.dataset.gameid
-      let matchInfoList=await addPlayer(token,gameid);//是{gameid,user:{id}}的集合
+      let matchInfoList=await addPlayer(gameid);//是{gameid,user:{id}}的集合
       this.matchInfo.ifIn=true
       this.matchInfo.players.push({user:this.userInfo})
       this.$apply()

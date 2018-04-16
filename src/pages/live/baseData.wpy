@@ -1,23 +1,17 @@
 
 <template>
   <view class="warp">
-  <view class="playersUidList">
-      <view class="label">参赛人为</view>
-      <view class="playersList">
-        <repeat for="{{playersUidList}}" key="index">
-          <view class="playerInfo">
-            <!-- <image class="avatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" /> -->
-            <view class="name">{{index}}.{{item}}</view>
-          </view>
-        </repeat>
-        <!-- <repeat for="{{[1,2,3,4,5]}}" key="index">
-          <view class="playerInfo">
-            <image class="atatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
-            <view class="name">{{index}}.{{item}}</view>
-          </view>
-        </repeat> -->
+  <view class="label">参赛人为</view>
+  <!-- <view class="playersUidList"> -->
+  <view class="playersList">
+    <repeat for="{{playersUidList}}" key="index">
+      <view class="playerInfo">
+        <image class="avatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
+        <view class="name">{{index}}.{{item}}</view>
       </view>
+    </repeat>
   </view>
+  <!-- </view> -->
   <view class="roundCount">
       <label for="roundPer">每人场数</label>
       <input type="number" name="" id="roundCount" value="{{roundCount}}" @input="changeRoundCount"/>
@@ -28,47 +22,39 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .playersUidList{
+  .label{
+    color: @font-side;
+    font-weight: lighter;
+    text-align: center;
+    padding:20rpx;
+    margin-top:0;
+  }
+  .playersList{
     background: @bgc-card;
-    margin:40rpx;
-
-    .label{
-      color: @font-side;
-      font-weight: lighter;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: 400rpx;
+    .playerInfo{
+      width:100rpx;
+      height:140rpx;
       text-align: center;
-      padding:20rpx;
-    }
-    .playersList{
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      min-height: 200rpx;
-      .playerInfo{
-        width:80rpx;
-        text-align: center;
-        background-size: cover;
-        .avatar{
-          height:60rpx;
-          width:60rpx;
-          border-radius: 50%;
-        }
-        .name{
-          font-size: 24rpx;
-          width:80rpx;
-          height:30rpx;
-          line-height:30rpx;
-          vertical-align: middle;
-        }
+      // background: red;
+      // background-size: cover;
+      .avatar{
+        height:100rpx;
+        width:100rpx;
+        border-radius: 50%;
+        margin:0 auto;
       }
-      // .name{
-      //   height: 40rpx;
-      //   line-height: 40rpx;
-      //   font-size:30rpx;
-      //   vertical-align: middle;
-      //   color: @font;
-      //   padding:10rpx;
-      // }
+      .name{
+        font-size: 28rpx;
+        width:100rpx;
+        height:40rpx;
+        line-height:30rpx;
+        vertical-align: middle;
+        margin:0 auto;
+      }
     }
   }
   .roundCount{

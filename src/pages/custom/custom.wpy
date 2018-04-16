@@ -2,14 +2,14 @@
   <view class="custom">
     <view class="part part1">
       <view class="item" @tap.stop="tap">
-        <image class="avatar" src="{{userPrivate.avatarUrl}}"/>
+        <image class="avatar" src="{{userInfo.avatar_url}}"/>
         <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
-        <view class="nickname">{{userPrivateInfo.nickName}}</view>
+        <view class="nickname">{{userInfo.nick_name}}</view>
         <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
-          <view class="item">{{userPrivateInfo.gender===1?'男':'女'}}</view>
-          <view class="item">姓名{{userPublicInfo.realName}}</view>
-          <view class="item">身高{{userPublicInfo.tall}}</view>
-          <view class="item">体重{{userPublicInfo.weight}}</view>
+          <view class="item">{{userInfo.gender===1?'男':'女'}}</view>
+          <view class="item">姓名{{userInfo.real_name}}</view>
+          <view class="item">身高{{userInfo.tall}}</view>
+          <view class="item">体重{{userInfo.weight}}</view>
         </view>
         <view class="other">
           <view class="item">{{on}}关注</view>
@@ -167,7 +167,7 @@
     line-height: 40px;
     font-size: 40px;
     padding-top:15px;
-    background: @font;
+    background: @btn;
     font-family:"Arial Narrow";
   }
   .row2{
@@ -202,6 +202,12 @@ export default class Custom extends wepy.page {
 
   async onLoad() {
       this.userInfo=await initUserInfo()
+      console.log(this.userInfo)
+    };
+   async onShow() {
+      this.userInfo=await initUserInfo()
+      this.$apply()
+      console.log('onshow',this.userInfo)
     };
     methods = {
       navigateToBaseInfoPage(){

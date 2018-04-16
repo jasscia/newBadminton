@@ -37,6 +37,10 @@
     this.matchInfoList = await downLoadMatchInfoList('All')
     this.$apply()
   }
+  async onShow(){
+    this.matchInfoList = await downLoadMatchInfoList('All')
+    this.$apply()
+  }
   async onShareAppMessage(res){
     return share('/pages/index/index.wpy')
   }

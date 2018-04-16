@@ -91,7 +91,7 @@ export default class CreateNewAgain extends wepy.page {
     })
   }
   methods={
-    submit(e){
+    async submit(e){
       let formData=e.detail.value,
           date=formData.date,
           time=formData.time;
@@ -102,7 +102,20 @@ export default class CreateNewAgain extends wepy.page {
         }
       })
       if(time){newFormData['begintime']=date+' '+time+':00'}
-      createGame(newFormData);
+      if(await createGame(newFormData)){
+        wx.showToast({
+          title:'创建成功,返回赛事列表',
+          icon:'success',
+          duration:1500,
+          success:()=>{
+            wx.navigateBack({delta: 1})
+          }
+        })
+      }else{
+        wx.showModal({
+          title:'创建失败'
+        })
+      }
     }
   }
 }

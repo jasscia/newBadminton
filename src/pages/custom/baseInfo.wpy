@@ -59,9 +59,10 @@ async  onLoad(option){
   methods={
     async submitBaseInfo(e){
       let res=await changeRealname(e.detail.value.realName);
-      if(res.realname){
-        this.userInfo.realName=res.realname;
-        setStorage('userInfo',this.userInfo);
+      if(res.real_name){
+        wx.navigateBack({
+          delta:1
+        })
       }
     }
   }

@@ -117,10 +117,14 @@ const changeRealname=async function(realName){
     let url=URLList.changeRealnameURl,
         method='POST',
         data={token:token,
-              realName:realName};
+              real_name:realName};
       let res=await htr(url,method,data);
       console.log(res,data);
-      return res
+      if(res.data.code===1){
+        userInfo.real_name=realName
+        await setStorage('userInfo',userInfo)
+        return res.data.data
+      }
   }
 }
 const createGame=async function(formData){
@@ -136,21 +140,11 @@ const createGame=async function(formData){
         address:formData.address,
         begintime:formData.begintime
       };
-  const success=async function(){
-    await wx.showToast({
-      title:'创建成功,返回赛事列表',
-      icon:'success',
-      duration:1500
-    })
-    wx.navigateBack({delta: 1})
-  },
-  fail=function(err){
-    wx.showModal({
-      title:'创建失败',
-      content:err.msg
-    })
-  };
-  htr(url,method,data).then(success,fail)
+  let res=await htr(url,method,data)
+  console.log('create res',res)
+  if(res.data.code){
+    return res.data.data
+  }
 }
 
 const postGroupList=async function(gameid,list){

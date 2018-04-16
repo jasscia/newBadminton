@@ -89,6 +89,10 @@ export default class myGameList extends wepy.page{
     this.matchInfoList = await downLoadMatchInfoList()
     this.$apply()
   }
+  async onShow(){
+    this.matchInfoList = await downLoadMatchInfoList()
+    this.$apply()
+  }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')

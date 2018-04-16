@@ -5,7 +5,9 @@
       <view class="tip">请及时到场，如果不能到场请于创建者<text>{{matchInfo.owner.real_name||matchInfo.nick_name}}</text>联系!</view>
       <view class="tip">比赛采用<text>’轮转’-通过轮换对手和队友的方式</text>，循环比赛，并统计胜负情况，兼具竞技性和趣味性。</view>
     </view>
-    <button @tap="addplayer" data-gameid="{{matchInfo.id}}" disabled="{{matchInfo.ifIn || matchInfo.status!=='报名中'}}">{{matchInfo.ifIn?'已经报名':(matchInfo.status!=='报名中'?'截止报名':'点我报名')}}</button>
+    <button @tap="addplayer" data-gameid="{{matchInfo.id}}" 
+            disabled="{{matchInfo.ifIn || matchInfo.status!=='报名中'}}">
+            {{matchInfo.ifIn?'已经报名':(matchInfo.status!=='报名中'?'截止报名':'点我报名')}}</button>
   </view>
 </template>
 

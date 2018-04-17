@@ -18,6 +18,9 @@ function badmin(personNum,roundPre){
   if(this.personNum<4){
     this.result='数据不符合要求，人数不能少于4人';
     return}
+  if(!this.roundPre){
+    this.result='没人场次不能为0';
+    return}
   let count=0;
   while(this.result[1].length<this.round){
       this.init();

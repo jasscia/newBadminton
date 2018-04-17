@@ -2,28 +2,31 @@ import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
         getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
 const downLoadMatchInfoList=async function(type='my'){
   let url=(type==="my"?URLList.getGameListMyURL:URLList.getGameListAllURL);
-  let userInfo=await initUserInfo()
-  let token=userInfo.token;
-  let data={token},
-      method="GET";
-  let res=await htr(url,method,data);
-  if(res.statusCode >=400){
-    console.log('res.statusCode>=400',res.statusCode);
-    return}
-  if([200,206,304].indexOf(res.statusCode)===-1){
-    console.log("res.statusCode not in [200,206,304]",res.statusCode);
-    return}
-  let matchInfoList=res.data.data;
-  for(let matchInfo of matchInfoList){
-    matchInfo.ifIn=judgeIfIn(matchInfo)
-    transformStatusAndTimeOfMatchInfo(matchInfo);
+  let token;
+  let data={};
+  if(type==="my"){
+    let userInfo=await initUserInfo()
+    if(!userInfo || !userInfo.token){
+      return []
+    }
+    token=userInfo.token
+    data={token:token}
   }
-  console.log('download matchinfolist fn',matchInfoList)
-  return matchInfoList;
+  let  method="GET";
+  let res=await htr(url,method,data);
+  if(res.data.code===1){
+    let matchInfoList=res.data.data;
+    for(let matchInfo of matchInfoList){
+      matchInfo.ifIn=judgeIfIn(matchInfo)
+      transformStatusAndTimeOfMatchInfo(matchInfo);
+    }
+    console.log('matchinfolist fn=',matchInfoList)
+    return matchInfoList
+  }else{
+    return []
+  }  
 }
 const downLoadMatchInfo=async function(gameid){
-  let userInfo=await initUserInfo()
-  let token=userInfo.token;
   let url=URLList.getGameInfoURL+'\/'+gameid,
       method="GET",
       data={};
@@ -31,9 +34,11 @@ const downLoadMatchInfo=async function(gameid){
   let matchInfo=res.data.data;
   if(matchInfo){
     matchInfo.ifIn=judgeIfIn(matchInfo)
-  } 
-  console.log('download matchinfo fn',matchInfo)
-  return transformStatusAndTimeOfMatchInfo(matchInfo);
+    // console.log('download matchinfo fn',matchInfo)
+    return transformStatusAndTimeOfMatchInfo(matchInfo);
+  }else{
+    return {}
+  }
 }
 
 const judgeIfIn=function(matchInfo){
@@ -46,7 +51,10 @@ const judgeIfIn=function(matchInfo){
     return ifIn
   }
 const updateMatchInfo =async function(gameid,options){
-  let userInfo=wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
+  let userInfo=await initUserInfo()
+    if(!userInfo || !userInfo.token){
+      return {}
+    }
   let token=userInfo.token;
   let url=URLList.putGameInfoURL+'\/'+gameid,
       method="PUT",
@@ -58,15 +66,15 @@ const updateMatchInfo =async function(gameid,options){
   }
 }
 const getPlayersUidList=async function(gameid){
-  console.log('gameid',gameid)
   let matchInfo=await downLoadMatchInfo(gameid)
-  console.log('matchInfo',matchInfo)
+  if(!matchInfo){
+    return []
+  }
   let playersList=matchInfo.players
   let playersUidList=[]
   playersList.forEach(userInfo => {
     playersUidList.push(userInfo.user.uid)
   });
-  console.log('playersUidList',playersUidList)
   return playersUidList
 }
  
@@ -80,7 +88,8 @@ const initUserInfo=async function() {
     let resOfcode=await login();//先登录获取 临时code
     let resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
     if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){
-      return//若用户中断的登录 授权，直接返回，失败
+      setStorage('userInfo',{})
+      return {}//若用户中断的登录 授权，直接返回，失败
     }
     let code=resOfcode.code;
     let nickName=resOfuserInfo.userInfo.nickName;
@@ -88,7 +97,8 @@ const initUserInfo=async function() {
     //这里是登录的时候拿到的用户信息，用code nickname avatarurl 去换token
     userInfo=await getUserInfoWithToken(code,nickName,avatarUrl)
     if(!userInfo.token){//标示拿到了带有openid的 用户信息
-      return//失败
+      setStorage('userInfo',{})
+      return {}//失败
     }
     setStorage('userInfo',userInfo)//全部信息拿到后 存储userInfo
     return userInfo
@@ -96,6 +106,9 @@ const initUserInfo=async function() {
 }
 const addPlayer=async function(gameid){
   let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
   let token=userInfo.token;
   let url=URLList.addplayerURL,
       method="POST",
@@ -104,31 +117,36 @@ const addPlayer=async function(gameid){
         gameid:gameid
       };
   let res=await htr(url,method,data);
-  console.log('addPlayer fn,res=',res.data)
   if(res.data.code===1){
     return res.data.data;//其实是matchInfoList,只有gameid 和 user 信息列表
+  }else{
+    return {}
   }
 }
 const changeRealname=async function(realName){
   let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
   let token=userInfo.token;
-  console.log('进入 changeRealname fn');
-  if(token){
-    let url=URLList.changeRealnameURl,
-        method='POST',
-        data={token:token,
-              real_name:realName};
-      let res=await htr(url,method,data);
-      console.log(res,data);
-      if(res.data.code===1){
-        userInfo.real_name=realName
-        await setStorage('userInfo',userInfo)
-        return res.data.data
-      }
+  let url=URLList.changeRealnameURl,
+      method='POST',
+      data={token:token,
+            real_name:realName};
+  let res=await htr(url,method,data);
+  if(res.data.code===1){
+    userInfo.real_name=realName
+    await setStorage('userInfo',userInfo)
+    return res.data.data //包含昵称和真是姓名的对象
+  }else{
+    return {}
   }
 }
 const createGame=async function(formData){
   let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
   let token=userInfo.token;
   let url=URLList.postGameInfoURL,
       method="POST",
@@ -138,17 +156,21 @@ const createGame=async function(formData){
         status:0,
         note:null,
         address:formData.address,
-        begintime:formData.begintime
+        begintime:formData.begintime,
+        auto_signup:formData.auto_signup
       };
   let res=await htr(url,method,data)
-  console.log('create res',res)
-  if(res.data.code){
+  if(res.data.code===1){
     return res.data.data
+  }else{
+    return {}
   }
 }
-
 const postGroupList=async function(gameid,list){
   let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
   let token=userInfo.token;
   let url=URLList.postGroupListURl,
       method="POST",
@@ -158,15 +180,16 @@ const postGroupList=async function(gameid,list){
         list:list
       };
    let res=await htr(url,method,data)
-   console.log('postGroupList',res)
    if(res.data.code===1){
      return res.data.data
+   }else{
+     return {}
    }
 }
 const getGroupInfo=async function(gameid){
   let userInfo=await initUserInfo()
   let token=userInfo.token;
-  let url=URLList.postGroupListURl+'\/'+gameid,
+  let url=URLList.getGroupInfoURl,
       method="GET",
       data={
         token:token,
@@ -176,19 +199,26 @@ const getGroupInfo=async function(gameid){
   console.log('getGroupInfo',res)
   if(res.data.code===1){
     return res.data.data
+  }else{
+    return {}
   }
 }
 const putGroupInfo=async function(groupid,options){
   let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
   let token=userInfo.token;
   let url=URLList.postGroupListURl+'\/'+groupid,
       method="PUT",
       data=options;
-    data.totken=token;
+  data.totken=token;
   let res=await htr(url,method,data)
   console.log('putGroupInfo res=',res)
   if(res.data.code===1){
     return res.data.data
+  }else{
+    return {}
   }
 }
 const formatTime =(date,mark='/') => {
@@ -203,9 +233,7 @@ const formatTime =(date,mark='/') => {
 }
 const share=function(path){
   return {
-      title: 'CGGC羽球赛',
       path: path,
-      // imgUrl:'../image/src.jpg',
       success: function(res) {
         console.log("转发成功")
       },

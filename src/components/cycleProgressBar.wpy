@@ -1,25 +1,47 @@
 <template>
   <view class="cycleProgressBar">
-        <view class="cycle">
-          <slot name="score"></slot>
-          <block wx:if="{{value<=50}}">
-            <view class="less bg">
-            <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view> 
-            </view>
-          </block>
-          <block wx:if="{{value>50}}">
-              <view class="more bg">
-              <view class="more bg1" style="transform: rotate(180deg)"></view> 
-              <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view> 
-              </view>
-          </block>
-        </view>      
+    <view class="cycle">
+      <block wx:if="{{value<=50}}">
+        <view class="less bg">
+        <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view> 
+        </view>
+      </block>
+      <block wx:if="{{value>50}}">
+          <view class="more bg">
+          <view class="more bg1" style="transform: rotate(180deg)"></view> 
+          <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view> 
+          </view>
+      </block>
+      <view class="text">
+        <view class="value">{{value}}</view>
+        <view class="comment">{{comment}}</view>
       </view>
+    </view>      
+  </view>
 </template>
 <style lang="less">
 @import '../common/common.less';
 .cycleProgressBar {
   text-align: center;
+}
+.text{
+  height:80rpx;
+  width:100rpx;
+  text-align: center;
+  margin:auto;
+  .value,.comment{
+    color:@font;
+    margin:0;
+    width: 100rpx;
+  }
+  .value{
+    height:60rpx;
+    font-size:90rpx;
+  }
+  .comment{
+    height:30rpx;
+    font-size:24rpx;
+  }
 }
 .cycle {
   display: inline-block;
@@ -29,14 +51,18 @@
   text-align: center;
   line-height: 100px;
   font-size: 0;
+  background: @bgc;
+  border-radius: 50%;
+  border-radius: 10rpx solid transparent;
 }
 .bg{
   height:100%;
   width:100%;
   position: absolute;
   top:0;
-  background:@bgc;
+  // background:@bgc;
   border-radius: 50%;
+  // opacity: 0.6;
 }
 .less.bg{
   clip: rect(0 100px 50px 0);

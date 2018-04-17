@@ -7,7 +7,7 @@ export default class extends wepy.app {
     pages: [
       'pages/index/index',
       'pages/main/main',
-      // 'pages/message/message',
+      'pages/detail/detail',
       'pages/custom/custom',
       'pages/live/live',
       'pages/custom/baseInfo',

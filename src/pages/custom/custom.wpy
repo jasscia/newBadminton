@@ -5,27 +5,25 @@
         <image class="avatar" src="{{userInfo.avatar_url}}"/>
         <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
         <view class="nickname">{{userInfo.nick_name}}</view>
-        <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
-          <view class="item">{{userInfo.gender===1?'男':'女'}}</view>
-          <view class="item">姓名{{userInfo.real_name}}</view>
-          <view class="item">身高{{userInfo.tall}}</view>
-          <view class="item">体重{{userInfo.weight}}</view>
-        </view>
-        <view class="other">
+        <!-- <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
+          <view class="item">年龄:{{userInfoOther.age||'未知'}}</view>
+          <view class="item">姓名:{{userInfo.real_name||'未知'}}</view>
+          <view class="item">身高:{{userInfoOther.tall||'未知'}}</view>
+          <view class="item">体重:{{userInfoOther.weight||'未知'}}</view>
+        </view> -->
+        <!-- <view class="other">
           <view class="item">{{on}}关注</view>
           <view class="item">|</view>
           <view class="item">{{fans}}粉丝</view>
           <view class="item">|</view>
           <view class="item">{{diamond}}钻石</view>
-        </view>
+        </view> -->
       </view>
       <view class="item" @tap.stop="tap"></view>
     </view>
     <view class="part part2">
       <view class="item title" @tap.stop="tap">个人数据</view>
-      <cycleProgressBar :value.sync="value" :comment.sync="comment">
-        <view slot="score" class="score">{{value}}</view>
-      </cycleProgressBar>
+      <cycleProgressBar :value.sync="value" :comment.sync="comment"></cycleProgressBar>
     </view>
     <view class="part part3">
       <view class="item title" @tap.stop="tap">得分统计</view>
@@ -107,7 +105,7 @@
   }
   .sumary,.other{
     margin:5px auto;
-    width:60%;
+    width:500rpx;
     display:flex;
     justify-content: space-around;
     font-size: 12px;
@@ -195,6 +193,7 @@ export default class Custom extends wepy.page {
     data = {
       value:80,
       userInfo:{},
+      userInfoOther:{},
       on:'200',
       fans:'3000',
       diamond:'56'
@@ -202,12 +201,13 @@ export default class Custom extends wepy.page {
 
   async onLoad() {
       this.userInfo=await initUserInfo()
-      console.log(this.userInfo)
+      this.userInfoOther=wx.getStorageSync('userOtherInfo')
+      this.$apply()
     };
    async onShow() {
       this.userInfo=await initUserInfo()
+      this.userInfoOther=wx.getStorageSync('userOtherInfo')
       this.$apply()
-      console.log('onshow',this.userInfo)
     };
     methods = {
       navigateToBaseInfoPage(){

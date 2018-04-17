@@ -5,11 +5,15 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard">
+      <view  class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
         <matchInfo :matchInfo.sync="matchInfo" :ifSlot.sync="true">
-          <button slot="contoller" @tap="goToLive" 
-                data-tag="cardTap" data-gameid="{{matchInfo.id}}"
-                disabled="{{matchInfo.players.length<4}}"><text class="status">{{matchInfo.status}}</text>{{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看详情"}}</button>
+          <button slot="contoller" 
+                  @tap.stop="goToLive" 
+                  data-tag="cardTap" 
+                  data-gameid="{{matchInfo.id}}"
+                  disabled="{{matchInfo.players.length<4}}">
+                  <text class="status">{{matchInfo.status}}</text>
+                  {{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看详情"}}</button>
         </matchInfo>
       </view>
     </repeat>
@@ -87,10 +91,12 @@ export default class myGameList extends wepy.page{
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList()
+    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList()
+    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){
@@ -114,6 +120,12 @@ export default class myGameList extends wepy.page{
             url:`/pages/live/live?gameid=${gameid}`
           })
         }
+      },
+      gotodetail(e){
+        let gameid=e.currentTarget.dataset.gameid;
+        wx.navigateTo({
+          url:`/pages/detail/detail?gameid=${gameid}`
+        })
       }
     }
 }

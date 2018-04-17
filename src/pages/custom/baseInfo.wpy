@@ -29,7 +29,7 @@ export default class BaseInfo extends wepy.page {
     item2colunm:item2colunm
   }
   data={
-    userInfo:{},
+    userInfo:{},//这里存储 后端 不保存的 的数据
     list:[
       {title:'姓名',
         name:'realName',
@@ -56,14 +56,28 @@ export default class BaseInfo extends wepy.page {
 async  onLoad(option){
     this.userInfo=await initUserInfo();
   }
-  methods={
-    async submitBaseInfo(e){
-      let res=await changeRealname(e.detail.value.realName);
-      if(res.real_name){
-        wx.navigateBack({
-          delta:1
-        })
+methods={
+  async submitBaseInfo(e){
+    let real_name=e.detail.value.realName
+    let age=e.detail.value.age
+    let tall=e.detail.value.tall
+    let weight=e.detail.value.weight
+    if(real_name){
+      await changeRealname(real_name);
+    }
+    if(age){
+      this.userInfo.age=age
+    }
+    if(tall){
+      this.userInfo.tall=tall
+    }
+    if(weight){
+      this.userInfo.weight=weight
       }
+      wx.setStorageSync('userOtherInfo',this.userInfo)
+      wx.navigateBack({
+        delta:1
+      })
     }
   }
 }

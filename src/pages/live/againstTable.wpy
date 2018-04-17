@@ -161,16 +161,17 @@ export default class AgainstTable extends wepy.page {
       type:Array,
       default:[],
       twoWay:true
+    },
+    gameid:{
+      type:String,
+      default:null
     }
   }
   data={
     activedGroupIndex:null
+    // matchInfo:{}
   }
-  watch={
-    groupList(n){
-      console.log('new grouplist=',n)
-    }
-  }
+  
   methods={
      scoreChange(e){
       let index = e.target.dataset.id;
@@ -199,8 +200,13 @@ export default class AgainstTable extends wepy.page {
         gameid:gameid,
         score_a:score_a,
         score_b:score_b,
-        status:status})
-      }
+        status:status})  
+      // let res=await downloadMatchInfo(this.matchInfo.id)
+      // if(res){
+      //   this.matchInfo=res
+      //   wx.setStorageSync('activeMatchInfo',this.matchInfo)
+      // }
+    }
   }
 }
 </script>

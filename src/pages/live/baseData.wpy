@@ -1,21 +1,23 @@
 
 <template>
   <view class="warp">
-  <view class="label">参赛人为</view>
+  <view class="label top">共{{playersList.length}}人报名参赛人</view>
   <!-- <view class="playersUidList"> -->
   <view class="playersList">
-    <repeat for="{{playersUidList}}" key="index">
+    <repeat for="{{playersList}}" key="index" item="playerInfo">
       <view class="playerInfo">
-        <image class="avatar" scr="https://wx.qlogo.cn/mmopen/vi_32/XX1SpfMDNTVicjpzzotfs8TFqJ2kMXdylIeyj4D1J2GVSqMibHk7ofOBQJLyf5vV7o9WoAjflCicbIeJU632gc9Jw/0" />
-        <view class="name">{{index}}.{{item}}</view>
+        <image class="avatar" src="{{playerInfo.user.avatar_url}}" />
+        <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
       </view>
     </repeat>
   </view>
   <!-- </view> -->
-  <view class="roundCount">
-      <label for="roundPer">每人场数</label>
-      <input type="number" name="" id="roundCount" value="{{roundCount}}" @input="changeRoundCount"/>
-  </view>
+  <view class="label">每人场数</view>
+  <input type="number" name="" 
+        class="roundCount" value="{{roundCount}}"
+        placeholder="请输入每人场次,与人数的乘积,应被4整除"
+        @input="changeRoundCount"/>
+  <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
   <button id="btn" @tap="makeGroup">生产对阵表</button>
   </view>
 </template>
@@ -25,9 +27,29 @@
   .label{
     color: @font-side;
     font-weight: lighter;
+    padding:20rpx;
+    text-align:left;
+    font-size:30rpx;
+    background:#fff;
+    margin-top:40rpx;
+    margin-bottom:4rpx;
+  }
+  .roundCount{
+    color: @font;
     text-align: center;
     padding:20rpx;
-    margin-top:0;
+    text-align:center;
+    font-size:36rpx;
+    background:#fff;
+    margin-bottom:40rpx;
+  }
+  .input-placeholder{
+    font-size: 30rpx;
+  }
+  .label.errTip{
+    margin-bottom: 40rpx;
+    color:tomato;
+    text-align: center;
   }
   .playersList{
     background: @bgc-card;
@@ -37,70 +59,25 @@
     min-height: 400rpx;
     .playerInfo{
       width:100rpx;
-      height:140rpx;
+      height:120rpx;
       text-align: center;
-      // background: red;
-      // background-size: cover;
+      margin:20rpx;
       .avatar{
-        height:100rpx;
-        width:100rpx;
+        height: 100rpx;
+        width: 100rpx;
         border-radius: 50%;
-        margin:0 auto;
+        background-size: cover;
       }
       .name{
-        font-size: 28rpx;
+        font-size: 24rpx;
         width:100rpx;
-        height:40rpx;
+        height:30rpx;
         line-height:30rpx;
         vertical-align: middle;
-        margin:0 auto;
       }
     }
   }
-  .roundCount{
-    font-size:30rpx;
-    background: @bgc-card;
-    margin:40rpx 0;
-    padding-left:30rpx;
-    border-bottom: 2px solid @bgc;
-    label{
-      width: 150rpx;
-      color: @font-side;
-      font-weight: lighter;
-    }
-    label,input{
-      display: inline-block;
-      height: 60px;
-      line-height: 60px;
-      vertical-align: middle;
-    }
-    input{
-      width:500rpx;
-    }
-  }
-   .result{
-     font-size: 14px;
-   }
-   .result .err{
-     text-align: center;
-   }
-  .result .item{
-      margin: 10px auto;
-      padding:5px;
-      display: flex;
-      justify-content: space-around;
-      border-bottom:5px solid @bgc;
-     }
-  .result .side{
-    flex:1;
-    font-size:20px;
-    text-align: center;
-  }
-  .result .mark p{
-    margin:0;
-    padding:0;
-    text-align: center;
-  }
+ 
   #btn{
     margin:40rpx auto;
     width:450rpx;
@@ -118,7 +95,7 @@ import { initUserInfo,postGroupList,updateMatchInfo} from "../../common/common";
 import badmin from '../../common/makeGroup'
 export default class BaseData extends wepy.page {
   props={
-    playersUidList:{
+    playersList:{
       type:Array,
       default:[]
     },
@@ -130,27 +107,41 @@ export default class BaseData extends wepy.page {
   data={
       groupList:[],
       roundCount:4,
-      msg:['努力计算中','','对不起，这次没有找到合适的对阵模式，点我重试'],
+      msg:'努力计算中',
       state:1
     }
-  async onLoad(options){}
+ watch={
+   playersList(n){
+     n.forEach(p=>{
+       console.log(p.user.avatar_url)
+     })
+     console.log('playersList changed',n)
+   }
+ }
   methods={
     async makeGroup(){
-      console.log(this.playersUidList,this.roundCount)
+      console.log(this.playersList,this.roundCount)
       this.state=0;
-      let playersNum=this.playersUidList.length
+      this.msg='正在计算。。。。。。'
+      let playersNum=this.playersList.length
       let roundCount=this.roundCount
       let data=(new badmin(playersNum,roundCount)).result
       if(typeof data ==='string'){
         this.state=2;
+        this.msg=data
         return
       }else{
         this.state=1;
+        let playersUidList=[]
+        this.playersList.forEach(playerInfo=>{
+          playersUidList.push(playerInfo.userid)
+        })
+        console.log(this.playersList,this.playersList[0].userid)
         for(let i=0,len=data[1].length;i<len;i++){
-          let p1=this.playersUidList[data[1][i]-1];
-          let p2=this.playersUidList[data[2][i]-1];
-          let p3=this.playersUidList[data[3][i]-1];
-          let p4=this.playersUidList[data[4][i]-1];
+          let p1=playersUidList[data[1][i]-1];
+          let p2=playersUidList[data[2][i]-1];
+          let p3=playersUidList[data[3][i]-1];
+          let p4=playersUidList[data[4][i]-1];
           this.groupList.push([p1,p2,p3,p4])
         }
         this.groupList=await postGroupList(this.gameid,this.groupList)

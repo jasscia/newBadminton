@@ -2,7 +2,7 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersUidList.sync="playersUidList" :gameid.sync="gameid"></baseData>
+    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersList.sync="playersList" :gameid.sync="gameid"></baseData>
     <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"></againstTable>
     <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid"></result>
   </view>
@@ -15,7 +15,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getGroupInfo,getPlayersUidList } from "../../common/common";
+import { getGroupInfo,downLoadMatchInfo } from "../../common/common";
 import header from '../../components/header'
 import baseData from './baseData'
 import againstTable from './againstTable'
@@ -31,7 +31,7 @@ export default class Live extends wepy.page {
     result:result
   }
   data={
-    playersUidList:[],
+    playersList:[],
     groupList:[],
     gameid:null,
     titleList:['设置','对阵表','时实战况'],
@@ -39,13 +39,15 @@ export default class Live extends wepy.page {
   }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-    this.playersUidList=await getPlayersUidList(this.gameid)
+    let matchInfo=await downLoadMatchInfo(this.gameid)
+    if(matchInfo.players){
+      this.playersList=matchInfo.players
+    }
     this.$apply()
-    console.log('传参',this.gameid,this.playersUidList)
   }
   watch={
-    gameid(){
-      console.log('gameid chenged',this.gameid)
+    gameid(n){
+      console.log('gameid chenged',n)
     }
   }
   events={

@@ -48,14 +48,14 @@ export default class CreateNewAgain extends wepy.page {
     },
     titleList:[
       {
-        title:'团体',
+        title:'团体标示',
         name:'theme',
-        value:'勘测设计羽协',
+        value:'',
         type:'strng',
       },{
         title:'地点',
         name:'address',
-        value:'葛洲坝青少年宫三楼',
+        value:'',
         type:'strng',
       },{
         title:'日期',
@@ -67,6 +67,11 @@ export default class CreateNewAgain extends wepy.page {
         name:'time',
         value:'09:00',
         type:'string',
+      },{
+        title:'我也报名',
+        name:'auto_signup',
+        value:true,
+        type:'boolean',
       }
     ]
   }

@@ -1,16 +1,18 @@
 <!--pages/result/result.wxml-->
 <template>   
   <view class="wrapper">
-    <button wx:if="{{ifShowBtn}}" @tap="getResult">获取排名结果</button>
-     <view class="itemHead"  wx:if="{{!ifShowBtn}}">
+    <view class="progress">
+      <resultCycleProgressBar :value.sync="process" :comment.sync="comment"></resultCycleProgressBar>
+    </view>
+    <view class="itemHead">
       <view class='item1'>姓名</view>
       <view class='item3'>胜-负</view>
       <view class='item2'>净胜分</view>
       <view class='item4'>名次</view>
     </view>
-    <repeat wx:for="{{result}}" wx:key="{{item}}">
-      <view  class="item itemBody"  wx:if="{{!ifShowBtn}}">
-        <view class='item1 NO-{{item[4]}}'>{{index}}</view>
+    <repeat for="{{result}}" key="{{item}}" index="index">
+      <view  class="item itemBody">
+        <view class='item1 NO-{{item[4]}}'>{{item[5]||item[6]}}</view>
         <view class='item3'>{{item[1]}}-{{item[2]}}</view>
         <view class='item2'>{{item[0]}}</view>            
         <view class='item4 NO-{{item[4]}}'>{{item[4]}}</view>
@@ -20,6 +22,10 @@
 </template>
 <style lang="less" scoped>
 @import '../../common/common.less';
+.progress{
+  background: @bgc-card;
+  padding:30rpx;
+}
 .itemHead{
   display: flex;
   width:700rpx;
@@ -27,7 +33,7 @@
   height:80rpx;
   line-height: 80rpx;
   background: lightgreen;
-  margin-top: 40rpx;
+  // margin-top: 40rpx;
   margin-bottom: -10rpx;
   // border-bottom: 10rpx solid cadetblue;
 }
@@ -77,24 +83,45 @@
 </style>
 <script>
 import wepy from 'wepy';
+import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Result extends wepy.page  {
-  //logs.js
+  components={
+    resultCycleProgressBar:cycleProgressBar
+  }
   props= {
     groupList: {
       type:Array,
       default:[]
+    },
+    gameid:{
+      type:String,
+      default:null
     }
   }
   data={
     result:{},
-    ifShowBtn:true
+    ifShowBtn:true,
+    process:40,
+    comment:'完成进度'
   }
-  onUnload(){
-    this.ifShowBtn=true
+  watch={
+    groupList(newGroupList,oldGroup){
+      console.log('groupList changed',newGroupList)
+      let calcedScore = this.calcScore(newGroupList);
+      let orderedScore = this.orderScore(calcedScore);
+      this.result= orderedScore;
+      console.log(this.result)
+    }
   }
-  onHide(){
-    this.ifShowBtn=true
-  }
+  // onUnload(){
+  //   this.ifShowBtn=true
+  // }
+  // onHide(){
+  //   this.ifShowBtn=true
+  // }
+  // onShow(){
+  //   this.ifShowBtn=true
+  // }
   methods={
     getResult(){
     this.ifShowBtn=false
@@ -107,19 +134,26 @@ export default class Result extends wepy.page  {
     let result = {}
     let playerList=['user_a1','user_a2','user_b1','user_b2']
     for (let groupInfo of groupList) {
+      // console.log(groupInfo)
       for (let i = 0; i < 4; i++) {
-        let player=groupInfo[playerList[i]].uid
-        result[player] = result[player] || [0, 0, 0,0];
+        let key=playerList[i]
+        // console.log(key)
+        let playerId=groupInfo[key].uid//获取userid
+        let playerRealName=groupInfo[key].real_name//获取userid
+        let playerNickName=groupInfo[key].nick_name//获取userid
+        let playerAvatarUrl=groupInfo[key].avatar_url//获取userid
+        result[playerId] = result[playerId] || [0, 0, 0,0,0,playerRealName,playerNickName,playerAvatarUrl];//初始化结果数组【净胜分、胜场、负场、胜负差值、名次、姓名、昵称、头像】
         if (i < 2) {
-          result[player][0] += (groupInfo.score_a - groupInfo.score_a);
-          result[player][1] += (groupInfo.score_a > groupInfo.score_b? 1 : 0);
-          result[player][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
+          result[playerId][0] += (groupInfo.score_a - groupInfo.score_b);
+          result[playerId][1] += (groupInfo.score_a > groupInfo.score_b? 1 : 0);
+          result[playerId][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
         } else {
-          result[player][0] += (groupInfo.score_a - groupInfo.score_b);//[0]是净胜分
-          result[player][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);//[1]胜的场次
-          result[player][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);//[2]是败胜分
+          result[playerId][0] += (groupInfo.score_b - groupInfo.score_a);//[0]是净胜分
+          result[playerId][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);//[1]胜的场次
+          result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);//[2]负的场次
         }
-        result[player][3] = result[player][1] - result[player][2];//[3]是胜-败的比值率
+        result[playerId][3] = result[playerId][1] - result[playerId][2];//[3]是胜-败的差值
+        // console.log(playerId,result[playerId],groupInfo)
       }
     }
     return result;
@@ -133,7 +167,8 @@ export default class Result extends wepy.page  {
     }
     let newObj = {};
     for (let i=0; i < orderedKeys.length; i++) {
-      newObj[orderedKeys[i]] = obj[orderedKeys[i]].concat(i + 1)//[4]是名次，concat的部分
+      newObj[orderedKeys[i]] = obj[orderedKeys[i]].slice()
+      newObj[orderedKeys[i]][4]=i + 1     //[4]是名次
     }
     return newObj;
   }

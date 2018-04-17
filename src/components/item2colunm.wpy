@@ -5,11 +5,20 @@
                   mode="{{item.name}}" 
                   start="{{dateRange['start'][item.name]}}" 
                   end="{{dateRange['end'][item.name]}}"
-                  value="{{item.value}}" @change="dateChange" name="{{item.name}}">
+                  value="{{item.value}}" 
+                  @change="inputValue" 
+                  name="{{item.name}}">
                   <view class="picker">{{item.value}}</view>
           </picker>
-          <input  wx:else type="{{item.type}}" value="{{item.value}}" name="{{item.name}}" />
-          
+          <switch wx:if="{{item.name==='auto_signup'}}" 
+                  checked="{{item.value}}"
+                  @change="inputValue" 
+                  name="{{item.name}}"></switch>
+          <input  wx:if="{{(item.name!=='date')&&(item.name!=='time') &&(item.name!=='auto_signup')}}" 
+                  type="{{item.type}}" 
+                  value="{{item.value}}" 
+                  @change="inputValue" 
+                  name="{{item.name}}" />          
     </view>
 </template>
 <style lang="less" scoped>
@@ -59,9 +68,9 @@ export default class Item2colunm extends wepy.component{
   };
   
   methods={
-    dateChange: function(e) {
+     inputValue: function(e) {
       this.item.value= e.detail.value;
-      // this.$apply();
+      console.log(this.item.title,this.item.value)
     }
   }
 }

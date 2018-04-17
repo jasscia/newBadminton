@@ -82,7 +82,7 @@ const URLList={
   getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',
   changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename',
   postGroupListURl:'https://kkiqq.cn/api/badminton/group',
-  postGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
+  getGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
   putGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
 };
 export {URLList,

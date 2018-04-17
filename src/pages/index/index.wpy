@@ -25,20 +25,24 @@
     }
     data = {
       matchInfoList:[],
-      activeBar:'附近的比赛',
-      titleList:['附近的比赛','球员排行榜']
+      activeBar:'近期赛事',
+      titleList:['近期赛事','球员排行榜']
     }
     computed={
       matchCount(){
-        return this.matchInfoList.length
+        if(this.matchInfo && this.matchInfoList.length!==undefined){
+          return this.matchInfoList.length
+        }
       }
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList('All')
+    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList('All')
+    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){

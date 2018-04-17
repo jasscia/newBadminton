@@ -97,7 +97,7 @@
     content:"\e6ec";
   }
   .row5::before{
-    content:"\f012d";
+    content:"\e700";
   }
   .row2::before,.row3::before,.row4::before,.row5::before{    
     width:20px;

@@ -1,6 +1,6 @@
 <template>
 <view class="rankingList" for="{{data}}" key="item" index="index">
-    <view class="NO">NO.{{item.NO}}</view>
+    <!-- <view class="NO">NO.{{item.NO}}</view>
     <view class="identity">
       <image class="avatar" src="{{item.avatarUrl}}" />
       <view class="name">{{item.nickName}}</view>
@@ -18,7 +18,7 @@
       <view class="item1">{{item.fail}}</view>
       <view class="item1">胜率</view>
       <view class="item1">{{item.ratio}}%</view>
-    </view>
+    </view> -->
 </view>
 </template>
 <style lang="less" scoped>

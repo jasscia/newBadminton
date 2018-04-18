@@ -25,6 +25,7 @@
 .progress{
   background: @bgc-card;
   padding:30rpx;
+  margin-top:40rpx;
 }
 .itemHead{
   display: flex;
@@ -107,21 +108,14 @@ export default class Result extends wepy.page  {
   watch={
     groupList(newGroupList,oldGroup){
       console.log('groupList changed',newGroupList)
+      this.process = this.calcProcess(newGroupList);
       let calcedScore = this.calcScore(newGroupList);
+      console.log('calcedScore',calcedScore)
       let orderedScore = this.orderScore(calcedScore);
       this.result= orderedScore;
       console.log(this.result)
     }
   }
-  // onUnload(){
-  //   this.ifShowBtn=true
-  // }
-  // onHide(){
-  //   this.ifShowBtn=true
-  // }
-  // onShow(){
-  //   this.ifShowBtn=true
-  // }
   methods={
     getResult(){
     this.ifShowBtn=false
@@ -132,11 +126,11 @@ export default class Result extends wepy.page  {
   }
   calcScore(groupList) {
     let result = {}
-    let playerList=['user_a1','user_a2','user_b1','user_b2']
+    let uKey=['id_a1','id_a2','id_b1','id_b2']
     for (let groupInfo of groupList) {
       // console.log(groupInfo)
       for (let i = 0; i < 4; i++) {
-        let key=playerList[i]
+        let key=uKey[i]
         // console.log(key)
         let playerId=groupInfo[key].uid//获取userid
         let playerRealName=groupInfo[key].real_name//获取userid
@@ -196,6 +190,13 @@ export default class Result extends wepy.page  {
       }
     }
     return key_of_max;
+  }
+  calcProcess(groupList){
+    let doneList=groupList.filter(groupInfo => {
+      console.log('groupInfo.status',groupInfo.status)
+      return groupInfo.status
+    });
+    return Math.round(doneList.length/groupList.length*100,2)
   }
 }
 </script>

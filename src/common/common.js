@@ -204,6 +204,7 @@ const getGroupInfo=async function(gameid){
   }
 }
 const putGroupInfo=async function(groupid,options){
+  console.log('options--------',options)
   let userInfo=await initUserInfo()
   if(!userInfo || !userInfo.token){
     return {}
@@ -212,7 +213,7 @@ const putGroupInfo=async function(groupid,options){
   let url=URLList.postGroupListURl+'\/'+groupid,
       method="PUT",
       data=options;
-  data.totken=token;
+  data.token=token;
   let res=await htr(url,method,data)
   console.log('putGroupInfo res=',res)
   if(res.data.code===1){
@@ -243,21 +244,23 @@ const share=function(path){
     }
 }
 const transGroupListToGroupListWithPlayerInfo=function(groupList,playersList){
-  let uKey=['user_a1','user_a2','user_b1','user_b2']
+  let uKey=['id_a1','id_a2','id_b1','id_b2']
   groupList.forEach(groupInfo=>{
-    for(key of uKey){
+    for(let key of uKey){
       let uid=groupInfo[key]
       groupInfo[key]=getUserInfoByUid(uid,playersList)
     }
   })
+  return groupList
 }
 const getUserInfoByUid=function(uid,playersList){
   let results=playersList.filter(playerInfo=>{
-    return playerInfo.id===uid
+    return playerInfo.userid===uid
   })
-  console.log(results)
   if(results.length){
-    return results[0]
+    let userInfo={...results[0].user}
+    userInfo.uid=results[0].userid;
+    return userInfo
   }
 }
 export {downLoadMatchInfoList,

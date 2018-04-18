@@ -5,8 +5,8 @@
     <view class="againstTable">
     <view class="againstItem {{item.status===1?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
       <view class="side">
-        <view class="name">{{item.user_a1.real_name||item.user_a1.nick_name}}</view>
-        <view class="name">{{item.user_a2.real_name||item.user_a2.nick_name}}</view>
+        <view class="name">{{item.id_a1.real_name||item.id_a1.nick_name}}</view>
+        <view class="name">{{item.id_a2.real_name||item.id_a2.nick_name}}</view>
       </view>
       <!-- <view class="score"> -->
       <view class="handleBtnGroup">
@@ -26,8 +26,8 @@
       </view>
       <!-- </view> -->
       <view class="side">
-        <view class="name">{{item.user_b1.real_name||item.user_b1.nick_name}}</view>
-        <view class="name">{{item.user_b2.real_name||item.user_b2.nick_name}}</view>
+        <view class="name">{{item.id_b1.real_name||item.id_b1.nick_name}}</view>
+        <view class="name">{{item.id_b2.real_name||item.id_b2.nick_name}}</view>
       </view>
     </view>
   </view>
@@ -171,6 +171,12 @@ export default class AgainstTable extends wepy.page {
     activedGroupIndex:null
     // matchInfo:{}
   }
+  watch={
+    groupList(n,o){
+      console.log('grouplist changed fn in table',n,o)
+      // this.$apply()
+    }
+  }
   
   methods={
      scoreChange(e){
@@ -183,6 +189,7 @@ export default class AgainstTable extends wepy.page {
       } else if (this.groupList[index][side]!==0){
         groupInfo[side]--
       }
+      this.$apply()
     },
     selectItem(e){
       this.activedGroupIndex=e.currentTarget.dataset.id
@@ -192,7 +199,7 @@ export default class AgainstTable extends wepy.page {
       let groupInfo=this.groupList[index]
       let status=(groupInfo.status===1?0:1)
       groupInfo.status=status
-      let gameid=groupInfo.gameid
+      let gameid=this.gameid
       let groupid=groupInfo.id
       let score_a=groupInfo.score_a
       let score_b=groupInfo.score_b

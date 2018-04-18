@@ -15,7 +15,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getGroupInfo,downLoadMatchInfo } from "../../common/common";
+import { getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share} from "../../common/common";
 import header from '../../components/header'
 import baseData from './baseData'
 import againstTable from './againstTable'
@@ -33,22 +33,29 @@ export default class Live extends wepy.page {
   data={
     playersList:[],
     groupList:[],
+    // groupListWithUserInfo:[],
     gameid:null,
     titleList:['设置','对阵表','时实战况'],
     activeBar:'设置'
   }
+  onShareAppMessage(){
+   return  share('/pages/live/lve?gameid='+this.gameid)
+ }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-    let matchInfo=await downLoadMatchInfo(this.gameid)
-    if(matchInfo.players){
-      this.playersList=matchInfo.players
-    }
-    this.$apply()
   }
   watch={
-    gameid(n){
-      console.log('gameid chenged',n)
+    async gameid(newGameId){
+      console.log('gameid changed',newGameId)
+      let res=await this.getPlayerAndGroupList(newGameId)
+      this.playersList=res[0]
+      this.groupList=res[1]
+      this.$apply()
+    },
+      groupList(n,o){
+      console.log('grouplist changed fn in live',n,o)
     }
+ 
   }
   events={
     changeActiveBar(from){
@@ -56,11 +63,34 @@ export default class Live extends wepy.page {
         this.activeBar=this.titleList[1]
       }
     },
-    async updataGroupList(newGroupList){
-      console.log('updataGroupList',newGroupList)
-      this.groupList=newGroupList
+    async updataGroupList(){
+      let res=await this.getPlayerAndGroupList(this.gameid)
+      this.playersList=res[0]
+      this.groupList=res[1]
+      // [this.playersList,this.groupList]
       this.$apply()
     }
   }
+  async getPlayerAndGroupList(gameid){
+     let groupUidList=[]
+     let groupList=[]
+     let playersList=[]
+      let matchInfo=await downLoadMatchInfo(gameid)
+      if(matchInfo.players){
+        playersList=matchInfo.players
+      }else{return}
+      if(matchInfo.group){
+        groupUidList=matchInfo.group
+      }else{return}
+      groupList=transGroupListToGroupListWithPlayerInfo(groupUidList,playersList)
+      groupList.forEach(groupInfo => {
+        groupInfo.score_a=(groupInfo.score_a||0)
+        groupInfo.score_b=(groupInfo.score_b||0)
+        groupInfo.status=(groupInfo.status||0)
+      });
+      console.log('[playersList,groupList],fn',playersList,groupList)
+      return [playersList,groupList]
+}
 }
 </script>
+

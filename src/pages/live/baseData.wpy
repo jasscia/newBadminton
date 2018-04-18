@@ -90,7 +90,7 @@
 
 <script>
 import wepy from 'wepy'
-import { initUserInfo,postGroupList,updateMatchInfo} from "../../common/common";
+import { initUserInfo,postGroupList,updateMatchInfo,downLoadMatchInfo} from "../../common/common";
 import badmin from '../../common/makeGroup'
 export default class BaseData extends wepy.page {
   props={
@@ -105,61 +105,65 @@ export default class BaseData extends wepy.page {
   }
   data={
       groupList:[],
+      playersList:[],
+      matchInfo:{},
       roundCount:4,
       msg:'努力计算中',
       state:1
     }
  watch={
    playersList(n){
-     n.forEach(p=>{
-       console.log(p.user.avatar_url)
-     })
-     console.log('playersList changed',n)
+     console.log('playersList changed in baseData',n)
+   },
+   gameid(n){
+     console.log('gameid changed in baseData page',n)
    }
  }
+  async onLoad(options){}
   methods={
     async makeGroup(){
-      console.log(this.playersList,this.roundCount)
       this.state=0;
       this.msg='正在计算。。。。。。'
       let playersNum=this.playersList.length
       let roundCount=this.roundCount
-      let data=(new badmin(playersNum,roundCount)).result
-      if(typeof data ==='string'){
+      let groupListJustWithOrder=(new badmin(playersNum,roundCount)).result//拿到的结果只是用数字序号标示的
+      if(typeof groupListJustWithOrder ==='string'){//如果成功的话，需要将数字序号改写为对应的人的信息
         this.state=2;
-        this.msg=data
+        this.msg=groupListJustWithOrder
         return
       }else{
-        this.state=1;
-        let playersUidList=[]
-        this.playersList.forEach(playerInfo=>{
-          playersUidList.push(playerInfo.userid)
-        })
-        console.log(this.playersList,this.playersList[0].userid)
-        for(let i=0,len=data[1].length;i<len;i++){
-          let p1=playersUidList[data[1][i]-1];
-          let p2=playersUidList[data[2][i]-1];
-          let p3=playersUidList[data[3][i]-1];
-          let p4=playersUidList[data[4][i]-1];
-          this.groupList.push([p1,p2,p3,p4])
-        }
+        this.state=1;//计算成功的时候，
+        this.groupList=this.transOrderWithPLayerId(groupListJustWithOrder,this.playersList)
+        //得到好用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
+        //一旦生成对阵表 说明比赛开始了，也要去改变比赛的状态
+        //通知 父页面去获取group并跟新 本地的group--是一个辅助，用于后期展示页面
         this.groupList=await postGroupList(this.gameid,this.groupList)
-        if(this.groupList){
-          this.groupList.forEach(groupInfo => {
-            groupInfo.score_a=0
-            groupInfo.score_b=0
-            groupInfo.status=0
-          });
-          this.$emit('updataGroupList',this.groupList)
-          await updateMatchInfo(this.gameid,{status:2})
-          this.$emit('changeActiveBar','from baseData')
+        await updateMatchInfo(this.gameid,{status:2})
+        this.$emit('updataGroupList')
+        //这个改变 是为了页面跳转
+        this.$emit('changeActiveBar','from baseData')
         }
-      }
     },
     changeRoundCount(e){
       this.roundCount=e.detail.value
     }
   }
   // posttGroupList()
+transOrderWithPLayerId(groupListJustWithOrder,playersList){
+let groupListWithUid=[]
+  let playersUidList=[]//先获取人员依次获取人员UID 按顺序排好
+        this.playersList.forEach(playerInfo=>{
+          playersUidList.push(playerInfo.userid)
+        })
+        //
+        for(let i=0,len=groupListJustWithOrder[1].length;i<len;i++){
+          let p1=playersUidList[groupListJustWithOrder[1][i]-1];//这是因为groupListJustWithOrder的存储方式是【【---】，【---】，【---】，【---】】
+          let p2=playersUidList[groupListJustWithOrder[2][i]-1];//相同index上的 是要对阵的四个人员
+          let p3=playersUidList[groupListJustWithOrder[3][i]-1];
+          let p4=playersUidList[groupListJustWithOrder[4][i]-1];
+          groupListWithUid.push([p1,p2,p3,p4])
+        }
+        return groupListWithUid
+        }
 }
 </script>

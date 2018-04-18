@@ -63,7 +63,7 @@
         <view class="side left">我的资料</view>
         <view class="side right">修改</view>
       </view>
-      <view class="item" @tap.stop="tap">
+      <view class="item" @tap.stop="gotoAbout">
         <view class="side left">关于</view>
         <view class="side right"></view>
       </view>
@@ -231,7 +231,11 @@ export default class Custom extends wepy.page {
         wx.navigateTo({
           url:"/pages/custom/baseInfo"
         })
-      }
+      },
+      gotoAbout(){
+        wx.navigateTo({
+          url:"/pages/about/about"
+        })}
     };
 }
 </script>

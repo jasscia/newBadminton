@@ -48,7 +48,7 @@ export default class CreateNewAgain extends wepy.page {
     },
     titleList:[
       {
-        title:'团体标示',
+        title:'团体名称',
         name:'theme',
         value:'',
         type:'strng',
@@ -101,6 +101,16 @@ export default class CreateNewAgain extends wepy.page {
           date=formData.date,
           time=formData.time;
       let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
+      let tag=Object.keys(formData).some(key=>{
+        return !formData[key]
+      })
+      if(tag){
+        wx.showToast({
+          title:'创建失败，字段不能为空',
+          icon:'none'
+        })
+        return
+        }
       Object.keys(formData).map(key=>{
         if(['time','date'].indexOf(key)===-1){
           newFormData[key]=formData[key]

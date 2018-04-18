@@ -55,7 +55,6 @@ export default class Live extends wepy.page {
       groupList(n,o){
       console.log('grouplist changed fn in live',n,o)
     }
- 
   }
   events={
     changeActiveBar(from){

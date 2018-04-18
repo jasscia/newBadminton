@@ -170,15 +170,29 @@ data={
    this.matchInfo=await downLoadMatchInfo(this.gameid)
    console.log(this.matchInfo)
    this.$apply()
-  //  this.my_avatar_url=wx.getStorageSync('userInfo').avatar_url
-  //  console.log('my',this.my_avatar_url)
  }
- onShareAppMessage(){
+ onShareAppMessage(res){
+   console.log(res)
    return  share('/pages/detail/detail?gameid='+this.gameid)
  }
  methods={
-   signup(){
-     addPlayer(this.gameid)
+   async signup(){
+     let res=await addPlayer(this.gameid)
+     if(res){
+
+   this.matchInfo=await downLoadMatchInfo(this.gameid)
+   this.$apply()
+       wx.showToast({
+         title:'报名成功',
+         icon:'success',
+         duration:1500
+       })
+     }else{
+       wx.showToast({
+         title:'报名失败',
+         duratuin:1500
+       })
+     }
    },
    goToIndex(){
      wx.switchTab({

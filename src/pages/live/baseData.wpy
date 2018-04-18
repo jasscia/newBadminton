@@ -96,7 +96,8 @@ export default class BaseData extends wepy.page {
   props={
     playersList:{
       type:Array,
-      default:[]
+      default:[],
+      twoWay:true
     },
     gameid:{
       type:String,

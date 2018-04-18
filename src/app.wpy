@@ -24,13 +24,13 @@ export default class extends wepy.app {
     tabBar: {
       list: [
         {pagePath: 'pages/index/index',
-          text: '首页'},
+          text: '近期赛事'},
         {pagePath: 'pages/main/main',
           text: '我的赛事'},
         {pagePath: 'pages/custom/custom',
           text: '个人中心'},
-        {pagePath: 'pages/about/about',
-          text: '关于'}
+        // {pagePath: 'pages/about/about',
+        //   text: '关于'}
       ]
     }
   };

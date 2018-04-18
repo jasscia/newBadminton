@@ -1,5 +1,5 @@
 <template>
-<view class="warp" @tap.stop="turnoverCard" animation="{{animationData[index]}}">
+<view class="warp" animation="{{animationData[index]}}">
   <view class="frontSide side" hidden="{{ifShowbackSide[index]}}">
     <slot name="frontSide" ></slot>
   </view>
@@ -49,7 +49,7 @@ export default class twoSide extends wepy.component{
                     transformOrigin: '50% 50% 0'
                 });
   }
-  methods={
+  events={
     turnoverCard(e){
       if(this.index!==undefined){
         if(this.animationData[this.index]===undefined){

@@ -55,8 +55,7 @@
     background: @bgc-card;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    min-height: 400rpx;
+    justify-content: flex-start;
     .playerInfo{
       width:100rpx;
       height:120rpx;

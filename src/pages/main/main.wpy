@@ -6,14 +6,8 @@
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view  class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
-        <matchInfo :matchInfo.sync="matchInfo" :ifSlot.sync="true">
-          <button slot="contoller" 
-                  @tap.stop="goToLive" 
-                  data-tag="cardTap" 
-                  data-gameid="{{matchInfo.id}}"
-                  disabled="{{matchInfo.players.length<4}}">
-                  <text class="status">{{matchInfo.status}}</text>
-                  {{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看详情"}}</button>
+        <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'">
+          
         </matchInfo>
       </view>
     </repeat>
@@ -42,36 +36,21 @@
         color:@bgc;
       }
     }
-    .matchCard{ 
+    .matchCard{
       margin:20px;
-      padding:10px;
+      padding-bottom:10px;
       font-size: 12px;
       color:#666;
       background: @bgc-card;
       border-radius: 10px;
       position: relative;
       height: 300rpx;
-      button{
-        height:70rpx;
-        line-height: 70rpx;
-        padding:0;
-        background: @btn-em;
-      }
-    }
-    .status{
-      font-size: 24rpx;;
-      position:absolute;
-      right:0;
-      padding:0 10rpx;
-      display:inline-block;
-      background:cadetblue;
-
     }
   }
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,downLoadMatchInfo,updateMatchInfo,share} from '../../common/common';
+import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
 import header from '../../components/header';
 export default class myGameList extends wepy.page{
@@ -108,18 +87,6 @@ export default class myGameList extends wepy.page{
         wx.navigateTo({
           url:"/pages/main/createNewAgainst"
         })
-      },
-      async goToLive(e){
-        let dataset=e.target.dataset
-        if(e.target.dataset.tag==='cardTap'){
-          let gameid=dataset.gameid
-          await updateMatchInfo(gameid,{status:2})
-          this.matchInfoList = await downLoadMatchInfoList()
-          this.$apply()
-          wx.navigateTo({
-            url:`/pages/live/live?gameid=${gameid}`
-          })
-        }
       },
       gotodetail(e){
         let gameid=e.currentTarget.dataset.gameid;

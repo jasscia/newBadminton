@@ -1,12 +1,17 @@
 <template>
 <view class="matchInfo"> 
-    <view class="row row1">
+    <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
       <view class="status">{{matchInfo.status}}</view>
       <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
     </view>
-    <view class="contoller" wx:if="{{ifSlot}}">
-      <slot  name="contoller"></slot>
-    </view>
+    <block wx:if="{{mode==='withPanle'}}">
+      <button @tap.stop="goToLive"  
+              data-gameid="{{matchInfo.id}}"
+              disabled="{{matchInfo.players.length<4}}">
+              <text class="statusBtn">{{matchInfo.status}}</text>
+              <text class="statusBtn" wx:if="{{matchInfo.players.length<4}}">人数小于4，不满足开赛条件</text>
+              {{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看赛事详情"}}</button>
+    </block>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
     </view>
@@ -16,7 +21,9 @@
       <view class="summery">{{matchInfo.players.length}}人已报名</view>
       <view class="avatarList">
         <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
-          <image src="{{player.user.avatar_url}}"/>
+          <view class="avatar">
+            <image src="{{player.user.avatar_url}}"/>
+          </view>
         </repeat>
       </view>
     </view>
@@ -45,20 +52,26 @@
       height:12px;
     }
   }
-  .contoller{
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:60rpx;
-    line-height: 60rpx;
-    vertical-align: middle;
-    text-align: center;
-    background: @btn-em;
-    font-size:40rpx;
-    letter-spacing: 10rpx;
-    color:@font;
-  }
+  // .contoller{
+    button{
+      color:@font;
+      height:55rpx;
+      line-height: 55rpx;
+      padding:0;
+      background: @btn-em;
+      font-size: 34rpx;
+      letter-spacing: 10rpx;
+    }
+    .statusBtn{
+      color:@font;
+      font-size: 24rpx;;
+      position:absolute;
+      right:0;
+      padding:0 10rpx;
+      display:inline-block;
+      background:cadetblue;
+    }
+  // }
   .row2{
     font-size: 18px;
     white-space: nowrap;
@@ -72,20 +85,37 @@
   }
   .row5{
     height:30px;
-    // line-height: 25px;
     display: flex;
     justify-content: space-between;
     .avatarList{
+      margin-right: 10rpx;
       flex:1;
-      text-align: end;   
-      overflow: hidden;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      .avatar{
+        width:40rpx;
+        border:4rpx solid @bgc-card;
+        border-radius: 50%;
+      }
       image{
-        height:25px;
-        width:25px;
+        height:28px;
+        width:28px;
         border-radius: 50%;
         background-size: cover;
       }
     }
+    // .shareBtn{
+    //   font-size: 20rpx;
+    // }
+    // .shareBtn::before{
+    //   content: "\e624";
+    //   font-family: "iconfont";
+    //   font-size: 30rpx;
+    //   overflow: hidden;
+    //   margin-left:20rpx;
+    //   color: @btn;
+    // }
   }
   .row2::before{
     content:"\e6fe";
@@ -109,17 +139,29 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {updateMatchInfo} from '../common/common'
+import {updateMatchInfo,share,downLoadMatchInfo} from '../common/common'
 export default class matchInfo extends wepy.component{
   props={
     matchInfo:{
       type:Object,
       default:{},
      },
-    ifSlot:{
-      type:Boolean,
-      default:false
+    mode:{
+      type:String,
+      default:'withoutPanle'
     }
+  }
+  methods={
+      async goToLive(e){
+        let dataset=e.currentTarget.dataset
+        let gameid=dataset.gameid
+        await updateMatchInfo(gameid,{status:2})
+        this.matchInfo = await downLoadMatchInfo()
+        this.$apply()
+        wx.navigateTo({
+          url:`/pages/live/live?gameid=${gameid}`
+        })
+      }
   }
 }
 </script>

@@ -5,7 +5,7 @@
       没有正在报名的比赛
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
-      <view class="matchCard">
+      <view class="matchCard" @tap="gotodetail" data-gameid="{{item.id}}">
          <twoSide :index.sync="index">
             <block slot='frontSide'>
               <matchInfo  :matchInfo.sync="item" :ifSlot.sync="true"></matchInfo>
@@ -78,6 +78,15 @@
   }
   async onLoad(){  }
   onShow(){}
+
+  methods={
+      gotodetail(e){
+        let gameid=e.currentTarget.dataset.gameid;
+        wx.navigateTo({
+          url:`/pages/detail/detail?gameid=${gameid}`
+        })
+      }
+  }
 }
 </script>
 

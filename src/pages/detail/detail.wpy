@@ -12,25 +12,26 @@
   </view>
   <view class="item">
     <view class="title">创建者</view>
-    <view class="content">{{baseInfo.owner.real_name || aseInfo.owner.nick_name}}</view>    
+    <view class="content">{{baseInfo.owner.real_name || baseInfo.owner.nick_name}}</view>    
   </view>
   <view class="item">
     <view class="title">状态</view>
     <view class="content">{{baseInfo.status}}</view>    
   </view>
-  <view class="label">共{{playersList.length}}人报名参赛</view>
+  <view class="label">共{{playersList.length}}人报名参赛 <button class="shareBtn" open-type="share" >邀请好友</button></view>
   <!-- <view class="playersUidList"> -->
   <view class="playersList">
     <repeat for="{{playersList}}" key="index" item="playerInfo">
-      <view class="playerInfo {{playerInfo.user.avatar_url===avatar_url?'em':''}}">
-        <image class="avatar" src="{{playerInfo.user.avatar_url}}" />
+      <view class="playerInfo">
+        <image class="avatar {{myturn===index?'em':''}}" src="{{playerInfo.user.avatar_url}}" />
         <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
       </view>
     </repeat>
   </view>
-  <button class="btn" @tap="signup" disabled="{{baseInfo.ifIn}}">{{baseInfo.ifIn?'已经报名':'参赛报名'}}</button>
-  <button class="btn" open-type="share" >分享 转发</button>
-  <button class="btn" @tap="goToIndex">去首页看看</button>
+  <view class="btnBox">
+    <button class="btn" @tap="signup" disabled="{{baseInfo.ifIn}}">{{baseInfo.ifIn?'已经报名':'参赛报名'}}</button>
+    <button class="btn" @tap="goToIndex">去首页看看</button>
+  </view>
 </view>
 </template>
 
@@ -41,8 +42,8 @@
     background: @bgc-card;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    min-height: 400rpx;
+    justify-content: flex-start;
+    // min-height: 400rpx;
     .playerInfo{
       width:100rpx;
       height:120rpx;
@@ -54,6 +55,10 @@
         border-radius: 50%;
         background-size: cover;
       }
+      .em{
+        border:6rpx solid @btn-em;
+        box-sizing: border-box;
+      }
       .name{
         font-size: 24rpx;
         width:100rpx;
@@ -62,13 +67,6 @@
         vertical-align: middle;
       }
     }
-    .playerInfo.em::after{
-        content:"已报名";
-        font-size: 20rpx;
-        color:tomato;
-        display: inline-block;
-        transform:translateY(-160rpx);
-      }
   }
   
   .item,.label{
@@ -97,14 +95,37 @@
       width:500rpx;
     }
   }
+  .btnBox{
+    display: flex;
+    align-content: space-around;
+  }
   .btn{
     margin:40rpx auto;
-    width:450rpx;
+    width:300rpx;
     height:100rpx;
     line-height: 100rpx;
     vertical-align: middle;
     text-align: center;
+    background: @bgc-card;
   }
+  .shareBtn{
+    display: inline-block;
+    height:60rpx;
+    line-height:60rpx;
+    vertical-align:bottom;
+    border-radius:15rpx;
+    font-size:18rpx;
+    text-align:center;
+    margin-left:20rpx;
+    background: @bgc-card;
+    position: static;
+  }
+    .shareBtn::before{
+      content: "\e624";
+      font-family: "iconfont";
+      font-size: 40rpx;
+      color: @btn-em;
+    }
 </style>
 
 
@@ -118,38 +139,40 @@ data={
     baseInfo:{},
     groupList:[],
     gameid:null,
-    avatar_url:''
+    myturn:null
   }
  watch={
    matchInfo(newMatchInfo){
-     let status=['报名中','报名结束','比赛中','比赛结束']
+    //  let status=['报名中','报名结束','比赛中','比赛结束']
      this.playersList=newMatchInfo.players
      this.groupList=newMatchInfo.group
      this.baseInfo.begintime=newMatchInfo.begintime
      this.baseInfo.address=newMatchInfo.address
-     this.baseInfo.status=status[newMatchInfo.status]
+     this.baseInfo.status=newMatchInfo.status
      this.baseInfo.owner=newMatchInfo.owner
      this.baseInfo.ifIn=newMatchInfo.ifIn
-
-     console.log(this.playersList,this.baseInfo,this.groupList)
+     let my_avatar_url=wx.getStorageSync('userInfo').avatar_url
+     if(! this.baseInfo.ifIn){
+       this.myturn=null
+       return
+      }
+      for(let i=0,len=this.playersList.length;i<len;i++){
+        let playerInfo=this.playersList[i]
+        console.log('other1',playerInfo.user.avatar_url,'other2',my_avatar_url)
+        if(playerInfo.user.avatar_url===my_avatar_url){
+          this.myturn=i;return
+        }
+      }
+     }
    }
- }
  async onLoad(options){
    this.gameid=options.gameid
-   console.log('options',options.gameid,options.query)
    this.matchInfo=await downLoadMatchInfo(this.gameid)
    console.log(this.matchInfo)
    this.$apply()
-   this.avatar_url=wx.getStorageSync('userInfo').avatar_url
+  //  this.my_avatar_url=wx.getStorageSync('userInfo').avatar_url
+  //  console.log('my',this.my_avatar_url)
  }
-//  async onshow(options){
-//    this.gameid=options.gameid
-//    console.log(this.gameid,options.query)
-//    this.matchInfo=await downLoadMatchInfo(this.gameid)
-//    console.log(this.matchInfo)
-//    this.$apply()
-//    this.avatar_url=wx.getStorageSync('userInfo').avatar_url
-//  }
  onShareAppMessage(){
    return  share('/pages/detail/detail?gameid='+this.gameid)
  }

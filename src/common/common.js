@@ -242,6 +242,24 @@ const share=function(path){
       }
     }
 }
+const transGroupListToGroupListWithPlayerInfo=function(groupList,playersList){
+  let uKey=['user_a1','user_a2','user_b1','user_b2']
+  groupList.forEach(groupInfo=>{
+    for(key of uKey){
+      let uid=groupInfo[key]
+      groupInfo[key]=getUserInfoByUid(uid,playersList)
+    }
+  })
+}
+const getUserInfoByUid=function(uid,playersList){
+  let results=playersList.filter(playerInfo=>{
+    return playerInfo.id===uid
+  })
+  console.log(results)
+  if(results.length){
+    return results[0]
+  }
+}
 export {downLoadMatchInfoList,
         downLoadMatchInfo,
         updateMatchInfo,
@@ -255,4 +273,5 @@ export {downLoadMatchInfoList,
         share,
         postGroupList,
         getGroupInfo,
-        putGroupInfo}
+        putGroupInfo,
+        transGroupListToGroupListWithPlayerInfo}

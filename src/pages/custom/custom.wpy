@@ -28,15 +28,23 @@
     <view class="part part3">
       <view class="item title" @tap.stop="tap">得分统计</view>
       <view class="item content" @tap.stop="tap">
-        <view class="row1">180</view>
-        <view class="row1">4</view>
-        <view class="row1">6</view>
-        <view class="row1 raito">40</view>
-        <view class="row2" >场次</view>
-        <view class="row2">胜利</view>
-        <view class="row2">失败</view>
-        <view class="row2">胜率</view>
-      </view>
+        <view class="subItem">
+          <view class="row1">40</view>
+          <view class="row2">场次</view>
+        </view>
+        <view class="subItem">
+          <view class="row1">20</view>
+          <view class="row2">胜利</view>
+        </view>
+        <view class="subItem">
+          <view class="row1">20</view>
+          <view class="row2">失败</view>
+        </view>
+        <view class="subItem">
+          <view class="row1 raito">50</view>
+          <view class="row2">胜率</view>
+        </view>
+    </view>
     </view>
     <view class="part part4">
       <view class="item" @tap.stop="tap">
@@ -120,15 +128,15 @@
     position: relative;
     z-index: 1;
   }
-  .score::after {
-    content: '综合实力';
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    bottom: -27%;
-    font-size: 12px;
-    width: 100%;
-  }
+  // .score::after {
+  //   content: '综合实力';
+  //   display: inline-block;
+  //   position: absolute;
+  //   left: 0;
+  //   bottom: -27%;
+  //   font-size: 12px;
+  //   width: 100%;
+  // }
 }
 .part4{
   .item{
@@ -152,30 +160,39 @@
   background: @bgc-card;
   padding:10px;
   .content{
-    display: grid;
+    display: flex;
     padding:10px 0;
-    grid-template-columns: repeat(4,1fr);
-    justify-items: center;
-  }
-  .row1,.row2{
-    text-align: center;
-    min-width: 60px;
-  }
-  .row1{
-    line-height: 40px;
-    font-size: 40px;
-    padding-top:15px;
-    background: @btn;
-    font-family:"Arial Narrow";
-  }
-  .row2{
-    line-height: 12px;
-    font-size: 12px;
-    margin-top:-13px;
-  }
-  .raito::after{
-    content:'%';
-    font-size: 14px;
+    justify-content: space-around;
+    .subItem{
+      width: 120rpx;
+      background: @btn;
+      .row1,.row2{
+        width:100%;
+        text-align: center;
+      }
+      .row1{
+        line-height: 80rpx;
+        font-size: 80rpx;
+        // padding-top:15px;
+        // background: @btn;
+      }
+      .row2{
+        line-height: 30rpx;
+        font-size: 24rpx;
+        // margin-top:-13px;
+      }
+      .raito{
+        position: relative;
+      }
+      .raito::after{
+        content:'%';
+        height:30rpx;
+        font-size: 28rpx;
+        position: absolute;
+        right:0;
+        bottom:24rpx;
+      }
+    }
   }
 }
 </style>

@@ -2,7 +2,9 @@
 <template>   
   <view class="wrapper">
     <view class="progress">
-      <resultCycleProgressBar :value.sync="process" :comment.sync="comment"></resultCycleProgressBar>
+      <resultCycleProgressBar :value.sync="process" 
+                              :comment.sync="comment" 
+                              :visualValue.sync="doneData"></resultCycleProgressBar>
     </view>
     <view class="itemHead">
       <view class='item1'>姓名</view>
@@ -103,17 +105,21 @@ export default class Result extends wepy.page  {
     result:{},
     ifShowBtn:true,
     process:40,
+    doneData:[0,0],
     comment:'完成进度'
   }
   watch={
     groupList(newGroupList,oldGroup){
-      console.log('groupList changed',newGroupList)
-      this.process = this.calcProcess(newGroupList);
+      console.log('groupList changed in result',newGroupList)
+      let processData = this.calcProcess(newGroupList);
+      this.process=processData.process
+      this.doneData=[processData.doneNum,processData.totalNum]
       let calcedScore = this.calcScore(newGroupList);
-      console.log('calcedScore',calcedScore)
+      // console.log('calcedScore',calcedScore)
       let orderedScore = this.orderScore(calcedScore);
       this.result= orderedScore;
-      console.log(this.result)
+      // console.log(this.result)
+      this.$apply()
     }
   }
   methods={
@@ -196,7 +202,13 @@ export default class Result extends wepy.page  {
       console.log('groupInfo.status',groupInfo.status)
       return groupInfo.status
     });
-    return Math.round(doneList.length/groupList.length*100,2)
+    let doneNum=doneList.length
+    let totalNum=groupList.length
+    let process=0
+    if(totalNum){
+      process=Math.round(doneNum/totalNum*100,2)
+    }
+    return {doneNum,totalNum,process}
   }
 }
 </script>

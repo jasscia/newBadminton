@@ -13,7 +13,11 @@
           </view>
       </block>
       <view class="text">
-        <view class="value">{{value}}</view>
+        <view class="value {{visualValue.length!==0}}?'process':''">{{value}}</view>
+        <!-- <view class="value visualValue" wx:else="visualValue.length">
+          <view class="value1">{{visualValue[0]}}</view>
+          <view class="value2">of {{visualValue[1]}}</view>
+        </view> -->
         <view class="comment">{{comment}}</view>
       </view>
     </view>      
@@ -25,23 +29,42 @@
   text-align: center;
 }
 .text{
-  height:80rpx;
-  width:100rpx;
+  height:100%;
+  width:100%;
   text-align: center;
   margin:auto;
   .value,.comment{
     color:@font;
     margin:0;
-    width: 100rpx;
+    width: 100%;
+    text-align: center;
+    position: relative;
   }
   .value{
     height:60rpx;
-    font-size:90rpx;
+    font-size:80rpx;
   }
   .comment{
     height:30rpx;
     font-size:24rpx;
   }
+  .process::after{
+    content:'%';
+    height:30rpx;
+    font-size: 30rpx;
+    position: absolute;
+    right:18rpx;
+    bottom:20rpx;
+  }
+  // .visualValue{
+  //   display: flex;
+  //   .value1{
+  //     font-size:70rpx;
+  //   }
+  //   .value2{
+  //     font-size: 30rpx;
+  //   }
+  // }
 }
 .cycle {
   display: inline-block;
@@ -87,8 +110,14 @@
 import wepy from 'wepy';
 export default class CycleProgressBar extends wepy.component {
   props = {
-    value: { type: Number, default: 'null' },
-    comment: { type: String, default: '综合实力' }
+    value: { type: Number, default: 0 },
+    comment: { type: String, default: 'shi' },
+    visualValue:{type:Array,default:[]}
+  }
+  match={
+    visualValue(n,o){
+      console.log('visusal value changed',n,o)
+    }
   }
 }
 </script>

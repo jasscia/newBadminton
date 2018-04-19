@@ -68,6 +68,9 @@ export default class Live extends wepy.page {
       this.groupList=res[1]
       // [this.playersList,this.groupList]
       this.$apply()
+    },
+    updataGroupListScore(newGroupList){
+      this.groupList=newGroupList
     }
   }
   async getPlayerAndGroupList(gameid){

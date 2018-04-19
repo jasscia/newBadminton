@@ -172,9 +172,10 @@ export default class AgainstTable extends wepy.page {
     // matchInfo:{}
   }
   watch={
-    groupList(n,o){
-      console.log('grouplist changed fn in table',n,o)
-      // this.$apply()
+    groupList(newGroupList,o){
+      console.log('grouplist changed fn in table',newGroupList,o)
+      //通知父节点去更新数据
+      this.$emit('updataGroupListScore',newGroupList)
     }
   }
   
@@ -189,7 +190,6 @@ export default class AgainstTable extends wepy.page {
       } else if (this.groupList[index][side]!==0){
         groupInfo[side]--
       }
-      this.$apply()
     },
     selectItem(e){
       this.activedGroupIndex=e.currentTarget.dataset.id
@@ -208,11 +208,6 @@ export default class AgainstTable extends wepy.page {
         score_a:score_a,
         score_b:score_b,
         status:status})  
-      // let res=await downloadMatchInfo(this.matchInfo.id)
-      // if(res){
-      //   this.matchInfo=res
-      //   wx.setStorageSync('activeMatchInfo',this.matchInfo)
-      // }
     }
   }
 }

@@ -9,7 +9,7 @@
               data-gameid="{{matchInfo.id}}"
               disabled="{{matchInfo.players.length<4}}">
               <text class="statusBtn">{{matchInfo.status}}</text>
-              <text class="statusBtn" wx:if="{{matchInfo.players.length<4}}">人数小于4，不满足开赛条件</text>
+              <text class="statusBtn" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
               {{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看赛事详情"}}</button>
     </block>
     <view class="row row2">{{matchInfo.gamename}}
@@ -61,6 +61,13 @@
       background: @btn-em;
       font-size: 34rpx;
       letter-spacing: 10rpx;
+      border-radius: 0;
+    }
+    button[disabled] {
+      background: @bgc-card;
+      // border:0;
+      // border:none;
+      position: static;
     }
     .statusBtn{
       color:@font;
@@ -92,6 +99,7 @@
       flex:1;
       display: flex;
       flex-wrap: nowrap;
+      overflow: hidden;
       justify-content: flex-end;
       .avatar{
         width:40rpx;

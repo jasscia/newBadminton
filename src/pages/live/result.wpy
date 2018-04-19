@@ -121,11 +121,9 @@ export default class Result extends wepy.page  {
     groupList(newGroupList,oldGroup){
       console.log('groupList changed in result',newGroupList)
       let calcedScore = this.calcScore(newGroupList);
-      // console.log('calcedScore',calcedScore)
       let res = this.orderScore(calcedScore);
       this.result= res[0];
       this.resultKeys=res[1]
-      // console.log(this.result)
       this.$apply()
     },
     doneData(newDoneData,o){
@@ -133,29 +131,14 @@ export default class Result extends wepy.page  {
       this.process=this.doneData.process
       this.$apply()
       console.log('doneData changed in result',this.process,this.doneData,o)
-    },
-    // result(newResult){
-    //   this.resultKeys=Object.keys(newResult)
-    //   console.log('resultKeys',this.resultKeys)
-    //   this.$apply()
-    // }
+    }
   }
-  // methods={
-  //   getResult(){
-  //   this.ifShowBtn=false
-  //   let calcedScore = this.calcScore(this.groupList);
-  //   let orderedScore = this.orderScore(calcedScore);
-  //   this.result= orderedScore;
-  //   }
-  // }
   calcScore(groupList) {
     let result = {}
     let uKey=['id_a1','id_a2','id_b1','id_b2']
     for (let groupInfo of groupList) {
-      // console.log(groupInfo)
       for (let i = 0; i < 4; i++) {
         let key=uKey[i]
-        // console.log(key)
         let playerId=groupInfo[key].uid//获取userid
         let playerRealName=groupInfo[key].real_name//获取userid
         let playerNickName=groupInfo[key].nick_name//获取userid
@@ -171,7 +154,6 @@ export default class Result extends wepy.page  {
           result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);//[2]负的场次
         }
         result[playerId][3] = result[playerId][1] - result[playerId][2];//[3]是胜-败的差值
-        // console.log(playerId,result[playerId],groupInfo)
       }
     }
     return result;

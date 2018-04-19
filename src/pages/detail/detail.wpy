@@ -16,9 +16,9 @@
   </view>
   <view class="item">
     <view class="title">状态</view>
-    <view class="content">{{baseInfo.status}}</view>    
+    <view class="content">{{baseInfo.status}}</view>
   </view>
-  <view class="label">共{{playersList.length}}人报名参赛 <button class="shareBtn" open-type="share" >邀请好友</button></view>
+  <!-- <view class="label">共{{playersList.length}}人报名参赛 <button class="shareBtn" open-type="share" >邀请好友</button></view> -->
   <!-- <view class="playersUidList"> -->
   <view class="playersList">
     <repeat for="{{playersList}}" key="index" item="playerInfo">
@@ -29,7 +29,10 @@
     </repeat>
   </view>
   <view class="btnBox">
-    <button class="btn" @tap="signup" disabled="{{baseInfo.ifIn}}">{{baseInfo.ifIn?'已经报名':'参赛报名'}}</button>
+    <button class="btn" open-type="share" wx:if="{{baseInfo.status==='报名中'}}">邀请好友</button>
+    <button class="btn" @tap="signup" wx:if="{{!baseInfo.ifIn && baseInfo.status==='报名中'}}">报名</button>
+    <button class="btn" @tap="goToLive" wx:if="{{playersList.length>=4  && ifOwner && (baseInfo.status==='报名中'|| baseInfo.status==='报名结束')}}">去开赛</button> 
+    <button class="btn" @tap="goToLive" wx:if="{{playersList.length>=4 && (baseInfo.status=== '正在比赛' || baseInfo.status== '比赛结束')}}">查看赛事详情</button> 
     <button class="btn" @tap="goToIndex">去首页看看</button>
   </view>
 </view>
@@ -43,7 +46,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    // min-height: 400rpx;
+    padding-bottom: 20rpx;
     .playerInfo{
       width:100rpx;
       height:120rpx;
@@ -139,7 +142,8 @@ data={
     baseInfo:{},
     groupList:[],
     gameid:null,
-    myturn:null
+    myturn:null,
+    ifOwner:false
   }
  watch={
    matchInfo(newMatchInfo){
@@ -151,15 +155,19 @@ data={
      this.baseInfo.status=newMatchInfo.status
      this.baseInfo.owner=newMatchInfo.owner
      this.baseInfo.ifIn=newMatchInfo.ifIn
-     let my_avatar_url=wx.getStorageSync('userInfo').avatar_url
+     let myUserInfo=wx.getStorageSync('userInfo')
+     let my_uid=myUserInfo.uid
+     if(this.baseInfo.owner.uid===my_uid){
+       this.ifOwner=true
+     }
      if(! this.baseInfo.ifIn){
        this.myturn=null
        return
       }
       for(let i=0,len=this.playersList.length;i<len;i++){
         let playerInfo=this.playersList[i]
-        console.log('other1',playerInfo.user.avatar_url,'other2',my_avatar_url)
-        if(playerInfo.user.avatar_url===my_avatar_url){
+        console.log('other1',playerInfo.user.avatar_url,'other2',my_uid)
+        if(playerInfo.user.uid===my_uid){
           this.myturn=i;return
         }
       }
@@ -198,7 +206,12 @@ data={
      wx.switchTab({
        url:'/pages/index/index'
      })
-   }
+   },
+    goToLive(e){
+        wx.navigateTo({
+          url:`/pages/live/live?gameid=${this.gameid}`
+        })
+      }
  }
 }
 </script>

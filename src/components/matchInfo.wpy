@@ -5,12 +5,14 @@
       <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
     </view>
     <block wx:if="{{mode==='withPanle'}}">
-      <button @tap.stop="goToLive"  
-              data-gameid="{{matchInfo.id}}"
-              disabled="{{matchInfo.players.length<4}}">
-              <text class="statusBtn">{{matchInfo.status}}</text>
-              <text class="statusBtn" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
-              {{(matchInfo.status==="报名中" || matchInfo.status==="报名结束")?"去开赛":"查看赛事详情"}}</button>
+      <view class="statement-group" wx:if="{{matchInfo.players.length<4}}">
+        <button  class="statement">人数小于4,尚未达到开赛条件</button>
+      </view>
+      <view class="statement-group" wx:else data-wheretaped="top"  data-gameid="{{matchInfo.id}}"  @tap="emitGoToLive">
+        <button class="statementBtn" wx:if="{{matchInfo.status==='报名中'}}" size="min">去开赛</button>
+        <button class="statementBtn" wx:else  size="min">查看赛事详情</button>
+        <button class="statement"  size="min" >{{matchInfo.status}}</button>
+      </view>
     </block>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -43,41 +45,40 @@
   .row1{
     display: flex;
     justify-content: space-between;
-    font-size:10px;
+    font-size:12px;
     color:#333;
     .status{
       background: lightblue;
       border-radius: 6px;
       padding:0 2px;
-      height:12px;
+      height:14px;
     }
   }
-  // .contoller{
-    button{
-      color:@font;
-      height:55rpx;
-      line-height: 55rpx;
-      padding:0;
-      background: @btn-em;
-      font-size: 34rpx;
-      letter-spacing: 10rpx;
-      border-radius: 0;
-    }
-    button[disabled] {
-      background: @bgc-card;
-      // border:0;
-      // border:none;
-      position: static;
-    }
-    .statusBtn{
-      color:@font;
-      font-size: 24rpx;;
-      position:absolute;
-      right:0;
-      padding:0 10rpx;
-      display:inline-block;
-      background:cadetblue;
-    }
+  .statement-group{
+    display: flex;
+    font-size: 30rpx;
+   justify-content: flex-end;
+   text-align: left;
+   padding:0;
+  }
+  .statementBtn{
+   flex: 1;
+   text-align: center;
+   background: @btn-em;
+   color:@font;
+  }
+  button.statementBtn,button.statement{
+    position: static;
+    border-radius: 0;
+    padding:0 10rpx;
+    font-size: 32rpx;
+    height:54rpx;
+    line-height: 54rpx;
+  }
+  .statement{
+    background:cadetblue;
+    text-align: left;
+  }
   // }
   .row2{
     font-size: 18px;
@@ -113,17 +114,6 @@
         background-size: cover;
       }
     }
-    // .shareBtn{
-    //   font-size: 20rpx;
-    // }
-    // .shareBtn::before{
-    //   content: "\e624";
-    //   font-family: "iconfont";
-    //   font-size: 30rpx;
-    //   overflow: hidden;
-    //   margin-left:20rpx;
-    //   color: @btn;
-    // }
   }
   .row2::before{
     content:"\e6fe";
@@ -159,16 +149,11 @@ export default class matchInfo extends wepy.component{
       default:'withoutPanle'
     }
   }
-  methods={
-      async goToLive(e){
-        let dataset=e.currentTarget.dataset
-        let gameid=dataset.gameid
-        // this.$emit('',gameid)
-        wx.navigateTo({
-          url:`/pages/live/live?gameid=${gameid}`
-        })
-      }
+methods={
+  emitGotoLive(e){
+    this.$emit('goToLive',e)
   }
+}
 }
 </script>
 

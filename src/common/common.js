@@ -61,7 +61,6 @@ const updateMatchInfo =async function(gameid,options){
       data=options;
   data.token=token;
   let res=await htr(url,method,data)
-  console.log('}}}}}}}}}updateMatchInfo fn res',res.data.data,'options',options)
   if(res.data.code===1){
     return res.data.data
   }
@@ -197,7 +196,6 @@ const getGroupInfo=async function(gameid){
         gameid:gameid
       };
   let res=await htr(url,method,data)
-  console.log('getGroupInfo',res)
   if(res.data.code===1){
     return res.data.data
   }else{
@@ -205,7 +203,6 @@ const getGroupInfo=async function(gameid){
   }
 }
 const putGroupInfo=async function(groupid,options){
-  console.log('options--------',options)
   let userInfo=await initUserInfo()
   if(!userInfo || !userInfo.token){
     return {}
@@ -216,7 +213,6 @@ const putGroupInfo=async function(groupid,options){
       data=options;
   data.token=token;
   let res=await htr(url,method,data)
-  console.log('putGroupInfo res=',res)
   if(res.data.code===1){
     return res.data.data
   }else{

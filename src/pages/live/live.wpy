@@ -45,7 +45,7 @@ export default class Live extends wepy.page {
  }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-
+this.$apply()
     let userInfo=await initUserInfo()
     let uid=userInfo.uid;
     if(!uid){//
@@ -54,13 +54,11 @@ export default class Live extends wepy.page {
       return
     }
     let matchInfo=await this.getMatchInfo(this.gameid)
-    console.log('limit fn,the matchInfo=',matchInfo)
     if(matchInfo.owner.uid!==uid){
       this.limit='readOnly'
       this.$apply()
       return
     }
-      console.log('-------',matchInfo.status)
     if(matchInfo.status==="比赛结束"){
       this.limit='readOnly'
       this.$apply()
@@ -76,7 +74,7 @@ export default class Live extends wepy.page {
   }
   watch={
     async gameid(newGameId){
-      console.log('gameid changed',newGameId)
+      console.log('gameid changed in live',newGameId)
       let res=await this.getPlayerAndGroupList(newGameId)
       this.playersList=res[0]
       this.groupList=res[1]
@@ -101,7 +99,6 @@ export default class Live extends wepy.page {
     },
     updataGroupListScore(newGroupList){
       this.doneData=this.calcProcess(newGroupList)
-      console.log('this.doneData in live updataSscore',this.doneData)
       if(this.doneData.process===100){
         newGroupList.status=3
         updateMatchInfo(this.gameid,{status:3})
@@ -112,7 +109,6 @@ export default class Live extends wepy.page {
 
   calcProcess(groupList){
     let doneList=groupList.filter(groupInfo => {
-      console.log('groupInfo.status',groupInfo.status)
       return groupInfo.status
     });
     let doneNum=doneList.length
@@ -126,7 +122,6 @@ export default class Live extends wepy.page {
 
   async getMatchInfo(gameid){
      let matchInfo=await downLoadMatchInfo(gameid)
-     console.log('get matchInfo fn',matchInfo)
       return matchInfo
 }
   async getPlayerAndGroupList(gameid){
@@ -146,7 +141,6 @@ export default class Live extends wepy.page {
         groupInfo.score_b=(groupInfo.score_b||0)
         groupInfo.status=(groupInfo.status||0)
       });
-      console.log('[playersList,groupList],fn',playersList,groupList)
       return [playersList,groupList,matchInfo]
 }
 }

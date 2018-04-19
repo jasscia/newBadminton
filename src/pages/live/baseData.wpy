@@ -58,6 +58,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    padding-bottom: 20rpx;
     .playerInfo{
       width:100rpx;
       height:120rpx;

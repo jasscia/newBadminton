@@ -5,9 +5,8 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
-        <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'">
-          
+      <view  class="matchCard" @tap="goToDetail" data-gameid="{{matchInfo.id}}" data-wheretaped="body">
+        <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'">   
         </matchInfo>
       </view>
     </repeat>
@@ -88,12 +87,28 @@ export default class myGameList extends wepy.page{
           url:"/pages/main/createNewAgainst"
         })
       },
-      gotodetail(e){
-        let gameid=e.currentTarget.dataset.gameid;
+    goToDetail(e){
+      console.log(e.currentTarget.dataset)
+      let where=e.currentTarget.dataset.wheretaped
+      let gameid=e.currentTarget.dataset.gameid
+      if(where==="body"){
         wx.navigateTo({
-          url:`/pages/detail/detail?gameid=${gameid}`
-        })
+            url:`/pages/detail/detail?gameid=${gameid}`
+          })
       }
+    }
+  }
+    events={
+      goToLive(e){
+      console.log(e.currentTarget.dataset)
+      let where=e.currentTarget.dataset.wheretaped
+      let gameid=e.currentTarget.dataset.gameid
+      if(where==="top"){
+        wx.navigateTo({
+            url:`/pages/live/live?gameid=${gameid}`
+          })
+      }
+    }
     }
 }
 </script>

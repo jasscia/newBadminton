@@ -3,26 +3,29 @@
   <view class="warp"> 
   <repeat for="{{groupList}}" key="index" index="index" item="item" if="{{state===1}}">
     <view class="againstTable">
-    <view class="againstItem {{item.status===1?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
+    <view class="againstItem {{item.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
       <view class="side">
         <view class="name">{{item.id_a1.real_name||item.id_a1.nick_name}}</view>
         <view class="name">{{item.id_a2.real_name||item.id_a2.nick_name}}</view>
       </view>
       <!-- <view class="score"> -->
       <view class="handleBtnGroup">
-        <button @tap='scoreChange' data-id="{{index}}" data-side="A" data-way="more"  hover-class="hover">+</button>
-        <button @tap='scoreChange' data-id="{{index}}" data-side="A" data-way="less"  hover-class="hover">-</button>
+        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="more"  hover-class="hover">+</button>
+        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="less"  hover-class="hover">-</button>
       </view>
       <view class="score scoreL">{{item.score_a}}</view>
-      <view class="sub" bindtap="finish" data-id="{{index}}">
+      <view class="sub" bindtap="finish" data-id="{{index}}" wx:if="{{limit!=='readOnly'}}">
         <view>第{{index+1}}场</view>
         <view wx:if="{{item.status!==1}}"  class="finishBtn">结束比赛</view> 
         <view wx:else  class="finishBtn">查看比赛</view>
       </view>
+      <view class="sub" wx:else>
+        <view>第{{index+1}}场</view>
+      </view>
       <view class="score scoreR">{{item.score_b}}</view>
       <view class="handleBtnGroup">
-        <button @tap='scoreChange' data-id="{{index}}" data-side="B" data-way="more" hover-class="hover">+</button>
-        <button @tap='scoreChange' data-id="{{index}}" data-side="B" data-way="less"  hover-class="hover">-</button>
+        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="more" hover-class="hover">+</button>
+        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="less"  hover-class="hover">-</button>
       </view>
       <!-- </view> -->
       <view class="side">
@@ -165,6 +168,10 @@ export default class AgainstTable extends wepy.page {
     gameid:{
       type:String,
       default:null
+    },
+    limit:{
+      type:String,
+      default:'readOnly'
     }
   }
   data={
@@ -176,7 +183,9 @@ export default class AgainstTable extends wepy.page {
       console.log('grouplist changed fn in table',newGroupList,o)
       //通知父节点去更新数据
       this.$emit('updataGroupListScore',newGroupList)
-    }
+    },
+   limit(n){
+     console.log('limit changed in table page',n)}
   }
   
   methods={

@@ -61,8 +61,9 @@ const updateMatchInfo =async function(gameid,options){
       data=options;
   data.token=token;
   let res=await htr(url,method,data)
+  console.log('}}}}}}}}}updateMatchInfo fn res',res.data.data,'options',options)
   if(res.data.code===1){
-    return res.data.datai
+    return res.data.data
   }
 }
 const getPlayersUidList=async function(gameid){

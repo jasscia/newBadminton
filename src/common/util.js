@@ -38,7 +38,8 @@ const setStorage=function(key,data) {
   }
 
 const transformStatusAndTimeOfMatchInfo=function(matchInfo){
-  let status=['报名中','报名结束','正在比赛','比赛结束'];  
+  let status=['报名中','报名结束','正在比赛','比赛结束'];
+  console.log('----=======matchInfo before trans',matchInfo,matchInfo.status,status[matchInfo.status])  
     if(status[matchInfo.status]){
       matchInfo.status=status[matchInfo.status]
     };

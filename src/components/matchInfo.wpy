@@ -163,9 +163,7 @@ export default class matchInfo extends wepy.component{
       async goToLive(e){
         let dataset=e.currentTarget.dataset
         let gameid=dataset.gameid
-        await updateMatchInfo(gameid,{status:2})
-        this.matchInfo = await downLoadMatchInfo()
-        this.$apply()
+        // this.$emit('',gameid)
         wx.navigateTo({
           url:`/pages/live/live?gameid=${gameid}`
         })

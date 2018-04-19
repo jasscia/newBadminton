@@ -18,7 +18,9 @@
         placeholder="请输入每人场次,与人数的乘积,应被4整除"
         @input="changeRoundCount"/>
   <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
-  <button id="btn" @tap="makeGroup">生产对阵表</button>
+  <button id="btn" @tap="makeGroup" 
+          wx:if="{{limit!=='readOnly'}}">
+          {{limit==='writableOnlyScore'?'重新':''}}生产对阵表</button>
   </view>
 </template>
 
@@ -102,6 +104,10 @@ export default class BaseData extends wepy.page {
     gameid:{
       type:String,
       default:null
+    },
+    limit:{
+      type:String,
+      default:'readOnly'
     }
   }
   data={
@@ -118,7 +124,9 @@ export default class BaseData extends wepy.page {
    },
    gameid(n){
      console.log('gameid changed in baseData page',n)
-   }
+   },
+   limit(n){
+     console.log('limit changed in baseData page',n)}
  }
   async onLoad(options){}
   methods={

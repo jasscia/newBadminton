@@ -2,8 +2,8 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersList.sync="playersList" :gameid.sync="gameid"></baseData>
-    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"></againstTable>
+    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersList.sync="playersList" :gameid.sync="gameid" :limit.sync="limit"></baseData>
+    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"  :limit.sync="limit"></againstTable>
     <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid" :doneData.sync="doneData"></result>
   </view>
 </template>
@@ -15,7 +15,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share,updateMatchInfo} from "../../common/common";
+import {initUserInfo, getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share,updateMatchInfo} from "../../common/common";
 import header from '../../components/header'
 import baseData from './baseData'
 import againstTable from './againstTable'
@@ -36,6 +36,7 @@ export default class Live extends wepy.page {
     doneData:{doneNum:0,totalNum:0,process:0},
     // groupListWithUserInfo:[],
     gameid:null,
+    limit:null,
     titleList:['设置','对阵表','时实战况'],
     activeBar:'设置'
   }
@@ -44,6 +45,34 @@ export default class Live extends wepy.page {
  }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
+
+    let userInfo=await initUserInfo()
+    let uid=userInfo.uid;
+    if(!uid){//
+      this.limit='readOnly'
+      this.$apply()
+      return
+    }
+    let matchInfo=await this.getMatchInfo(this.gameid)
+    console.log('limit fn,the matchInfo=',matchInfo)
+    if(matchInfo.owner.uid!==uid){
+      this.limit='readOnly'
+      this.$apply()
+      return
+    }
+      console.log('-------',matchInfo.status)
+    if(matchInfo.status==="比赛结束"){
+      this.limit='readOnly'
+      this.$apply()
+      return
+    }
+    if(matchInfo.status==="正在比赛"){
+      this.limit='writableOnlyScore'
+      this.$apply()
+      return
+    }
+      this.limit='writableAll'
+      this.$apply()
   }
   watch={
     async gameid(newGameId){
@@ -73,7 +102,7 @@ export default class Live extends wepy.page {
     updataGroupListScore(newGroupList){
       this.doneData=this.calcProcess(newGroupList)
       console.log('this.doneData in live updataSscore',this.doneData)
-      if(this.doneData[2]===100){
+      if(this.doneData.process===100){
         newGroupList.status=3
         updateMatchInfo(this.gameid,{status:3})
       }
@@ -94,11 +123,17 @@ export default class Live extends wepy.page {
     }
     return {doneNum,totalNum,process}
   }
+
+  async getMatchInfo(gameid){
+     let matchInfo=await downLoadMatchInfo(gameid)
+     console.log('get matchInfo fn',matchInfo)
+      return matchInfo
+}
   async getPlayerAndGroupList(gameid){
      let groupUidList=[]
      let groupList=[]
      let playersList=[]
-      let matchInfo=await downLoadMatchInfo(gameid)
+     let matchInfo=await this.getMatchInfo(gameid)
       if(matchInfo.players){
         playersList=matchInfo.players
       }else{return}
@@ -112,7 +147,7 @@ export default class Live extends wepy.page {
         groupInfo.status=(groupInfo.status||0)
       });
       console.log('[playersList,groupList],fn',playersList,groupList)
-      return [playersList,groupList]
+      return [playersList,groupList,matchInfo]
 }
 }
 </script>

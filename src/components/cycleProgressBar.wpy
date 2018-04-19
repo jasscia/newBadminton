@@ -13,7 +13,7 @@
           </view>
       </block>
       <view class="text">
-        <view class="value {{visualValue.length!==0}}?'process':''">{{value}}</view>
+        <view class="value {{!visualvalue.doneNum}}?'process':''">{{value}}</view>
         <!-- <view class="value visualValue" wx:else="visualValue.length">
           <view class="value1">{{visualValue[0]}}</view>
           <view class="value2">of {{visualValue[1]}}</view>
@@ -111,11 +111,11 @@ import wepy from 'wepy';
 export default class CycleProgressBar extends wepy.component {
   props = {
     value: { type: Number, default: 0 },
-    comment: { type: String, default: 'shi' },
-    visualValue:{type:Array,default:[]}
+    comment: { type: String, default: '' },
+    visualvalue:{type:Object,default:{}}
   }
   match={
-    visualValue(n,o){
+    visualvalue(n,o){
       console.log('visusal value changed',n,o)
     }
   }

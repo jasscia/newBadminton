@@ -4,7 +4,7 @@
     <view class="progress">
       <resultCycleProgressBar :value.sync="process" 
                               :comment.sync="comment" 
-                              :visualValue.sync="doneData"></resultCycleProgressBar>
+                              :visualvalue.sync="doneData"></resultCycleProgressBar>
     </view>
     <view class="itemHead">
       <view class='item1'>姓名</view>
@@ -12,12 +12,12 @@
       <view class='item2'>净胜分</view>
       <view class='item4'>名次</view>
     </view>
-    <repeat for="{{result}}" key="{{item}}" index="index">
+    <repeat for="{{resultKeys}}" key="{{item}}" index="index" item="uid">
       <view  class="item itemBody">
-        <view class='item1 NO-{{item[4]}}'>{{item[5]||item[6]}}</view>
-        <view class='item3'>{{item[1]}}-{{item[2]}}</view>
-        <view class='item2'>{{item[0]}}</view>            
-        <view class='item4 NO-{{item[4]}}'>{{item[4]}}</view>
+        <view class='item1 NO-{{result[uid][4]}}'>{{result[uid][5]||result[uid][6]}}</view>
+        <view class='item3'>{{result[uid][1]}}-{{result[uid][2]}}</view>
+        <view class='item2'>{{result[uid][0]}}</view>            
+        <view class='item4 NO-{{result[uid][4]}}'>{{result[uid][4]}}</view>
       </view>
   </repeat>
   </view>
@@ -99,37 +99,55 @@ export default class Result extends wepy.page  {
     gameid:{
       type:String,
       default:null
+    },
+    doneData:{
+      type:Object,
+      default:{doneNum:0,totalNum:0,process:0}
     }
   }
   data={
     result:{},
+    resultKeys:[],
     ifShowBtn:true,
-    process:40,
-    doneData:[0,0],
-    comment:'完成进度'
+    comment:'完成进度',
+    process:0
   }
+  // computed={
+  //   process(){
+  //     return this.doneData
+  //   }
+  // }
   watch={
     groupList(newGroupList,oldGroup){
       console.log('groupList changed in result',newGroupList)
-      let processData = this.calcProcess(newGroupList);
-      this.process=processData.process
-      this.doneData=[processData.doneNum,processData.totalNum]
       let calcedScore = this.calcScore(newGroupList);
       // console.log('calcedScore',calcedScore)
-      let orderedScore = this.orderScore(calcedScore);
-      this.result= orderedScore;
+      let res = this.orderScore(calcedScore);
+      this.result= res[0];
+      this.resultKeys=res[1]
       // console.log(this.result)
       this.$apply()
-    }
+    },
+    doneData(newDoneData,o){
+      this.doneData=newDoneData
+      this.process=this.doneData.process
+      this.$apply()
+      console.log('doneData changed in result',this.process,this.doneData,o)
+    },
+    // result(newResult){
+    //   this.resultKeys=Object.keys(newResult)
+    //   console.log('resultKeys',this.resultKeys)
+    //   this.$apply()
+    // }
   }
-  methods={
-    getResult(){
-    this.ifShowBtn=false
-    let calcedScore = this.calcScore(this.groupList);
-    let orderedScore = this.orderScore(calcedScore);
-    this.result= orderedScore;
-    }
-  }
+  // methods={
+  //   getResult(){
+  //   this.ifShowBtn=false
+  //   let calcedScore = this.calcScore(this.groupList);
+  //   let orderedScore = this.orderScore(calcedScore);
+  //   this.result= orderedScore;
+  //   }
+  // }
   calcScore(groupList) {
     let result = {}
     let uKey=['id_a1','id_a2','id_b1','id_b2']
@@ -170,7 +188,7 @@ export default class Result extends wepy.page  {
       newObj[orderedKeys[i]] = obj[orderedKeys[i]].slice()
       newObj[orderedKeys[i]][4]=i + 1     //[4]是名次
     }
-    return newObj;
+    return [newObj,orderedKeys];
   }
   findKeyOfMax(obj, orderedKeys) {
     let keys = Object.keys(obj);
@@ -196,19 +214,6 @@ export default class Result extends wepy.page  {
       }
     }
     return key_of_max;
-  }
-  calcProcess(groupList){
-    let doneList=groupList.filter(groupInfo => {
-      console.log('groupInfo.status',groupInfo.status)
-      return groupInfo.status
-    });
-    let doneNum=doneList.length
-    let totalNum=groupList.length
-    let process=0
-    if(totalNum){
-      process=Math.round(doneNum/totalNum*100,2)
-    }
-    return {doneNum,totalNum,process}
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
     <baseData  wx:if="{{activeBar===titleList[0]}}" :playersList.sync="playersList" :gameid.sync="gameid"></baseData>
     <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"></againstTable>
-    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid"></result>
+    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid" :doneData.sync="doneData"></result>
   </view>
 </template>
 
@@ -15,7 +15,7 @@
 
 <script>
 import wepy from 'wepy'
-import { getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share} from "../../common/common";
+import { getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share,updateMatchInfo} from "../../common/common";
 import header from '../../components/header'
 import baseData from './baseData'
 import againstTable from './againstTable'
@@ -33,6 +33,7 @@ export default class Live extends wepy.page {
   data={
     playersList:[],
     groupList:[],
+    doneData:{doneNum:0,totalNum:0,process:0},
     // groupListWithUserInfo:[],
     gameid:null,
     titleList:['设置','对阵表','时实战况'],
@@ -70,8 +71,28 @@ export default class Live extends wepy.page {
       this.$apply()
     },
     updataGroupListScore(newGroupList){
+      this.doneData=this.calcProcess(newGroupList)
+      console.log('this.doneData in live updataSscore',this.doneData)
+      if(this.doneData[2]===100){
+        newGroupList.status=3
+        updateMatchInfo(this.gameid,{status:3})
+      }
       this.groupList=newGroupList
     }
+  }
+
+  calcProcess(groupList){
+    let doneList=groupList.filter(groupInfo => {
+      console.log('groupInfo.status',groupInfo.status)
+      return groupInfo.status
+    });
+    let doneNum=doneList.length
+    let totalNum=groupList.length
+    let process=0
+    if(totalNum){
+      process=Math.round(doneNum/totalNum*100,2)
+    }
+    return {doneNum,totalNum,process}
   }
   async getPlayerAndGroupList(gameid){
      let groupUidList=[]

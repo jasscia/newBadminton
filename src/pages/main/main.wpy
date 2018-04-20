@@ -5,13 +5,13 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}">
+      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSideInMain :index.sync="index">
             <block slot='frontSide'>
-              <matchInfo  :matchInfo.sync="matchInfo" :mode.sync="'withPanle'"></matchInfo>
+              <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'"></matchInfo>
             </block>
             <block slot='backSide'>
-              <matchActiveInMain :matchInfo.sync="matchInfo"></matchActiveInMain>
+              <matchActiveInMain :matchInfo.sync="matchInfo" :index.sync="index"></matchActiveInMain>
             </block>
         </twoSideInMain>
       </view>
@@ -97,8 +97,10 @@ export default class myGameList extends wepy.page{
       },
       turnOverCard(e){
         let index=e.currentTarget.dataset.index
+        let matchInfo=e.currentTarget.dataset.matchinfo
         console.log(index)
         this.$broadcast('turnOverCard',index)
+        this.$broadcast('calcContorlAttr',matchInfo,index)
       }
   }
 }

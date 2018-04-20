@@ -1,11 +1,11 @@
 <template>
   <view class="matchActive">
     <view class="btnBox">
-      <button class="btn" open-type="share" wx:if="{{ifOktoShare}}">分享赛事</button>
-      <button class="btn" open-type="share" wx:if="{{ifOktoInviate}}">邀请好友</button>
-      <button class="btn" @tap.stop="signup" wx:if="{{ifOktoSignup}}">报名</button>
-      <button class="btn" @tap.stop="goToLive" wx:if="{{ifOkToStart}}">去开赛</button> 
-      <button class="btn" @tap.stop="goToLive" wx:if="{{ifStarted}}">查看赛事详情</button> 
+      <button class="btn" open-type="share" wx:if="{{contorlAttr[index].ifOktoShare}}" data-gameid="index">分享赛事</button>
+      <button class="btn" open-type="share" wx:if="{{contorlAttr[index].ifOktoInviate}}" data-gameid="index">邀请好友</button>
+      <button class="btn" @tap.stop="signup" wx:if="{{contorlAttr[index].ifOktoSignup}}" data-gameid="index">报名</button>
+      <button class="btn" @tap.stop="goToLive" wx:if="{{contorlAttr[index].ifOkToStart}}" data-gameid="index">去开赛</button> 
+      <button class="btn" @tap.stop="goToLive" wx:if="{{contorlAttr[index].ifStarted}}" data-gameid="index">查看赛事详情</button> 
       <button class="btn" @tap.stop="goToIndex">去首页看看</button>
     </view>
   </view>
@@ -22,8 +22,9 @@
     display: flex;
     flex-wrap: wrap;
     background: @bgc-card;
-    align-content: space-around;
+    align-content: center;
     align-items: center;
+    justify-content: center;
     padding:20rpx 0;
   }
   .btn{
@@ -48,41 +49,20 @@ export default class MatchActive extends wepy.component{
       type:Object,
       default:{},
       twoWay:true,
-     }
+     },
+    index:{
+        type:Number,
+        default:0
+      }
  }
  data={
-   ifOwner:false,
-   ifDone:false,
-   ifGoingon:false,
-   ifStarted:true,
-   ifStopSingup:false,
-   ifOkToStart:true,
-   ifOktoSignup:true,
-   ifOktoShare:true,
-   ifOktoInviate:true,
+   contorlAttr:{}
+  //  gameidList:[]
  }
  watch={
-    matchInfo(matchInfo){
-      console.log('___________________',matchInfo.status,matchInfo)
-      if(!matchInfo){return}
-     let myUserInfo=wx.getStorageSync('userInfo')
-     let my_uid=myUserInfo.uid
-     if(matchInfo.owner.uid===my_uid){
-          this.ifOwner=true
-        }else{
-          this.ifOwner=false
-        }
- 
-      this.ifDone=matchInfo.status==='比赛结束'?true:false
-      this.ifGoingon=matchInfo.status==='正在比赛'?true:false
-      this.ifStarted=['正在比赛','比赛结束'].includes(matchInfo.status)?true:false
-      this.ifStopSingup=['报名结束','正在比赛','比赛结束'].includes(matchInfo.status)?true:false
-      this.ifOkToStart=(matchInfo.players.length>=5 && this.ifOwner)?true:false
-      this.ifOktoSignup=(!matchInfo.ifIn&&!this.ifStopSingup)?true:false
-      this.ifOktoShare=this.ifStarted?true:false,
-      this.ifOktoInviate=this.ifStopSingup?false:true,
-      this.$apply()
-    }
+   index(n,o){
+     console.log('index changed',n,o)
+   }
   }
   methods={
 async signup(){
@@ -115,6 +95,32 @@ async signup(){
           url:`/pages/live/live?gameid=${gameid}`
         })
       }
+  }
+  events={
+    calcContorlAttr(matchInfo,index){
+      console.log('----',matchInfo,index)
+       if(!matchInfo){return}
+     this.contorlAttr[index]={}
+     this.gameid=matchInfo.id
+     let myUserInfo=wx.getStorageSync('userInfo')
+     let my_uid=myUserInfo.uid
+     if(matchInfo.owner.uid===my_uid){
+          this.contorlAttr[index].ifOwner=true
+        }else{
+          this.contorlAttr[index].ifOwner=false
+        }
+ 
+      this.contorlAttr[index].ifDone=matchInfo.status==='比赛结束'?true:false
+      this.contorlAttr[index].ifGoingon=matchInfo.status==='正在比赛'?true:false
+      this.contorlAttr[index].ifStarted=['正在比赛','比赛结束'].includes(matchInfo.status)?true:false
+      this.contorlAttr[index].ifStopSingup=['报名结束','正在比赛','比赛结束'].includes(matchInfo.status)?true:false
+      this.contorlAttr[index].ifOkToStart=(matchInfo.players.length>=5 && this.contorlAttr[index].ifOwner)?true:false
+      this.contorlAttr[index].ifOktoSignup=(!matchInfo.ifIn&&!this.contorlAttr[index].ifStopSingup)?true:false
+      this.contorlAttr[index].ifOktoShare=this.contorlAttr[index].ifStarted?true:false
+      this.contorlAttr[index].ifOktoInviate=this.contorlAttr[index].ifStopSingup?false:true
+      // console.log(this.contorlAttr[index],index)
+      this.$apply()
+    }
   }
 }
 </script>

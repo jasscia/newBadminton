@@ -49,24 +49,25 @@ export default class twoSide extends wepy.component{
                     transformOrigin: '50% 50% 0'
                 });
   }
-  events={
-    turnoverCard(e){
-      if(this.index!==undefined){
-        if(this.animationData[this.index]===undefined){
-          this.animationData[this.index]={};
-        }
-        if(this.ifShowbackSide[this.index]===undefined){
-          this.ifShowbackSide[this.index]=true;
-        }
-      }else{
-        return
-      }
-      this.ifShowbackSide[this.index]=!this.ifShowbackSide[this.index];
-      let rotateDeg=(this.ifShowbackSide[this.index]?180:0);
-        this.animation.rotateX(rotateDeg).step();
-        this.animationData[this.index]=this.animation.export();
-        
+  watch={
+    index(index){
+      console.log(' in two side',index)
     }
+  }
+  events={
+    turnOverCard(index){
+      console.log('turn over',index)
+      if(index===undefined){return}
+     
+      if(this.ifShowbackSide[index]===undefined){
+        this.ifShowbackSide[index]=true;
+      }else{
+        this.ifShowbackSide[index]=!this.ifShowbackSide[index];
+      }
+      let rotateDeg=(this.ifShowbackSide[index]?180:0);
+        this.animation.rotateX(rotateDeg).step();
+        this.animationData[index]=this.animation.export();
+      }
   }
 }
 </script>

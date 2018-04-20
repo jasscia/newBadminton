@@ -1,0 +1,92 @@
+
+<template>
+  <view class="playersList">
+    <repeat for="{{playersList}}" key="index" item="playerInfo">
+      <view class="playerInfo">
+        <image class="avatar {{myturn===index?'me':''}} {{ownerturn===index?'owner':''}}"  src="{{playerInfo.user.avatar_url}}" />
+        <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
+      </view>
+    </repeat>
+  </view>
+</template>
+
+<style lang="less" scoped>
+  @import '../common/common.less';
+  
+  .playersList{
+    background: @bgc-card;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-bottom: 20rpx;
+    margin:10rpx auto;
+    .playerInfo{
+      width:100rpx;
+      height:120rpx;
+      text-align: center;
+      margin:20rpx;
+      .avatar{
+        height: 100rpx;
+        width: 100rpx;
+        border-radius: 50%;
+        background-size: cover;
+        position: relative;
+      }
+      .me{
+        border:6rpx solid @btn-em;
+        box-sizing: border-box;
+      }
+      .owner{
+        border:6rpx solid @btn;
+        box-sizing: border-box;
+      }
+      .name{
+        font-size: 24rpx;
+        width:100rpx;
+        height:30rpx;
+        line-height:30rpx;
+        vertical-align: middle;
+      }
+    }
+  }
+</style>
+
+
+<script>
+import wepy from 'wepy'
+export default class playersList extends wepy.component {
+  props={
+    matchInfo:{
+      type:Object,
+      default:{}}
+  }
+  data={
+    playersList:[],
+    myturn:null,
+    ownerturn:null
+  }
+  watch={
+    matchInfo(matchInfo){
+      if(!matchInfo){return}
+      this.playersList=matchInfo.players
+     let myUserInfo=wx.getStorageSync('userInfo')
+     let my_uid=myUserInfo.uid
+     let owner_uid=matchInfo.owner.uid
+      for(let i=0,len=this.playersList.length;i<len;i++){
+        let playerInfo=this.playersList[i]
+         if(!matchInfo.ifIn){
+       this.myturn=null
+      }else if(playerInfo.user.uid===my_uid){
+          this.myturn=i
+        }
+        if(playerInfo.user.uid===owner_uid){
+          this.ownerturn=i
+        }
+      }
+      // console.log('playersList changed in component',this.playersList,this.myturn,this.ownerturn)
+
+    this.$apply()
+    }
+  }
+}
+</script>

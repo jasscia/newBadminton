@@ -4,16 +4,9 @@
     <view class="errPage" wx:if="{{matchCount===0}}">
       没有正在报名的比赛
     </view>
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="item">
-      <view class="matchCard" @tap="gotodetail" data-gameid="{{item.id}}">
-         <twoSide :index.sync="index">
-            <block slot='frontSide'>
-              <matchInfo  :matchInfo.sync="item" :ifSlot.sync="true"></matchInfo>
-            </block>
-            <block slot='backSide'>
-              <matchActive :matchInfo.sync="item"></matchActive>
-            </block>
-        </twoSide>
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
+      <view class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
+        <matchInfo  :matchInfo.sync="matchInfo"></matchInfo>
       </view>
     </repeat>
   </view>
@@ -35,14 +28,14 @@
       letter-spacing: 5rpx;
     }
     .matchCard{    
-      margin:20px;
-      padding:10px;
+      margin:30rpx;
+      padding:10rpx;
       font-size: 12px;
       color:#666;
       background: @bgc-card;
       border-radius: 10px;
       position: relative;
-      height: 300rpx;
+      // height: 300rpx;
     }
   }
 
@@ -51,9 +44,9 @@
 <script>
   import wepy from 'wepy';
   // import matchCard from '../../components/matchCard';
-  import twoSide from '../../components/twoSide';
+  // import twoSide from '../../components/twoSide';
   import matchInfo from '../../components/matchInfo';
-  import matchActive from '../../components/matchActive';
+  // import matchActive from '../../components/matchActive';
 
   export default class Index extends wepy.page {
   props={
@@ -72,9 +65,9 @@
     }
   }
   components = {
-    twoSide:twoSide,
+    // twoSide:twoSide,
     matchInfo:matchInfo,
-    matchActive:matchActive
+    // matchActive:matchActive
   }
   async onLoad(){  }
   onShow(){}

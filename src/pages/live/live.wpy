@@ -2,9 +2,18 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <baseData  wx:if="{{activeBar===titleList[0]}}" :playersList.sync="playersList" :gameid.sync="gameid" :limit.sync="limit"></baseData>
-    <againstTable wx:if="{{activeBar===titleList[1]}}" :groupList.sync="groupList" :gameid.sync="gameid"  :limit.sync="limit"></againstTable>
-    <result  wx:if="{{activeBar===titleList[2]}}" :groupList.sync="groupList" :gameid.sync="gameid" :doneData.sync="doneData"></result>
+    <block   wx:if="{{activeBar===titleList[0]}}">
+  <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
+  <playersListInlive :matchInfo.sync="matchInfo"></playersListInlive>
+    <matchDataSetInlive 
+                        :matchInfo.sync="matchInfo" 
+                        :limit.sync="limit"></matchDataSetInlive>
+    </block>
+    <againstTableInlive wx:if="{{activeBar===titleList[1]}}" 
+                        :matchInfo.sync="matchInfo" 
+                        :limit.sync="limit"></againstTableInlive>
+    <matchResultInlive  wx:if="{{activeBar===titleList[2]}}" 
+                        :matchInfo.sync="matchInfo" ></matchResultInlive>
   </view>
 </template>
 
@@ -15,25 +24,30 @@
 
 <script>
 import wepy from 'wepy'
-import {initUserInfo, getGroupInfo,downLoadMatchInfo,transGroupListToGroupListWithPlayerInfo,share,updateMatchInfo} from "../../common/common";
+import {initUserInfo, getGroupInfo,downLoadMatchInfo,share,updateMatchInfo,calcprogress} from "../../common/common";
 import header from '../../components/header'
-import baseData from './baseData'
-import againstTable from './againstTable'
-import result from "./result"
+import matchDataSet from '../../components/matchDataSet'
+import playersList from '../../components/playersList'
+import matchBaseInfo from '../../components/matchBaseInfo'
+import againstTable from '../../components/againstTable'
+import matchResult from '../../components/matchResult'
 export default class Live extends wepy.page {
   config = {
     navigatorBatText:'比赛实况'
   }
   components={
     LiveHeader:header,
-    baseData:baseData,
-    againstTable:againstTable,
-    result:result
+    matchDataSetInlive:matchDataSet,
+    playersListInlive:playersList,
+    matchBaseInfoInlive:matchBaseInfo,
+    againstTableInlive:againstTable,
+    matchResultInlive:matchResult
   }
   data={
-    playersList:[],
-    groupList:[],
-    doneData:{doneNum:0,totalNum:0,process:0},
+    matchInfo:{},
+    // playersList:[],
+    // groupList:[],
+    // doneData:{doneNum:0,totalNum:0,progress:0},
     // groupListWithUserInfo:[],
     gameid:null,
     limit:null,
@@ -45,7 +59,8 @@ export default class Live extends wepy.page {
  }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-this.$apply()
+    this.$apply()
+//判断权限
     let userInfo=await initUserInfo()
     let uid=userInfo.uid;
     if(!uid){//
@@ -53,18 +68,18 @@ this.$apply()
       this.$apply()
       return
     }
-    let matchInfo=await this.getMatchInfo(this.gameid)
-    if(matchInfo.owner.uid!==uid){
+    this.matchInfo=await downLoadMatchInfo(this.gameid)
+    if(this.matchInfo.owner.uid!==uid){
       this.limit='readOnly'
       this.$apply()
       return
     }
-    if(matchInfo.status==="比赛结束"){
+    if(this.matchInfo.status==="比赛结束"){
       this.limit='readOnly'
       this.$apply()
       return
     }
-    if(matchInfo.status==="正在比赛"){
+    if(this.matchInfo.status==="正在比赛"){
       this.limit='writableOnlyScore'
       this.$apply()
       return
@@ -75,13 +90,10 @@ this.$apply()
   watch={
     async gameid(newGameId){
       console.log('gameid changed in live',newGameId)
-      let res=await this.getPlayerAndGroupList(newGameId)
-      this.playersList=res[0]
-      this.groupList=res[1]
+      this.matchInfo=await downLoadMatchInfo(newGameId)
+      // this.playersList=this.matchInfo.players
+      // this.groupList=this.matchInfo.group
       this.$apply()
-    },
-      groupList(n,o){
-      console.log('grouplist changed fn in live',n,o)
     }
   }
   events={
@@ -90,59 +102,21 @@ this.$apply()
         this.activeBar=this.titleList[1]
       }
     },
-    async updataGroupList(){
-      let res=await this.getPlayerAndGroupList(this.gameid)
-      this.playersList=res[0]
-      this.groupList=res[1]
-      // [this.playersList,this.groupList]
+    async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
+      this.matchInfo=await downLoadMatchInfo(this.gameid)
+      console.log('updataMatchInfo id runing',this.matchInfo)
       this.$apply()
     },
-    updataGroupListScore(newGroupList){
-      this.doneData=this.calcProcess(newGroupList)
-      if(this.doneData.process===100){
-        newGroupList.status=3
+    updataScoreOfMatch(newGroupListInfo){
+      this.matchInfo.progressData=calcprogress(newGroupListInfo)
+      if(this.matchInfo.progressData.progress===100){
+        this.matchInfo.status=3
         updateMatchInfo(this.gameid,{status:3})
       }
-      this.groupList=newGroupList
+      this.matchInfo.groupWithInfo=newGroupListInfo
+      this.$apply()
     }
   }
-
-  calcProcess(groupList){
-    let doneList=groupList.filter(groupInfo => {
-      return groupInfo.status
-    });
-    let doneNum=doneList.length
-    let totalNum=groupList.length
-    let process=0
-    if(totalNum){
-      process=Math.round(doneNum/totalNum*100,2)
-    }
-    return {doneNum,totalNum,process}
-  }
-
-  async getMatchInfo(gameid){
-     let matchInfo=await downLoadMatchInfo(gameid)
-      return matchInfo
-}
-  async getPlayerAndGroupList(gameid){
-     let groupUidList=[]
-     let groupList=[]
-     let playersList=[]
-     let matchInfo=await this.getMatchInfo(gameid)
-      if(matchInfo.players){
-        playersList=matchInfo.players
-      }else{return}
-      if(matchInfo.group){
-        groupUidList=matchInfo.group
-      }else{return}
-      groupList=transGroupListToGroupListWithPlayerInfo(groupUidList,playersList)
-      groupList.forEach(groupInfo => {
-        groupInfo.score_a=(groupInfo.score_a||0)
-        groupInfo.score_b=(groupInfo.score_b||0)
-        groupInfo.status=(groupInfo.status||0)
-      });
-      return [playersList,groupList,matchInfo]
-}
 }
 </script>
 

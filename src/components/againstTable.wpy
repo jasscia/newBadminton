@@ -1,36 +1,36 @@
 
 <template>
-  <view class="warp"> 
-  <repeat for="{{groupList}}" key="index" index="index" item="item" if="{{state===1}}">
+  <view class="warp"> {{matchInfo}}-againstTable
+  <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
     <view class="againstTable">
-    <view class="againstItem {{item.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
+    <view class="againstItem {{groupInfo.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
       <view class="side">
-        <view class="name">{{item.id_a1.real_name||item.id_a1.nick_name}}</view>
-        <view class="name">{{item.id_a2.real_name||item.id_a2.nick_name}}</view>
+        <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
+        <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
       </view>
       <!-- <view class="score"> -->
       <view class="handleBtnGroup">
         <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="more"  hover-class="hover">+</button>
         <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="less"  hover-class="hover">-</button>
       </view>
-      <view class="score scoreL">{{item.score_a}}</view>
+      <view class="score scoreL">{{groupInfo.score_a}}</view>
       <view class="sub" bindtap="finish" data-id="{{index}}" wx:if="{{limit!=='readOnly'}}">
         <view>第{{index+1}}场</view>
-        <view wx:if="{{item.status!==1}}"  class="finishBtn">结束比赛</view> 
+        <view wx:if="{{groupInfo.status!==1}}"  class="finishBtn">结束比赛</view> 
         <view wx:else  class="finishBtn">查看比赛</view>
       </view>
       <view class="sub" wx:else>
         <view>第{{index+1}}场</view>
       </view>
-      <view class="score scoreR">{{item.score_b}}</view>
+      <view class="score scoreR">{{groupInfo.score_b}}</view>
       <view class="handleBtnGroup">
         <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="more" hover-class="hover">+</button>
         <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="less"  hover-class="hover">-</button>
       </view>
       <!-- </view> -->
       <view class="side">
-        <view class="name">{{item.id_b1.real_name||item.id_b1.nick_name}}</view>
-        <view class="name">{{item.id_b2.real_name||item.id_b2.nick_name}}</view>
+        <view class="name">{{groupInfo.id_b1.real_name||groupInfo.id_b1.nick_name}}</view>
+        <view class="name">{{groupInfo.id_b2.real_name||groupInfo.id_b2.nick_name}}</view>
       </view>
     </view>
   </view>
@@ -40,7 +40,7 @@
 </template>
 
 <style lang="less" scoped>
-  @import '../../common/common.less';
+  @import '../common/common.less';
 .againstTable{
   width:100%;
   box-sizing: border-box;
@@ -156,18 +156,14 @@ padding:20px 0;
 
 <script>
 import wepy from 'wepy';
-import { putGroupInfo } from "../../common/common";
-import badmin from '../../common/makeGroup'
-export default class AgainstTable extends wepy.page {
+import { putGroupInfo } from "../common/common";
+import badmin from '../common/makeGroup'
+export default class AgainstTable extends wepy.component {
   props={
-    groupList:{
-      type:Array,
-      default:[],
-      twoWay:true
-    },
-    gameid:{
-      type:String,
-      default:null
+    matchInfo:{
+      type:Object,
+      default:{},
+      // twoWay:true
     },
     limit:{
       type:String,
@@ -175,15 +171,19 @@ export default class AgainstTable extends wepy.page {
     }
   }
   data={
-    activedGroupIndex:null
+    activedGroupIndex:null,
+    // groupList:[]
     // matchInfo:{}
   }
   watch={
-    groupList(newGroupList,o){
-      console.log('grouplist changed fn in table',newGroupList,o)
-      //通知父节点去更新数据
-      this.$emit('updataGroupListScore',newGroupList)
+    matchInfo(newMatchInfo,o){
+      console.log('matchInfo changed fn in table',newMatchInfo,newMatchInfo.groupWithInfo)
+      // this.groupList=newMatchInfo.groupWithInfo
+      // this.$apply()
     },
+    // groupList(newGroupList){
+    //   this.$emit('updataScoreOfMatch',newGroupList)
+    //   },
    limit(n){
      console.log('limit changed in table page',n)}
   }
@@ -193,10 +193,10 @@ export default class AgainstTable extends wepy.page {
       let index = e.target.dataset.id;
       let side=(e.target.dataset.side==='A'?'score_a':'score_b');
       let way=e.target.dataset.way;
-      let groupInfo=this.groupList[index]
+      let groupInfo=this.matchInfo.groupWithInfo[index]
       if (way === "more") {
         groupInfo[side]++
-      } else if (this.groupList[index][side]!==0){
+      } else if (this.matchInfo.groupWithInfo[index][side]!==0){
         groupInfo[side]--
       }
     },
@@ -205,7 +205,7 @@ export default class AgainstTable extends wepy.page {
     },
     finish(e){
       let index = e.currentTarget.dataset.id;
-      let groupInfo=this.groupList[index]
+      let groupInfo=this.matchInfo.groupWithInfo[index]
       let status=(groupInfo.status===1?0:1)
       groupInfo.status=status
       let gameid=this.gameid
@@ -217,6 +217,7 @@ export default class AgainstTable extends wepy.page {
         score_a:score_a,
         score_b:score_b,
         status:status})  
+      this.$emit('updataScoreOfMatch',this.matchInfo.groupWitßhInfo)
     }
   }
 }

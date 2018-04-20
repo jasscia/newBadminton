@@ -11,7 +11,6 @@ const setStorage=function(key,data) {
   }
   const login=function(){
     return new Promise((resolve,reject)=>{
-      // console.log('进入login fn');
       wx.login({
         success:resolve,
         fail:reject
@@ -20,7 +19,6 @@ const setStorage=function(key,data) {
   }
   const getUserInfoWithoutToken=function(){
     return new Promise((resolve,reject)=>{
-      // console.log('进入userInfo fn');
       wx.getUserInfo({
         success:resolve,
         fail:reject
@@ -38,8 +36,7 @@ const setStorage=function(key,data) {
   }
 
 const transformStatusAndTimeOfMatchInfo=function(matchInfo){
-  let status=['报名中','报名结束','正在比赛','比赛结束'];
-  console.log('----=======matchInfo before trans',matchInfo,matchInfo.status,status[matchInfo.status])  
+  let status=['报名中','报名结束','正在比赛','比赛结束']; 
     if(status[matchInfo.status]){
       matchInfo.status=status[matchInfo.status]
     };
@@ -63,7 +60,6 @@ const formateDate=(time)=>{
 }
 const htr=function(url,method,data){
   return new Promise((resolve,reject)=>{
-    // console.log('进入htr fn');
     wx.request({
       url,
       method,
@@ -85,6 +81,7 @@ const URLList={
   postGroupListURl:'https://kkiqq.cn/api/badminton/group',
   getGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
   putGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
+  getMyMatchDataURL:'https://kkiqq.cn/api/badminton/personalinfo'
 };
 export {URLList,
         htr,

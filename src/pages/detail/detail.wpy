@@ -1,77 +1,18 @@
 
 <template>
   <view class="container">
-  <!-- <view class="label">赛事信息</view> -->
-  <view class="item">
-    <view class="title">时间</view>
-    <view class="content" >{{baseInfo.begintime}}</view>    
-  </view>
-  <view class="item">
-    <view class="title">地点</view>
-    <view class="content">{{baseInfo.address}}</view>    
-  </view>
-  <view class="item">
-    <view class="title">创建者</view>
-    <view class="content">{{baseInfo.owner.real_name || baseInfo.owner.nick_name}}</view>    
-  </view>
-  <view class="item">
-    <view class="title">状态</view>
-    <view class="content">{{baseInfo.status}}</view>
-  </view>
-  <!-- <view class="label">共{{playersList.length}}人报名参赛 <button class="shareBtn" open-type="share" >邀请好友</button></view> -->
-  <!-- <view class="playersUidList"> -->
-  <view class="playersList">
-    <repeat for="{{playersList}}" key="index" item="playerInfo">
-      <view class="playerInfo">
-        <image class="avatar {{myturn===index?'em':''}}" src="{{playerInfo.user.avatar_url}}" />
-        <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
-      </view>
-    </repeat>
-  </view>
-  <view class="btnBox">
-    <button class="btn" open-type="share" wx:if="{{baseInfo.status==='报名中'}}">邀请好友</button>
-    <button class="btn" @tap="signup" wx:if="{{!baseInfo.ifIn && baseInfo.status==='报名中'}}">报名</button>
-    <button class="btn" @tap="goToLive" wx:if="{{playersList.length>=4  && ifOwner && (baseInfo.status==='报名中'|| baseInfo.status==='报名结束')}}">去开赛</button> 
-    <button class="btn" @tap="goToLive" wx:if="{{playersList.length>=4 && (baseInfo.status=== '正在比赛' || baseInfo.status== '比赛结束')}}">查看赛事详情</button> 
-    <button class="btn" @tap="goToIndex">去首页看看</button>
-  </view>
+  <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
+  <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
+  <matchActiveInDetail :matchInfo.sync="matchInfo"></matchActiveInDetail>
+  <matchResultInDetail 
+              wx:if="{{matchInfo.status=== '正在比赛' || matchInfo.status== '比赛结束'}}"
+              :matchInfo.sync="matchInfo"></matchResultInDetail>
 </view>
 </template>
 
 <style lang="less" scoped>
   @import '../../common/common.less';
 
-  .playersList{
-    background: @bgc-card;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding-bottom: 20rpx;
-    .playerInfo{
-      width:100rpx;
-      height:120rpx;
-      text-align: center;
-      margin:20rpx;
-      .avatar{
-        height: 100rpx;
-        width: 100rpx;
-        border-radius: 50%;
-        background-size: cover;
-      }
-      .em{
-        border:6rpx solid @btn-em;
-        box-sizing: border-box;
-      }
-      .name{
-        font-size: 24rpx;
-        width:100rpx;
-        height:30rpx;
-        line-height:30rpx;
-        vertical-align: middle;
-      }
-    }
-  }
-  
   .item,.label{
     background: @bgc-card;
     height:60rpx;
@@ -98,120 +39,34 @@
       width:500rpx;
     }
   }
-  .btnBox{
-    display: flex;
-    align-content: space-around;
-  }
-  .btn{
-    margin:40rpx auto;
-    width:300rpx;
-    height:100rpx;
-    line-height: 100rpx;
-    vertical-align: middle;
-    text-align: center;
-    background: @bgc-card;
-  }
-  .shareBtn{
-    display: inline-block;
-    height:60rpx;
-    line-height:60rpx;
-    vertical-align:bottom;
-    border-radius:15rpx;
-    font-size:18rpx;
-    text-align:center;
-    margin-left:20rpx;
-    background: @bgc-card;
-    position: static;
-  }
-    .shareBtn::before{
-      content: "\e624";
-      font-family: "iconfont";
-      font-size: 40rpx;
-      color: @btn-em;
-    }
 </style>
 
 
 <script>
 import wepy from 'wepy'
-import { downLoadMatchInfo,share,addPlayer} from "../../common/common";
+import { downLoadMatchInfo,share,addPlayer} from "../../common/common"
+import playersList from '../../components/playersList'
+import matchBaseInfo from '../../components/matchBaseInfo'
+import matchResult from '../../components/matchResult'
+import matchActive from '../../components/matchActive'
+
 export default class BaseData extends wepy.page {
-data={
-    matchInfo:{},
-    playersList:[],
-    baseInfo:{},
-    groupList:[],
-    gameid:null,
-    myturn:null,
-    ifOwner:false
+  components={
+    playersListInDetail:playersList,
+    matchBaseInfoInDetail:matchBaseInfo,
+    matchActiveInDetail:matchActive,
+    matchResultInDetail:matchResult
   }
- watch={
-   matchInfo(newMatchInfo){
-    //  let status=['报名中','报名结束','比赛中','比赛结束']
-     this.playersList=newMatchInfo.players
-     this.groupList=newMatchInfo.group
-     this.baseInfo.begintime=newMatchInfo.begintime
-     this.baseInfo.address=newMatchInfo.address
-     this.baseInfo.status=newMatchInfo.status
-     this.baseInfo.owner=newMatchInfo.owner
-     this.baseInfo.ifIn=newMatchInfo.ifIn
-     let myUserInfo=wx.getStorageSync('userInfo')
-     let my_uid=myUserInfo.uid
-     if(this.baseInfo.owner.uid===my_uid){
-       this.ifOwner=true
-     }
-     if(! this.baseInfo.ifIn){
-       this.myturn=null
-       return
-      }
-      for(let i=0,len=this.playersList.length;i<len;i++){
-        let playerInfo=this.playersList[i]
-        console.log('other1',playerInfo.user.avatar_url,'other2',my_uid)
-        if(playerInfo.user.uid===my_uid){
-          this.myturn=i;return
-        }
-      }
-     }
-   }
+data={
+    matchInfo:{}
+  }
  async onLoad(options){
    this.gameid=options.gameid
    this.matchInfo=await downLoadMatchInfo(this.gameid)
-   console.log(this.matchInfo)
    this.$apply()
  }
- onShareAppMessage(res){
-   console.log(res)
+ onShareAppMessage(){
    return  share('/pages/detail/detail?gameid='+this.gameid)
- }
- methods={
-   async signup(){
-     let res=await addPlayer(this.gameid)
-     if(res){
-
-   this.matchInfo=await downLoadMatchInfo(this.gameid)
-   this.$apply()
-       wx.showToast({
-         title:'报名成功',
-         icon:'success',
-         duration:1500
-       })
-     }else{
-       wx.showToast({
-         title:'报名失败',
-         duratuin:1500
-       })
-     }
-   },
-   goToIndex(){
-     wx.switchTab({
-       url:'/pages/index/index'
-     })
-   },
-    goToLive(e){
-        wx.navigateTo({
-          url:`/pages/live/live?gameid=${this.gameid}`
-        })
-      }
  }
 }
 </script>

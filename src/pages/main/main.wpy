@@ -5,9 +5,15 @@
       <button>创建赛事</button>
     </view>   
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="goToDetail" data-gameid="{{matchInfo.id}}" data-wheretaped="body">
-        <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'">   
-        </matchInfo>
+      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}">
+        <twoSideInMain :index.sync="index">
+            <block slot='frontSide'>
+              <matchInfo  :matchInfo.sync="matchInfo" :mode.sync="'withPanle'"></matchInfo>
+            </block>
+            <block slot='backSide'>
+              <matchActiveInMain :matchInfo.sync="matchInfo"></matchActiveInMain>
+            </block>
+        </twoSideInMain>
       </view>
     </repeat>
   </view> 
@@ -51,6 +57,8 @@
 import wepy from "wepy";
 import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
+import twoSide from '../../components/twoSide';
+import matchActive from '../../components/matchActive'
 import header from '../../components/header';
 export default class myGameList extends wepy.page{
   config={
@@ -65,16 +73,16 @@ export default class myGameList extends wepy.page{
    }
     components = {
       matchInfo:matchInfo,
-      header:header
+      header:header,
+      twoSideInMain:twoSide,
+    matchActiveInMain:matchActive
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList()
-    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList()
-    wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){
@@ -87,29 +95,12 @@ export default class myGameList extends wepy.page{
           url:"/pages/main/createNewAgainst"
         })
       },
-    goToDetail(e){
-      console.log(e.currentTarget.dataset)
-      let where=e.currentTarget.dataset.wheretaped
-      let gameid=e.currentTarget.dataset.gameid
-      if(where==="body"){
-        wx.navigateTo({
-            url:`/pages/detail/detail?gameid=${gameid}`
-          })
+      turnOverCard(e){
+        let index=e.currentTarget.dataset.index
+        console.log(index)
+        this.$broadcast('turnOverCard',index)
       }
-    }
   }
-    events={
-      goToLive(e){
-      console.log(e.currentTarget.dataset)
-      let where=e.currentTarget.dataset.wheretaped
-      let gameid=e.currentTarget.dataset.gameid
-      if(where==="top"){
-        wx.navigateTo({
-            url:`/pages/live/live?gameid=${gameid}`
-          })
-      }
-    }
-    }
 }
 </script>
 

@@ -1,19 +1,14 @@
 <template>
 <view class="matchInfo"> 
     <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
-      <view class="status">{{matchInfo.status}}</view>
-      <view class="statusOfMy">{{matchInfo.ifIn?"已报名":"未报名"}}</view>
+      <text class="status {{matchInfo.status==='报名中'?'signupable':'unsignupable'}}">{{matchInfo.status}}</text>
+      <text class="status {{matchInfo.ifIn?'signuped':'unsignup'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
-    <block wx:if="{{mode==='withPanle'}}">
-      <view class="statement-group" wx:if="{{matchInfo.players.length<4}}">
-        <button  class="statement">人数小于4,尚未达到开赛条件</button>
+    <!-- <block > -->
+      <view class="statement-group" wx:if="{{mode==='withPanle'}}">
+        <text  class="statement"  wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
+        <text  class="statement"  wx:else>{{matchInfo.status}}</text>
       </view>
-      <view class="statement-group" wx:else data-wheretaped="top"  data-gameid="{{matchInfo.id}}"  @tap="emitGoToLive">
-        <button class="statementBtn" wx:if="{{matchInfo.status==='报名中'}}" size="min">去开赛</button>
-        <button class="statementBtn" wx:else  size="min">查看赛事详情</button>
-        <button class="statement"  size="min" >{{matchInfo.status}}</button>
-      </view>
-    </block>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
     </view>
@@ -40,44 +35,38 @@
     padding:0;
   }
   .row{
-    margin:10px;
+    margin:20rpx;
   }
   .row1{
     display: flex;
-    justify-content: space-between;
-    font-size:12px;
+    justify-content:space-between;
+    font-size:28rpx;
     color:#333;
+    padding:0 10rpx;
     .status{
-      background: lightblue;
-      border-radius: 6px;
-      padding:0 2px;
-      height:14px;
+      border-radius: 6rpx;
     }
+    .signupable{
+      background: @btn;
+    }
+    .unsignupable{
+      background: tomato;
+    }
+    .signuped{
+      color:@btn-em;
+    }
+    .unsignup{}
   }
   .statement-group{
-    display: flex;
     font-size: 30rpx;
-   justify-content: flex-end;
-   text-align: left;
+    color:@font;
+   text-align: right;
    padding:0;
-  }
-  .statementBtn{
-   flex: 1;
-   text-align: center;
-   background: @btn-em;
-   color:@font;
-  }
-  button.statementBtn,button.statement{
-    position: static;
-    border-radius: 0;
-    padding:0 10rpx;
-    font-size: 32rpx;
-    height:54rpx;
-    line-height: 54rpx;
   }
   .statement{
     background:cadetblue;
-    text-align: left;
+    // text-align: right;
+    padding:0 10rpx;
   }
   // }
   .row2{
@@ -96,22 +85,25 @@
     display: flex;
     justify-content: space-between;
     .avatarList{
-      margin-right: 10rpx;
+      // margin-right: 10rpx;
       flex:1;
       display: flex;
       flex-wrap: nowrap;
       overflow: hidden;
       justify-content: flex-end;
       .avatar{
-        width:40rpx;
-        border:4rpx solid @bgc-card;
+        width:42rpx;
+        box-sizing: border-box; 
         border-radius: 50%;
+        text-align: right;
       }
       image{
         height:28px;
         width:28px;
         border-radius: 50%;
         background-size: cover;
+        float: right;
+        border:4rpx solid @bgc-card;
       }
     }
   }

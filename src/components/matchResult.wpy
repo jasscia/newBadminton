@@ -23,7 +23,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import '../../common/common.less';
+@import '../common/common.less';
 .progress{
   background: @bgc-card;
   padding:30rpx;
@@ -86,23 +86,15 @@
 </style>
 <script>
 import wepy from 'wepy';
-import cycleProgressBar from "../../components/cycleProgressBar";
-export default class Result extends wepy.page  {
+import cycleProgressBar from "../components/cycleProgressBar";
+export default class Result extends wepy.component  {
   components={
     resultCycleProgressBar:cycleProgressBar
   }
   props= {
-    groupList: {
-      type:Array,
-      default:[]
-    },
-    gameid:{
+    matchInfo:{
       type:String,
       default:null
-    },
-    doneData:{
-      type:Object,
-      default:{doneNum:0,totalNum:0,process:0}
     }
   }
   data={
@@ -112,25 +104,15 @@ export default class Result extends wepy.page  {
     comment:'完成进度',
     process:0
   }
-  // computed={
-  //   process(){
-  //     return this.doneData
-  //   }
-  // }
   watch={
-    groupList(newGroupList,oldGroup){
-      console.log('groupList changed in result',newGroupList)
-      let calcedScore = this.calcScore(newGroupList);
+    matchInfo(newMatchInfo){
+            console.log('matchInfo changed fn in result',newMatchInfo)
+      this.progress=newMatchInfo.progressData.process
+      let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
       let res = this.orderScore(calcedScore);
       this.result= res[0];
       this.resultKeys=res[1]
       this.$apply()
-    },
-    doneData(newDoneData,o){
-      this.doneData=newDoneData
-      this.process=this.doneData.process
-      this.$apply()
-      console.log('doneData changed in result',this.process,this.doneData,o)
     }
   }
   calcScore(groupList) {

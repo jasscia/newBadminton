@@ -5,12 +5,8 @@ const downLoadMatchInfoList=async function(type='my'){
   let token;
   let data={};
   if(type==="my"){
-    let userInfo=await initUserInfo()
-    if(!userInfo || !userInfo.token){
-      return []
-    }
-    token=userInfo.token
-    data={token:token}
+    token=await getToken();
+    data.token=token
   }
   let  method="GET";
   let res=await htr(url,method,data);
@@ -18,9 +14,10 @@ const downLoadMatchInfoList=async function(type='my'){
     let matchInfoList=res.data.data;
     for(let matchInfo of matchInfoList){
       matchInfo.ifIn=judgeIfIn(matchInfo)
+      matchInfo.groupWithInfo= getGroupListWithPlayerInfo(matchInfo)
+      matchInfo.progressData=calcprogress(matchInfo)
       transformStatusAndTimeOfMatchInfo(matchInfo);
     }
-    console.log('matchinfolist fn=',matchInfoList)
     return matchInfoList
   }else{
     return []
@@ -34,13 +31,13 @@ const downLoadMatchInfo=async function(gameid){
   let matchInfo=res.data.data;
   if(matchInfo){
     matchInfo.ifIn=judgeIfIn(matchInfo)
-    // console.log('download matchinfo fn',matchInfo)
+    matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)
+    matchInfo.progressData=calcprogress(matchInfo)
     return transformStatusAndTimeOfMatchInfo(matchInfo);
   }else{
     return {}
   }
 }
-
 const judgeIfIn=function(matchInfo){
     let players=matchInfo.players
     let uid=wx.getStorageSync('userInfo').uid
@@ -51,11 +48,7 @@ const judgeIfIn=function(matchInfo){
     return ifIn
   }
 const updateMatchInfo =async function(gameid,options){
-  let userInfo=await initUserInfo()
-    if(!userInfo || !userInfo.token){
-      return {}
-    }
-  let token=userInfo.token;
+  let token=await getToken();
   let url=URLList.putGameInfoURL+'\/'+gameid,
       method="PUT",
       data=options;
@@ -64,18 +57,6 @@ const updateMatchInfo =async function(gameid,options){
   if(res.data.code===1){
     return res.data.data
   }
-}
-const getPlayersUidList=async function(gameid){
-  let matchInfo=await downLoadMatchInfo(gameid)
-  if(!matchInfo){
-    return []
-  }
-  let playersList=matchInfo.players
-  let playersUidList=[]
-  playersList.forEach(userInfo => {
-    playersUidList.push(userInfo.user.uid)
-  });
-  return playersUidList
 }
  
 const initUserInfo=async function() {
@@ -105,11 +86,8 @@ const initUserInfo=async function() {
   }
 }
 const addPlayer=async function(gameid){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return {}
-  }
-  let token=userInfo.token;
+  let token=await getToken();
+
   let url=URLList.addplayerURL,
       method="POST",
       data={
@@ -124,11 +102,9 @@ const addPlayer=async function(gameid){
   }
 }
 const changeRealname=async function(realName){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return {}
-  }
-  let token=userInfo.token;
+  let userInfo=wx.getStorageSync('userInfo')
+  let token=await getToken();
+
   let url=URLList.changeRealnameURl,
       method='POST',
       data={token:token,
@@ -143,11 +119,8 @@ const changeRealname=async function(realName){
   }
 }
 const createGame=async function(formData){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return {}
-  }
-  let token=userInfo.token;
+  let token=await getToken();
+
   let url=URLList.postGameInfoURL,
       method="POST",
       data={
@@ -167,11 +140,8 @@ const createGame=async function(formData){
   }
 }
 const postGroupList=async function(gameid,list){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return {}
-  }
-  let token=userInfo.token;
+  let token=await getToken();
+
   let url=URLList.postGroupListURl,
       method="POST",
       data={
@@ -187,8 +157,8 @@ const postGroupList=async function(gameid,list){
    }
 }
 const getGroupInfo=async function(gameid){
-  let userInfo=await initUserInfo()
-  let token=userInfo.token;
+  let token=await getToken();
+
   let url=URLList.getGroupInfoURl,
       method="GET",
       data={
@@ -203,11 +173,8 @@ const getGroupInfo=async function(gameid){
   }
 }
 const putGroupInfo=async function(groupid,options){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return {}
-  }
-  let token=userInfo.token;
+  let token=await getToken();
+
   let url=URLList.postGroupListURl+'\/'+groupid,
       method="PUT",
       data=options;
@@ -240,16 +207,54 @@ const share=function(path){
       }
     }
 }
-const transGroupListToGroupListWithPlayerInfo=function(groupList,playersList){
-  let uKey=['id_a1','id_a2','id_b1','id_b2']
-  groupList.forEach(groupInfo=>{
-    for(let key of uKey){
-      let uid=groupInfo[key]
-      groupInfo[key]=getUserInfoByUid(uid,playersList)
-    }
-  })
-  return groupList
+const getMyMatchData=async function(){
+  let token=await getToken();
+  let url=URLList.getMyMatchDataURL
+  let method='GET'
+  let data={token}
+  let res= await htr(url,method,data)
+  if(res.data.code===1){
+    return res.data.data
+  }else{
+    return {}
+  }
 }
+const getToken=async function(){
+  let userInfo=await initUserInfo()
+  if(!userInfo || !userInfo.token){
+    return {}
+  }
+  let token=userInfo.token;
+  if(token){
+    return token
+  }else{
+    return ''
+  }
+}
+
+const getPlayersUidList=async function(gameid){
+  let matchInfo=await downLoadMatchInfo(gameid)
+  if(!matchInfo){
+    return []
+  }
+  let playersList=matchInfo.players
+  let playersUidList=[]
+  playersList.forEach(userInfo => {
+    playersUidList.push(userInfo.user.uid)
+  });
+  return playersUidList
+}
+// const transGroupListToGroupListWithPlayerInfo=function(groupListOnlyPlayerUid,playersList){
+//   let uKey=['id_a1','id_a2','id_b1','id_b2']
+//   let groupListWithPlayerInfo=playersList
+//   groupListOnlyPlayerUid.forEach(groupInfo=>{
+//     for(let key of uKey){
+//       let uid=groupListOnlyPlayerUid[key]
+//       groupListWithPlayerInfo[key]=getUserInfoByUid(uid,playersList)
+//     }
+//   })
+//   return groupListWithPlayerInfo
+// }
 const getUserInfoByUid=function(uid,playersList){
   let results=playersList.filter(playerInfo=>{
     return playerInfo.userid===uid
@@ -259,6 +264,44 @@ const getUserInfoByUid=function(uid,playersList){
     userInfo.uid=results[0].userid;
     return userInfo
   }
+}
+
+const getGroupListWithPlayerInfo=function(matchInfo){
+  let groupListOnlyPlayerUid=[]
+  let groupListWithPlayerInfo=[]
+  let playersList=[]
+   if(matchInfo.players){
+     playersList=matchInfo.players
+   }else{return []}
+   if(matchInfo.group){
+     groupListOnlyPlayerUid=matchInfo.group
+   }else{return []}
+
+   let uKey=['id_a1','id_a2','id_b1','id_b2']
+   groupListOnlyPlayerUid.forEach(groupInfo=>{
+     for(let key of uKey){
+       let uid=groupInfo[key]
+       groupListWithPlayerInfo[key]=getUserInfoByUid(uid,playersList)
+     }
+   })
+   return groupListWithPlayerInfo
+}
+
+const calcprogress=function(matchInfo){
+  let doneNum=0
+  let totalNum=0
+  let progress=0
+  let groupList=matchInfo.group
+  if(!groupList) return{doneNum,totalNum,progress}
+  let doneList=groupList.filter(groupInfo => {
+    return groupInfo.status
+  });
+  doneNum=doneList.length
+  totalNum=groupList.length
+  if(totalNum){
+    progress=Math.round(doneNum/totalNum*100,2)
+  }
+  return {doneNum,totalNum,progress}
 }
 export {downLoadMatchInfoList,
         downLoadMatchInfo,
@@ -274,4 +317,6 @@ export {downLoadMatchInfoList,
         postGroupList,
         getGroupInfo,
         putGroupInfo,
-        transGroupListToGroupListWithPlayerInfo}
+        // transGroupListToGroupListWithPlayerInfo,
+        getMyMatchData,
+        calcprogress}

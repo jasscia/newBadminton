@@ -13,11 +13,7 @@
           </view>
       </block>
       <view class="text">
-        <view class="value {{!visualvalue.doneNum}}?'process':''">{{value}}</view>
-        <!-- <view class="value visualValue" wx:else="visualValue.length">
-          <view class="value1">{{visualValue[0]}}</view>
-          <view class="value2">of {{visualValue[1]}}</view>
-        </view> -->
+        <view class="value {{visualvalue.doneNum?'progress':''}}">{{value}}</view>
         <view class="comment">{{comment}}</view>
       </view>
     </view>      
@@ -48,7 +44,7 @@
     height:30rpx;
     font-size:24rpx;
   }
-  .process::after{
+  .progress::after{
     content:'%';
     height:30rpx;
     font-size: 30rpx;

@@ -1,17 +1,6 @@
 
 <template>
   <view class="warp">
-  <view class="label top">共{{playersList.length}}人报名参赛人</view>
-  <!-- <view class="playersUidList"> -->
-  <view class="playersList">
-    <repeat for="{{playersList}}" key="index" item="playerInfo">
-      <view class="playerInfo">
-        <image class="avatar" src="{{playerInfo.user.avatar_url}}" />
-        <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
-      </view>
-    </repeat>
-  </view>
-  <!-- </view> -->
   <view class="label">每人场数</view>
   <input type="number" name="" 
         class="roundCount" value="{{roundCount}}"
@@ -25,7 +14,7 @@
 </template>
 
 <style lang="less" scoped>
-  @import '../../common/common.less';
+  @import '../common/common.less';
   .label{
     color: @font-side;
     font-weight: lighter;
@@ -53,32 +42,6 @@
     color:tomato;
     text-align: center;
   }
-  .playersList{
-    background: @bgc-card;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding-bottom: 20rpx;
-    .playerInfo{
-      width:100rpx;
-      height:120rpx;
-      text-align: center;
-      margin:20rpx;
-      .avatar{
-        height: 100rpx;
-        width: 100rpx;
-        border-radius: 50%;
-        background-size: cover;
-      }
-      .name{
-        font-size: 24rpx;
-        width:100rpx;
-        height:30rpx;
-        line-height:30rpx;
-        vertical-align: middle;
-      }
-    }
-  }
  
   #btn{
     margin:40rpx auto;
@@ -93,18 +56,18 @@
 
 <script>
 import wepy from 'wepy'
-import { initUserInfo,postGroupList,updateMatchInfo,downLoadMatchInfo} from "../../common/common";
-import badmin from '../../common/makeGroup'
-export default class BaseData extends wepy.page {
+import { initUserInfo,postGroupList,updateMatchInfo,downLoadMatchInfo} from "../common/common"
+import badmin from '../common/makeGroup'
+// import playersList from './playersList'
+
+export default class MatchDataSet extends wepy.component{
+  components={
+    // playersListMatchDataSet:playersList,
+  }
   props={
-    playersList:{
-      type:Array,
-      default:[],
-      twoWay:true
-    },
-    gameid:{
-      type:String,
-      default:null
+    matchInfo:{
+      type:Object,
+      default:{}
     },
     limit:{
       type:String,
@@ -114,17 +77,17 @@ export default class BaseData extends wepy.page {
   data={
       groupList:[],
       playersList:[],
-      matchInfo:{},
+      gameid:null,
       roundCount:4,
       msg:'努力计算中',
       state:1
     }
  watch={
-   playersList(n){
-     console.log('playersList changed in baseData',n)
-   },
-   gameid(n){
-     console.log('gameid changed in baseData page',n)
+   matchInfo(matchInfo){
+     this.playersList=matchInfo.players
+     this.gameid=matchInfo.id
+     this.$apply()
+     console.log('matchInfo changed in baseData',matchInfo)
    },
    limit(n){
      console.log('limit changed in baseData page',n)}
@@ -144,12 +107,12 @@ export default class BaseData extends wepy.page {
       }else{
         this.state=1;//计算成功的时候，
         this.groupList=this.transOrderWithPLayerId(groupListJustWithOrder,this.playersList)
-        //得到好用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
+        //得到用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
         //一旦生成对阵表 说明比赛开始了，也要去改变比赛的状态
-        //通知 父页面去获取group并跟新 本地的group--是一个辅助，用于后期展示页面
-        this.groupList=await postGroupList(this.gameid,this.groupList)
+        await postGroupList(this.gameid,this.groupList)
         await updateMatchInfo(this.gameid,{status:2})
-        this.$emit('updataGroupList')
+        //通知 父页面去获取更新
+        this.$emit('updataMatchInfo')
         //这个改变 是为了页面跳转
         this.$emit('changeActiveBar','from baseData')
         }

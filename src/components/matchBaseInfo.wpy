@@ -1,0 +1,65 @@
+
+<template>
+  <block>
+  <view class="item">
+    <view class="title">时间</view>
+    <view class="content" >{{matchInfo.begintime}}</view>    
+  </view>
+  <view class="item">
+    <view class="title">地点</view>
+    <view class="content">{{matchInfo.address}}</view>    
+  </view>
+  <view class="item">
+    <view class="title">创建者</view>
+    <view class="content">{{matchInfo.owner.real_name || matchInfo.owner.nick_name}}</view>    
+  </view>
+  <view class="item">
+    <view class="title">状态</view>
+    <view class="content">{{matchInfo.status}}</view>
+  </view>
+</block>
+</template>
+
+<style lang="less" scoped>
+  @import '../common/common.less';
+
+  .item,.label{
+    background: @bgc-card;
+    height:60rpx;
+    line-height: 60rpx;
+    vertical-align: middle;
+    padding:10rpx 20rpx;
+    margin-bottom:8rpx;
+    font-size:30rpx;
+    .label.title{
+      color: @font-side;
+      font-weight: lighter;
+      text-align:left;
+    }
+    .title{
+      width: 150rpx;
+    }
+    .title,.content{
+      display: inline-block;
+      height: 40px;
+      line-height: 40px;
+      vertical-align: middle;
+    }
+    .content{
+      width:500rpx;
+    }
+  }
+</style>
+
+<script>
+import wepy from 'wepy'
+
+export default class matchBaseInfo extends wepy.component {
+  props={
+    matchInfo:{
+      type:Object,
+      default:{}
+    }
+  }
+}
+</script>

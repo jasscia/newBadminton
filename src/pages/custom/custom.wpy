@@ -1,75 +1,45 @@
 <template>
-  <view class="custom">
-    <view class="part part1">
-      <view class="item" @tap.stop="tap">
+  <view class="container">
+    <view class="part part1" @tap="navigateToBaseInfoPage">
+      <view class="item">
         <image class="avatar" src="{{userInfo.avatar_url}}"/>
-        <!-- <view class="edit"  @tap.stop="changeAvatar">&#x270e;</view> -->
         <view class="nickname">{{userInfo.nick_name}}</view>
-        <!-- <view class="sumary"  @tap.stop="navigateToBaseInfoPage">
-          <view class="item">年龄:{{userInfoOther.age||'未知'}}</view>
-          <view class="item">姓名:{{userInfo.real_name||'未知'}}</view>
-          <view class="item">身高:{{userInfoOther.tall||'未知'}}</view>
-          <view class="item">体重:{{userInfoOther.weight||'未知'}}</view>
-        </view> -->
-        <!-- <view class="other">
-          <view class="item">{{on}}关注</view>
-          <view class="item">|</view>
-          <view class="item">{{fans}}粉丝</view>
-          <view class="item">|</view>
-          <view class="item">{{diamond}}钻石</view>
-        </view> -->
       </view>
-      <view class="item" @tap.stop="tap"></view>
+      <view class="item"></view>
     </view>
     <view class="part part2">
-      <view class="item title" @tap.stop="tap">个人数据</view>
+      <view class="item title">个人数据</view>
       <cycleProgressBar :value.sync="value" :comment.sync="comment"></cycleProgressBar>
     </view>
     <view class="part part3">
-      <view class="item title" @tap.stop="tap">得分统计</view>
-      <view class="item content" @tap.stop="tap">
+      <view class="item title">得分统计</view>
+      <view class="item content">
         <view class="subItem">
-          <view class="row1">40</view>
+          <view class="row1">{{myMatchData.total}}</view>
           <view class="row2">场次</view>
         </view>
         <view class="subItem">
-          <view class="row1">20</view>
+          <view class="row1">{{myMatchData.win}}</view>
           <view class="row2">胜利</view>
         </view>
         <view class="subItem">
-          <view class="row1">20</view>
+          <view class="row1">{{myMatchData.failed}}</view>
           <view class="row2">失败</view>
         </view>
         <view class="subItem">
-          <view class="row1 raito">50</view>
+          <view class="row1 raito">{{myMatchData.winrate}}</view>
           <view class="row2">胜率</view>
         </view>
     </view>
     </view>
     <view class="part part4">
-      <view class="item" @tap.stop="tap">
-        <view class="side left">我的战绩</view>
-        <view class="side right">88</view>
-      </view>
-      <view class="item" @tap.stop="tap">
-        <view class="side left">我的积分</view>
-        <view class="side right">200</view>
-      </view>
-      <view class="item" @tap.stop="tap">
-        <view class="side left">扫一扫</view>
-        <view class="side right">0</view>
-      </view>
       <view class="item" @tap.stop="navigateToBaseInfoPage">
         <view class="side left">我的资料</view>
         <view class="side right">修改</view>
       </view>
       <view class="item" @tap.stop="gotoAbout">
-        <view class="side left">关于</view>
-        <view class="side right"></view>
-      </view>
-      <view class="item" @tap.stop="tap">
-        <view class="side left">帮助</view>
-        <view class="side right"></view>
+        <text class="side left">关于我们</text>
+        <text class="side right"></text>
       </view>
     </view>
   </view>
@@ -198,7 +168,7 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {initUserInfo} from '../../common/common';
+import {initUserInfo,getMyMatchData} from '../../common/common';
 import itemList from "./itemList";
 import cycleProgressBar from "../../components/cycleProgressBar";
 export default class Custom extends wepy.page {
@@ -208,24 +178,26 @@ export default class Custom extends wepy.page {
       cycleProgressBar:cycleProgressBar,
     };
     data = {
-      value:80,
       userInfo:{},
       userInfoOther:{},
-      on:'200',
-      fans:'3000',
-      diamond:'56'
+      myMatchData:{},
+      comment:'综合实力',
+      value:0
     };
 
   async onLoad() {
       this.userInfo=await initUserInfo()
       this.userInfoOther=wx.getStorageSync('userOtherInfo')
+      this.myMatchData=await getMyMatchData()
+      this.myMatchData.winrate=this.myMatchData.winrate.replace(/\D/,'')
+      this.value=this.myMatchData.winrate
       this.$apply()
     };
-   async onShow() {
-      this.userInfo=await initUserInfo()
-      this.userInfoOther=wx.getStorageSync('userOtherInfo')
-      this.$apply()
-    };
+  //  async onShow() {
+  //     this.userInfo=await initUserInfo()
+  //     this.userInfoOther=wx.getStorageSync('userOtherInfo')
+  //     this.$apply()
+  //   };
     methods = {
       navigateToBaseInfoPage(){
         wx.navigateTo({

@@ -8,7 +8,7 @@
 <style lang="less" scoped>
 @import  '../../common/common.less';
 .container{
-  margin-top:-40rpx;
+  margin-top:-30rpx;
 }
 </style>
 <script>

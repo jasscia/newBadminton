@@ -10,6 +10,7 @@
 @import '../common/common.less';
 .header{
   margin:0px;
+  margin-bottom: 40rpx;
   padding-top:20rpx;
   display: flex;
   justify-content: space-around;

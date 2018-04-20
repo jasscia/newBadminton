@@ -1,9 +1,9 @@
 
 <template>
-  <view class="warp"> {{matchInfo}}-againstTable
-  <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
+  <view class="warp"> 
+  <repeat for="{{groupList}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
     <view class="againstTable">
-    <view class="againstItem {{groupInfo.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-id="{{index}}">
+    <view class="againstItem {{groupInfo.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-index="{{index}}">
       <view class="side">
         <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
         <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
@@ -16,8 +16,8 @@
       <view class="score scoreL">{{groupInfo.score_a}}</view>
       <view class="sub" bindtap="finish" data-id="{{index}}" wx:if="{{limit!=='readOnly'}}">
         <view>第{{index+1}}场</view>
-        <view wx:if="{{groupInfo.status!==1}}"  class="finishBtn">结束比赛</view> 
-        <view wx:else  class="finishBtn">查看比赛</view>
+        <button wx:if="{{groupInfo.status!==1}}"  class="finishBtn">点这结束</button> 
+        <button wx:else  class="finishBtn">点这查看</button>
       </view>
       <view class="sub" wx:else>
         <view>第{{index+1}}场</view>
@@ -49,7 +49,7 @@
   .againstItem{
     font-size:36rpx;
     height:200rpx;
-    background-color: @bgc-card;
+    background-color: @btn-em;
     display: flex;
     align-items: center;
     margin:40rpx 0;
@@ -118,10 +118,13 @@ padding:20px 0;
       margin:5rpx;
       background: gold;
       border-radius: 20%;
+      font-size: 25rpx;
+      padding:0;
       } 
     }
   }  
 }
+
 .done::before{
   content: '结束';
   position: absolute;
@@ -163,7 +166,7 @@ export default class AgainstTable extends wepy.component {
     matchInfo:{
       type:Object,
       default:{},
-      // twoWay:true
+      twoWay:true
     },
     limit:{
       type:String,
@@ -172,18 +175,18 @@ export default class AgainstTable extends wepy.component {
   }
   data={
     activedGroupIndex:null,
-    // groupList:[]
+    groupList:[]
     // matchInfo:{}
   }
   watch={
     matchInfo(newMatchInfo,o){
-      console.log('matchInfo changed fn in table',newMatchInfo,newMatchInfo.groupWithInfo)
-      // this.groupList=newMatchInfo.groupWithInfo
+      console.log('matchInfo changed fn in table',newMatchInfo,o)
+      this.groupList=newMatchInfo.groupWithInfo
       // this.$apply()
     },
-    // groupList(newGroupList){
-    //   this.$emit('updataScoreOfMatch',newGroupList)
-    //   },
+    groupList(newGroupList){
+      this.$emit('updataScoreOfMatch',newGroupList)
+      },
    limit(n){
      console.log('limit changed in table page',n)}
   }
@@ -193,22 +196,29 @@ export default class AgainstTable extends wepy.component {
       let index = e.target.dataset.id;
       let side=(e.target.dataset.side==='A'?'score_a':'score_b');
       let way=e.target.dataset.way;
-      let groupInfo=this.matchInfo.groupWithInfo[index]
+      let groupInfo=this.groupList[index]
       if (way === "more") {
         groupInfo[side]++
-      } else if (this.matchInfo.groupWithInfo[index][side]!==0){
+      } else if (this.groupList[index][side]!==0){
         groupInfo[side]--
       }
     },
     selectItem(e){
-      this.activedGroupIndex=e.currentTarget.dataset.id
+      let index=e.currentTarget.dataset.index
+      if(this.groupList[index].status){
+        return
+      }
+      this.activedGroupIndex=e.currentTarget.dataset.index
     },
     finish(e){
       let index = e.currentTarget.dataset.id;
-      let groupInfo=this.matchInfo.groupWithInfo[index]
+      let groupInfo=this.groupList[index]
       let status=(groupInfo.status===1?0:1)
       groupInfo.status=status
-      let gameid=this.gameid
+      if(groupInfo.status===1){
+        this.activedGroupIndex=null
+      }
+      let gameid=this.matchInfo.id
       let groupid=groupInfo.id
       let score_a=groupInfo.score_a
       let score_b=groupInfo.score_b
@@ -217,7 +227,6 @@ export default class AgainstTable extends wepy.component {
         score_a:score_a,
         score_b:score_b,
         status:status})  
-      this.$emit('updataScoreOfMatch',this.matchInfo.groupWitßhInfo)
     }
   }
 }

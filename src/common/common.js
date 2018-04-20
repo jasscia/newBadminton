@@ -278,10 +278,11 @@ const getGroupListWithPlayerInfo=function(matchInfo){
    }else{return []}
 
    let uKey=['id_a1','id_a2','id_b1','id_b2']
-   groupListOnlyPlayerUid.forEach(groupInfo=>{
+   groupListOnlyPlayerUid.forEach((groupInfo,index)=>{
+    groupListWithPlayerInfo[index]=groupInfo
      for(let key of uKey){
        let uid=groupInfo[key]
-       groupListWithPlayerInfo[key]=getUserInfoByUid(uid,playersList)
+       groupListWithPlayerInfo[index][key]=getUserInfoByUid(uid,playersList)
      }
    })
    return groupListWithPlayerInfo

@@ -49,14 +49,8 @@ export default class twoSide extends wepy.component{
                     transformOrigin: '50% 50% 0'
                 });
   }
-  watch={
-    index(index){
-      console.log(' in two side',index)
-    }
-  }
   events={
     turnOverCard(index){
-      console.log('turn over',index)
       if(index===undefined){return}
      
       if(this.ifShowbackSide[index]===undefined){

@@ -1,10 +1,13 @@
 import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
         getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
-const downLoadMatchInfoList=async function(type='my'){
-  let url=(type==="my"?URLList.getGameListMyURL:URLList.getGameListAllURL);
+const downLoadMatchInfoList=async function(type){
+  let url;
+  if(type==="mycreate"){url=URLList.getGameListMyURL}
+  if(type==="all"){url=URLList.getGameListAllURL}
+  if(type==="myjoin"){url=URLList.getGameListMyjoinURL}
   let token;
   let data={};
-  if(type==="my"){
+  if(type!=="all"){
     token=await getToken();
     data.token=token
   }
@@ -14,8 +17,7 @@ const downLoadMatchInfoList=async function(type='my'){
     let matchInfoList=res.data.data;
     for(let matchInfo of matchInfoList){
       matchInfo.ifIn=judgeIfIn(matchInfo)
-      matchInfo.groupWithInfo= getGroupListWithPlayerInfo(matchInfo)
-      matchInfo.progressData=calcprogress(matchInfo)
+      matchInfo.contorlAttr=calcContorlAttr(matchInfo)
       transformStatusAndTimeOfMatchInfo(matchInfo);
     }
     return matchInfoList
@@ -30,9 +32,11 @@ const downLoadMatchInfo=async function(gameid){
   let res= await htr(url,method,data);
   let matchInfo=res.data.data;
   if(matchInfo){
+    matchInfo.progressData=calcprogress(matchInfo)
     matchInfo.ifIn=judgeIfIn(matchInfo)
     matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)
-    matchInfo.progressData=calcprogress(matchInfo)
+    matchInfo.contorlAttr=calcContorlAttr(matchInfo)
+    matchInfo.limitForLive=calcLimitForLive(matchInfo)
     return transformStatusAndTimeOfMatchInfo(matchInfo);
   }else{
     return {}
@@ -244,17 +248,6 @@ const getPlayersUidList=async function(gameid){
   });
   return playersUidList
 }
-// const transGroupListToGroupListWithPlayerInfo=function(groupListOnlyPlayerUid,playersList){
-//   let uKey=['id_a1','id_a2','id_b1','id_b2']
-//   let groupListWithPlayerInfo=playersList
-//   groupListOnlyPlayerUid.forEach(groupInfo=>{
-//     for(let key of uKey){
-//       let uid=groupListOnlyPlayerUid[key]
-//       groupListWithPlayerInfo[key]=getUserInfoByUid(uid,playersList)
-//     }
-//   })
-//   return groupListWithPlayerInfo
-// }
 const getUserInfoByUid=function(uid,playersList){
   let results=playersList.filter(playerInfo=>{
     return playerInfo.userid===uid
@@ -267,6 +260,7 @@ const getUserInfoByUid=function(uid,playersList){
 }
 
 const getGroupListWithPlayerInfo=function(matchInfo){
+  console.log("++++++++= getGroupListWithPlayerInfo parm",matchInfo)
   let groupListOnlyPlayerUid=[]
   let groupListWithPlayerInfo=[]
   let playersList=[]
@@ -289,11 +283,15 @@ const getGroupListWithPlayerInfo=function(matchInfo){
 }
 
 const calcprogress=function(matchInfo){
+  console.log('calcprogress pram',matchInfo)
   let doneNum=0
   let totalNum=0
   let progress=0
   let groupList=matchInfo.group
-  if(!groupList) return{doneNum,totalNum,progress}
+  if(!groupList || !groupList.length){
+    console.log(groupList)
+    return{doneNum,totalNum,progress}
+  } 
   let doneList=groupList.filter(groupInfo => {
     return groupInfo.status
   });
@@ -302,7 +300,42 @@ const calcprogress=function(matchInfo){
   if(totalNum){
     progress=Math.round(doneNum/totalNum*100,2)
   }
+  console.log('progress fn',{doneNum,totalNum,progress},matchInfo)
   return {doneNum,totalNum,progress}
+}
+
+const calcContorlAttr=function(matchInfo){
+  let contorlAttr={}
+  if(!matchInfo){return {}}
+  let userInfo=wx.getStorageSync('userInfo')
+  contorlAttr.ifOwner= matchInfo.owner.uid===userInfo.uid
+  contorlAttr.ifDone=matchInfo.status===3
+  contorlAttr.ifGoingon=(matchInfo.status===2)
+  contorlAttr.ifStarted=(matchInfo.status>1)
+  contorlAttr.ifStopSingup=(matchInfo.status>1)
+  contorlAttr.ifOkToStart=(matchInfo.players.length>=5 && contorlAttr.ifOwner && matchInfo.status<2)
+  contorlAttr.ifOktoSignup=(!matchInfo.ifIn&&!contorlAttr.ifStopSingup)
+  contorlAttr.ifOktoShare=contorlAttr.ifStarted
+  contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup
+  return contorlAttr
+}
+//判断权限
+const calcLimitForLive=function(matchInfo){
+let my_uid=wx.getStorageSync('userInfo').uid
+console.log('limit fn',my_uid,matchInfo.owner.uid,matchInfo.status)
+if(!my_uid){//
+  return 'readOnly'
+}
+if(matchInfo.owner.uid!==my_uid){
+  return'readOnly'
+}
+if(matchInfo.status===3){
+  return'readOnly'
+}
+if(matchInfo.status===2){
+  return'writableOnlyScore'
+}
+  return'writableAll'
 }
 export {downLoadMatchInfoList,
         downLoadMatchInfo,

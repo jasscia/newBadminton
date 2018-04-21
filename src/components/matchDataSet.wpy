@@ -4,12 +4,13 @@
   <view class="label">每人场数</view>
   <input type="number" name="" 
         class="roundCount" value="{{roundCount}}"
-        placeholder="请输入每人场次,与人数的乘积,应被4整除"
+        placeholder="每人场次与人数的乘积,应被4整除,且不大于10" min="0" max="10"
+        disabled="{{matchInfo.limitForLive==='readOnly'}}"
         @input="changeRoundCount"/>
   <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
   <button id="btn" @tap="makeGroup" 
-          wx:if="{{limit!=='readOnly'}}">
-          {{limit==='writableOnlyScore'?'重新':''}}生产对阵表</button>
+          wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
+          {{matchInfo.limitForLive==='writableOnlyScore'?'重新':''}}生成对阵表</button>
   </view>
 </template>
 
@@ -68,10 +69,6 @@ export default class MatchDataSet extends wepy.component{
     matchInfo:{
       type:Object,
       default:{}
-    },
-    limit:{
-      type:String,
-      default:'readOnly'
     }
   }
   data={
@@ -88,11 +85,11 @@ export default class MatchDataSet extends wepy.component{
      this.gameid=matchInfo.id
      this.$apply()
      console.log('matchInfo changed in baseData',matchInfo)
-   },
-   limit(n){
-     console.log('limit changed in baseData page',n)}
+   }
  }
-  async onLoad(options){}
+  async onLoad(options){
+    
+  }
   methods={
     async makeGroup(){
       this.state=0;
@@ -118,6 +115,10 @@ export default class MatchDataSet extends wepy.component{
         }
     },
     changeRoundCount(e){
+      let value=e.detail.value
+      if(value<1 || value>10){
+        this.roundCount=''
+        return}
       this.roundCount=e.detail.value
     }
   }

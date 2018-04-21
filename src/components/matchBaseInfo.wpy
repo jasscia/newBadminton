@@ -61,5 +61,10 @@ export default class matchBaseInfo extends wepy.component {
       default:{}
     }
   }
+  match={
+    matchInfo(n){
+      console.log('---------match changed in matchbaseInfo',n)
+    }
+  }
 }
 </script>

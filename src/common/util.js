@@ -74,6 +74,7 @@ const URLList={
   putGameInfoURL:"https://kkiqq.cn/api/badminton/game",
   postGameInfoURL:"https://kkiqq.cn/api/badminton/game",
   getGameListMyURL:"https://kkiqq.cn/api/badminton/game",
+  getGameListMyjoinURL:"https://kkiqq.cn/api/badminton/signuplist",
   getGameListAllURL:"https://kkiqq.cn/api/badminton/gamelist",
   addplayerURL:"https://kkiqq.cn/api/badminton/game/addplayer",
   getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',

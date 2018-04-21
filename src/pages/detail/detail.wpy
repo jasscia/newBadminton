@@ -4,8 +4,7 @@
   <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
   <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
   <matchActiveInDetail :matchInfo.sync="matchInfo"></matchActiveInDetail>
-  <matchResultInDetail 
-              wx:if="{{matchInfo.status=== '正在比赛' || matchInfo.status== '比赛结束'}}"
+  <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}"
               :matchInfo.sync="matchInfo"></matchResultInDetail>
 </view>
 </template>

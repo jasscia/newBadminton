@@ -2,7 +2,7 @@
 <template>   
   <view class="wrapper">
     <view class="progress">
-      <resultCycleProgressBar :value.sync="process" 
+      <resultCycleProgressBar :value.sync="progress" 
                               :comment.sync="comment" 
                               :visualvalue.sync="doneData"></resultCycleProgressBar>
     </view>
@@ -25,24 +25,25 @@
 <style lang="less" scoped>
 @import '../common/common.less';
 .progress{
-  background: @bgc-card;
+  background: @btn;
   padding:30rpx;
   margin-top:40rpx;
+  margin-bottom:20rpx;
 }
 .itemHead{
   display: flex;
-  width:700rpx;
+  // width:700rpx;
   margin:0 auto;
   height:80rpx;
   line-height: 80rpx;
-  background: lightgreen;
+  background: @btn-em;
   // margin-top: 40rpx;
   margin-bottom: -10rpx;
   // border-bottom: 10rpx solid cadetblue;
 }
 .item{
   display: flex;
-  width:700rpx;
+  // width:700rpx;
   margin:25rpx auto;
   height:80rpx;
   line-height: 80rpx;
@@ -102,14 +103,17 @@ export default class Result extends wepy.component  {
     resultKeys:[],
     ifShowBtn:true,
     comment:'完成进度',
-    process:0
+    progress:0
   }
   watch={
     matchInfo(newMatchInfo){
-            console.log('matchInfo changed fn in result',newMatchInfo)
-      this.progress=newMatchInfo.progressData.process
+      console.log('matchInfo changed fn in result',newMatchInfo)
+      this.progress=newMatchInfo.progressData.progress
+      console.log('progress',this.progress)
       let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
+      console.log('calcedScore',calcedScore)
       let res = this.orderScore(calcedScore);
+      console.log('res',res)
       this.result= res[0];
       this.resultKeys=res[1]
       this.$apply()

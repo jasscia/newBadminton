@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="search">搜索附近的比赛</view>
+    <view class="search" @tap="gotoIndex">去看看近期的比赛</view>
     <form @submit="submit">
       <repeat for="{{titleList}}" key="index" index="index" item="title">    
         <item2colunm :item.sync="title" :dateRange.sync="dateRange"></item2colunm>
@@ -131,6 +131,11 @@ export default class CreateNewAgain extends wepy.page {
           title:'创建失败'
         })
       }
+    },
+    gotoIndex(){
+      wx.switchTab({
+        url:'/pages/index/index'
+      })
     }
   }
 }

@@ -1,107 +1,38 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <view class="add" @tap.stop="createNewAgainst">
-      <button>创建赛事</button>
-    </view>   
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
-        <twoSideInMain :index.sync="index">
-            <block slot='frontSide'>
-              <matchInfo :matchInfo.sync="matchInfo" :mode.sync="'withPanle'"></matchInfo>
-            </block>
-            <block slot='backSide'>
-              <matchActiveInMain :matchInfo.sync="matchInfo" :index.sync="index"></matchActiveInMain>
-            </block>
-        </twoSideInMain>
-      </view>
-    </repeat>
-  </view> 
+    <myCreate wx:if="{{activeBar===titleList[0]}}"></myCreate>
+    <myJoin  wx:if="{{activeBar===titleList[1]}}"></myJoin>
+  </view>
 </template>
 <style lang="less" scoped>
   @import '../../common/common.less';
   .container{
     background: @bgc;
-    .add{
-      margin-top:40rpx;
-      border-radius: 10px;
-      line-height: 100rpx;
-      text-align: center;
-      vertical-align: middle;
-      button{
-        display: inline-block;
-        background:@bgc-card;
-        vertical-align: middle;
-        height: 100px;
-        width:90%;
-        padding:0;
-        line-height: 100px;
-        font-size: 60rpx;
-        letter-spacing: 20rpx;
-        color:@bgc;
-      }
-    }
-    .matchCard{
-      margin:20px;
-      padding-bottom:10px;
-      font-size: 12px;
-      color:#666;
-      background: @bgc-card;
-      border-radius: 10px;
-      position: relative;
-      height: 300rpx;
-    }
   }
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
-import matchInfo from '../../components/matchInfo';
-import twoSide from '../../components/twoSide';
-import matchActive from '../../components/matchActive'
+import {share} from '../../common/common';
+import myCreate from './mycreate';
+import myJoin from './myjoin';
 import header from '../../components/header';
-export default class myGameList extends wepy.page{
+export default class Main extends wepy.page{
   config={
-    navigationBarTitleText:'我的赛事列表'
+    navigationBarTitleText:'我的赛事'
   }
     data={
-      userInfo:{},
-      matchInfoList:[],
-      activeBar:'我创建de比赛',
-      titleList:['我创建的比赛','我参与的比赛'],
-      rankingList:[]
+      activeBar:'我创建的比赛',
+      titleList:['我创建的比赛','我参与的比赛']
    }
     components = {
-      matchInfo:matchInfo,
+      myCreate:myCreate,
       header:header,
-      twoSideInMain:twoSide,
-    matchActiveInMain:matchActive
+      myJoin:myJoin,
     }
-  async onLoad(){
-    this.matchInfoList = await downLoadMatchInfoList()
-    this.$apply()
-  }
-  async onShow(){
-    this.matchInfoList = await downLoadMatchInfoList()
-    this.$apply()
-  }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')
-  }
-  methods={
-      createNewAgainst(){
-        wx.navigateTo({
-          url:"/pages/main/createNewAgainst"
-        })
-      },
-      turnOverCard(e){
-        let index=e.currentTarget.dataset.index
-        let matchInfo=e.currentTarget.dataset.matchinfo
-        console.log(index)
-        this.$broadcast('turnOverCard',index)
-        this.$broadcast('calcContorlAttr',matchInfo,index)
-      }
   }
 }
 </script>

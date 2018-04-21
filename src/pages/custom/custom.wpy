@@ -98,15 +98,6 @@
     position: relative;
     z-index: 1;
   }
-  // .score::after {
-  //   content: '综合实力';
-  //   display: inline-block;
-  //   position: absolute;
-  //   left: 0;
-  //   bottom: -27%;
-  //   font-size: 12px;
-  //   width: 100%;
-  // }
 }
 .part4{
   .item{
@@ -141,8 +132,9 @@
         text-align: center;
       }
       .row1{
-        line-height: 80rpx;
-        font-size: 80rpx;
+        line-height: 60rpx;
+        font-size: 60rpx;
+        font-weight: 900
         // padding-top:15px;
         // background: @btn;
       }
@@ -189,15 +181,10 @@ export default class Custom extends wepy.page {
       this.userInfo=await initUserInfo()
       this.userInfoOther=wx.getStorageSync('userOtherInfo')
       this.myMatchData=await getMyMatchData()
-      this.myMatchData.winrate=this.myMatchData.winrate.replace(/\D/,'')
+      this.myMatchData.winrate=this.myMatchData.winrate.split(/([.%])/)[0]
       this.value=this.myMatchData.winrate
       this.$apply()
     };
-  //  async onShow() {
-  //     this.userInfo=await initUserInfo()
-  //     this.userInfoOther=wx.getStorageSync('userOtherInfo')
-  //     this.$apply()
-  //   };
     methods = {
       navigateToBaseInfoPage(){
         wx.navigateTo({

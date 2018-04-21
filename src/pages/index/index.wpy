@@ -38,28 +38,18 @@
       }
     }
   async onLoad(){
-    this.matchInfoList = await downLoadMatchInfoList('All')
-    wx.setStorageSync('activeMatchInfo',{})
+    this.matchInfoList = await downLoadMatchInfoList('all')
+    console.log('all',this.matchInfoList)
+
     this.$apply()
   }
   async onShow(){
-    this.matchInfoList = await downLoadMatchInfoList('All')
+    this.matchInfoList = await downLoadMatchInfoList('all')
     wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){
     return share('/pages/index/index.wpy')
-  }
-  events={
-    // updateMatchInfoList(gameid,newMatchInfo){
-    //   console.log('emit update fn,params=',gameid,newMatchInfo)
-    //   for(let matchInfo of this.matchInfoList){
-    //     if(matchInfo.gameid===gameid){
-    //       matchInfo=newMatchInfo
-    //     }
-    //   }
-    //   this.$apply()
-    // }
   }
 }
 </script>

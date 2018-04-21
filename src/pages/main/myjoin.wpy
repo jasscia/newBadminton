@@ -1,0 +1,72 @@
+<template>
+  <view class="warp join">
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
+      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
+        <twoSideInMyjoin :index.sync="index">
+            <block slot='frontSide'>
+              <matchInfoInMyjoin :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfoInMyjoin>
+            </block>
+            <block slot='backSide'>
+              <matchActiveInMyjoin :matchInfo.sync="matchInfo"></matchActiveInMyjoin>
+            </block>
+        </twoSideInMyjoin>
+      </view>
+    </repeat>
+  </view> 
+</template>
+<style lang="less" scoped>
+  @import '../../common/common.less';
+  .warp{
+    // background: @bgc;
+    .matchCard{
+      margin:20px;
+      padding-bottom:10px;
+      font-size: 12px;
+      color:#666;
+      background: @bgc-card;
+      border-radius: 10px;
+      position: relative;
+      height: 300rpx;
+    }
+  }
+</style>
+<script>
+import wepy from "wepy";
+import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
+import matchInfo from '../../components/matchInfo';
+import twoSide from '../../components/twoSide';
+import matchActive from '../../components/matchActive'
+export default class myGameList extends wepy.page{
+    data={
+      userInfo:{},
+      matchInfoList:[],
+      mode:'withPanle'
+   }
+    components = {
+      matchInfoInMyjoin:matchInfo,
+      twoSideInMyjoin:twoSide,
+      matchActiveInMyjoin:matchActive
+    }
+  async onLoad(){
+    this.matchInfoList = await downLoadMatchInfoList('myjoin')
+    console.log('myjoin',this.matchInfoList)
+    this.$apply()
+  }
+  async onShow(){
+    this.matchInfoList = await downLoadMatchInfoList()
+    this.$apply()
+  }
+  async onShareAppMessage(res){
+    await initUserInfo();
+    return share('/pages/main/main.wpy')
+  }
+  methods={
+      turnOverCard(e){
+        let index=e.currentTarget.dataset.index
+        this.$broadcast('turnOverCard',index)
+      }
+  }
+}
+</script>
+
+

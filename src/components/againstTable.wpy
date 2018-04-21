@@ -1,31 +1,32 @@
 
 <template>
   <view class="warp"> 
-  <repeat for="{{groupList}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
-    <view class="againstTable">
-    <view class="againstItem {{groupInfo.status===1 && limit!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" @tap.stop='selectItem' data-index="{{index}}">
+  <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
+    <!-- <view class="againstTable"> -->
+    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" 
+          @tap='itemTap' data-where="body" data-index="{{index}}">
       <view class="side">
         <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
         <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
       </view>
       <!-- <view class="score"> -->
       <view class="handleBtnGroup">
-        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="more"  hover-class="hover">+</button>
-        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}" data-id="{{index}}" data-side="A" data-way="less"  hover-class="hover">-</button>
+        <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="more"  hover-class="hover">+</button>
+        <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="less"  hover-class="hover">-</button>
       </view>
       <view class="score scoreL">{{groupInfo.score_a}}</view>
-      <view class="sub" bindtap="finish" data-id="{{index}}" wx:if="{{limit!=='readOnly'}}">
+      <view class="sub" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
         <view>第{{index+1}}场</view>
-        <button wx:if="{{groupInfo.status!==1}}"  class="finishBtn">点这结束</button> 
-        <button wx:else  class="finishBtn">点这查看</button>
+        <button wx:if="{{groupInfo.status!==1}}" data-where="finish"  class="finishBtn">点这结束</button> 
+        <button wx:else  class="finishBtn" data-where="look" >点这查看</button>
       </view>
       <view class="sub" wx:else>
         <view>第{{index+1}}场</view>
       </view>
       <view class="score scoreR">{{groupInfo.score_b}}</view>
       <view class="handleBtnGroup">
-        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="more" hover-class="hover">+</button>
-        <button @tap='scoreChange' disabled="{{limit==='readOnly'}}"  data-id="{{index}}" data-side="B" data-way="less"  hover-class="hover">-</button>
+        <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="more" hover-class="hover">+</button>
+        <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="less"  hover-class="hover">-</button>
       </view>
       <!-- </view> -->
       <view class="side">
@@ -33,7 +34,7 @@
         <view class="name">{{groupInfo.id_b2.real_name||groupInfo.id_b2.nick_name}}</view>
       </view>
     </view>
-  </view>
+  <!-- </view> -->
   </repeat>
   <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
   </view>
@@ -41,7 +42,7 @@
 
 <style lang="less" scoped>
   @import '../common/common.less';
-.againstTable{
+.warp{
   width:100%;
   box-sizing: border-box;
   padding-left:20rpx;
@@ -165,68 +166,84 @@ export default class AgainstTable extends wepy.component {
   props={
     matchInfo:{
       type:Object,
-      default:{},
-      twoWay:true
-    },
-    limit:{
-      type:String,
-      default:'readOnly'
+      default:{}
     }
   }
   data={
-    activedGroupIndex:null,
-    groupList:[]
-    // matchInfo:{}
+    activedGroupIndex:null
   }
   watch={
     matchInfo(newMatchInfo,o){
-      console.log('matchInfo changed fn in table',newMatchInfo,o)
+      console.log('matchInfo changed fn in table',newMatchInfo)
       this.groupList=newMatchInfo.groupWithInfo
-      // this.$apply()
-    },
-    groupList(newGroupList){
-      this.$emit('updataScoreOfMatch',newGroupList)
-      },
-   limit(n){
-     console.log('limit changed in table page',n)}
+      this.$apply()
+    }
   }
-  
   methods={
-     scoreChange(e){
-      let index = e.target.dataset.id;
-      let side=(e.target.dataset.side==='A'?'score_a':'score_b');
-      let way=e.target.dataset.way;
-      let groupInfo=this.groupList[index]
-      if (way === "more") {
-        groupInfo[side]++
-      } else if (this.groupList[index][side]!==0){
-        groupInfo[side]--
-      }
-    },
-    selectItem(e){
+    itemTap(e){
+      let dataset=e.target.dataset
+      let where=dataset.where||e.currentTarget.dataset.where
       let index=e.currentTarget.dataset.index
-      if(this.groupList[index].status){
-        return
-      }
-      this.activedGroupIndex=e.currentTarget.dataset.index
-    },
-    finish(e){
-      let index = e.currentTarget.dataset.id;
-      let groupInfo=this.groupList[index]
-      let status=(groupInfo.status===1?0:1)
-      groupInfo.status=status
-      if(groupInfo.status===1){
-        this.activedGroupIndex=null
-      }
+      let way=dataset.way
+      if(!where){
+        console.log('2-2,没点任何有效区域')
+        return}//1-1有点击到任何地方 什么都不做
+      let groupInfo=this.matchInfo.group[index]
       let gameid=this.matchInfo.id
       let groupid=groupInfo.id
       let score_a=groupInfo.score_a
       let score_b=groupInfo.score_b
+      let status=(groupInfo.status)
+      if(where==='finish'){
+        console.log('2-1，点击了finish')
+        status=groupInfo.status=1//当点击了完成 修改
+        this.activedGroupIndex=null
+      }
+      if(where==='look'){
+        console.log('2-2，点击了 look')
+        status=groupInfo.status=0
+        this.activedGroupIndex=index
+      }
+      if(where==='sideA'){
+        if (way === "more") {
+        console.log('3-1-1，点击了a+')
+          score_a=++groupInfo.score_a
+        }
+        if (way === "less"&&groupInfo.score_a!==0){
+
+        console.log('3-1-2，点击了a-')
+          score_a=--groupInfo.score_a
+        }
+      this.activedGroupIndex=index
+      }
+      if(where==='sideB'){
+        if (way === "more") {
+
+        console.log('3-2-1，点击了b+')
+          score_b=++groupInfo.score_b
+        }
+        if (way === "less"&&groupInfo.score_b!==0){
+        console.log('3-2-2，点击了b-')
+          score_b=--groupInfo.score_b
+        }
+      
+      this.activedGroupIndex=index
+      }
+      if(where==='body' && status){
+        console.log('1-2，点击了完成态body')//当点击了body 但是如果此时状态是完成状态 则不激活
+        this.activedGroupIndex=null
+      }
+      if(where==='body' && !status){
+        console.log('1-3，，点击了非完成态body')
+        this.activedGroupIndex=index
+      }
       putGroupInfo(groupid,{
         gameid:gameid,
         score_a:score_a,
         score_b:score_b,
-        status:status})  
+        status:status})
+      console.log(this.groupList)
+      this.$emit('updataScoreOfMatch',this.matchInfo)
     }
   }
 }

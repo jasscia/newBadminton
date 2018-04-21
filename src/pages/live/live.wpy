@@ -5,13 +5,10 @@
     <block   wx:if="{{activeBar===titleList[0]}}">
   <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
   <playersListInlive :matchInfo.sync="matchInfo"></playersListInlive>
-    <matchDataSetInlive 
-                        :matchInfo.sync="matchInfo" 
-                        :limit.sync="limit"></matchDataSetInlive>
+    <matchDataSetInlive  :matchInfo.sync="matchInfo" ></matchDataSetInlive>
     </block>
     <againstTableInlive wx:if="{{activeBar===titleList[1]}}" 
-                        :matchInfo.sync="matchInfo" 
-                        :limit.sync="limit"></againstTableInlive>
+                        :matchInfo.sync="matchInfo" ></againstTableInlive>
     <matchResultInlive  wx:if="{{activeBar===titleList[2]}}" 
                         :matchInfo.sync="matchInfo" ></matchResultInlive>
   </view>
@@ -45,10 +42,6 @@ export default class Live extends wepy.page {
   }
   data={
     matchInfo:{},
-    // playersList:[],
-    // groupList:[],
-    // doneData:{doneNum:0,totalNum:0,progress:0},
-    // groupListWithUserInfo:[],
     gameid:null,
     limit:null,
     titleList:['设置','对阵表','时实战况'],
@@ -59,42 +52,9 @@ export default class Live extends wepy.page {
  }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-    this.$apply()
-//判断权限
-    let userInfo=await initUserInfo()
-    let uid=userInfo.uid;
-    if(!uid){//
-      this.limit='readOnly'
-      this.$apply()
-      return
-    }
     this.matchInfo=await downLoadMatchInfo(this.gameid)
-    if(this.matchInfo.owner.uid!==uid){
-      this.limit='readOnly'
-      this.$apply()
-      return
-    }
-    if(this.matchInfo.status==="比赛结束"){
-      this.limit='readOnly'
-      this.$apply()
-      return
-    }
-    if(this.matchInfo.status==="正在比赛"){
-      this.limit='writableOnlyScore'
-      this.$apply()
-      return
-    }
-      this.limit='writableAll'
-      this.$apply()
-  }
-  watch={
-    async gameid(newGameId){
-      console.log('gameid changed in live',newGameId)
-      this.matchInfo=await downLoadMatchInfo(newGameId)
-      // this.playersList=this.matchInfo.players
-      // this.groupList=this.matchInfo.group
-      this.$apply()
-    }
+    this.$apply()
+
   }
   events={
     changeActiveBar(from){
@@ -107,13 +67,16 @@ export default class Live extends wepy.page {
       console.log('updataMatchInfo id runing',this.matchInfo)
       this.$apply()
     },
-    updataScoreOfMatch(newGroupListInfo){
-      this.matchInfo.progressData=calcprogress(newGroupListInfo)
+    updataScoreOfMatch(matchInfo){
+      this.matchInfo.progressData=calcprogress(matchInfo)
       if(this.matchInfo.progressData.progress===100){
         this.matchInfo.status=3
         updateMatchInfo(this.gameid,{status:3})
+      }else{
+        this.matchInfo.status=2
+        updateMatchInfo(this.gameid,{status:2})
       }
-      this.matchInfo.groupWithInfo=newGroupListInfo
+      this.matchInfo.groupWithInfo=matchInfo.groupWithInfo
       this.$apply()
     }
   }

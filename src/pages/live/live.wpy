@@ -64,7 +64,7 @@ export default class Live extends wepy.page {
     },
     async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
       this.matchInfo=await downLoadMatchInfo(this.gameid)
-      console.log('updataMatchInfo id runing',this.matchInfo)
+      // console.log('updataMatchInfo id runing',this.matchInfo)
       this.$apply()
     },
     updataScoreOfMatch(matchInfo){

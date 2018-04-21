@@ -39,13 +39,13 @@
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList('all')
-    console.log('all',this.matchInfoList)
+    // console.log('all',this.matchInfoList)
 
     this.$apply()
   }
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList('all')
-    wx.setStorageSync('activeMatchInfo',{})
+    // wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){

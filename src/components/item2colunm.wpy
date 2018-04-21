@@ -70,7 +70,7 @@ export default class Item2colunm extends wepy.component{
   methods={
      inputValue: function(e) {
       this.item.value= e.detail.value;
-      console.log(this.item.title,this.item.value)
+      // console.log(this.item.title,this.item.value)
     }
   }
 }

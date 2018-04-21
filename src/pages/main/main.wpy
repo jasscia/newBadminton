@@ -30,6 +30,13 @@ export default class Main extends wepy.page{
       header:header,
       myJoin:myJoin,
     }
+    onshow(){
+      console.log('fff')
+      this.$broadcast('updatematchinfoList')
+    }
+    onLoad(){
+      console.log('llllll')
+    }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')

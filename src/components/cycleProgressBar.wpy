@@ -110,10 +110,5 @@ export default class CycleProgressBar extends wepy.component {
     comment: { type: String, default: '' },
     visualvalue:{type:Object,default:{}}
   }
-  match={
-    visualvalue(n,o){
-      console.log('visusal value changed',n,o)
-    }
-  }
 }
 </script>

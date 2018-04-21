@@ -107,13 +107,13 @@ export default class Result extends wepy.component  {
   }
   watch={
     matchInfo(newMatchInfo){
-      console.log('matchInfo changed fn in result',newMatchInfo)
+      // console.log('matchInfo changed fn in result',newMatchInfo)
       this.progress=newMatchInfo.progressData.progress
-      console.log('progress',this.progress)
+      // console.log('progress',this.progress)
       let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
-      console.log('calcedScore',calcedScore)
+      // console.log('calcedScore',calcedScore)
       let res = this.orderScore(calcedScore);
-      console.log('res',res)
+      // console.log('res',res)
       this.result= res[0];
       this.resultKeys=res[1]
       this.$apply()

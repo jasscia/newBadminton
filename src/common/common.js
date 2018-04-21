@@ -260,7 +260,6 @@ const getUserInfoByUid=function(uid,playersList){
 }
 
 const getGroupListWithPlayerInfo=function(matchInfo){
-  console.log("++++++++= getGroupListWithPlayerInfo parm",matchInfo)
   let groupListOnlyPlayerUid=[]
   let groupListWithPlayerInfo=[]
   let playersList=[]
@@ -283,13 +282,11 @@ const getGroupListWithPlayerInfo=function(matchInfo){
 }
 
 const calcprogress=function(matchInfo){
-  console.log('calcprogress pram',matchInfo)
   let doneNum=0
   let totalNum=0
   let progress=0
   let groupList=matchInfo.group
   if(!groupList || !groupList.length){
-    console.log(groupList)
     return{doneNum,totalNum,progress}
   } 
   let doneList=groupList.filter(groupInfo => {
@@ -300,7 +297,6 @@ const calcprogress=function(matchInfo){
   if(totalNum){
     progress=Math.round(doneNum/totalNum*100,2)
   }
-  console.log('progress fn',{doneNum,totalNum,progress},matchInfo)
   return {doneNum,totalNum,progress}
 }
 
@@ -322,7 +318,6 @@ const calcContorlAttr=function(matchInfo){
 //判断权限
 const calcLimitForLive=function(matchInfo){
 let my_uid=wx.getStorageSync('userInfo').uid
-console.log('limit fn',my_uid,matchInfo.owner.uid,matchInfo.status)
 if(!my_uid){//
   return 'readOnly'
 }

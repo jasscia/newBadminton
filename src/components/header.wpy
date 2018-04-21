@@ -54,7 +54,7 @@
         let titlename=e.target.dataset.titlename;
         if(titlename){
           this.selectedItem=titlename;
-          console.log(this.selectedItem)
+          // console.log(this.selectedItem)
         }
       }
     }

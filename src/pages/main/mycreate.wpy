@@ -70,7 +70,7 @@ export default class mycreate extends wepy.page{
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList('mycreate')
-    console.log('mycreate',this.matchInfoList)
+    // console.log('mycreate',this.matchInfoList)
     this.$apply()
   }
   async onShareAppMessage(res){
@@ -87,6 +87,13 @@ export default class mycreate extends wepy.page{
         let index=e.currentTarget.dataset.index
         this.$broadcast('turnOverCard',index)
       }
+  }
+  events={
+    async updatematchinfoList(){
+    this.matchInfoList = await downLoadMatchInfoList('mycreate')
+    // console.log('mycreate',this.matchInfoList)
+    this.$apply()
+  }
   }
 }
 </script>

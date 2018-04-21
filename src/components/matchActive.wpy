@@ -1,5 +1,5 @@
 <template>
-  <view class="matchActive">
+  <view class="matchActive {{mode==='cube'?'cube':''}}">
     <view class="btnBox">
       <button class="btn" open-type="share" wx:if="{{matchInfo.contorlAttr.ifOktoShare}}">分享赛事</button>
       <button class="btn" open-type="share" wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
@@ -31,16 +31,25 @@
     border-radius: 10rpx;
   }
   .btn{
-    width:250rpx;
+    width:200rpx;
     height:2.6em;
     line-height: 2.6em;
     vertical-align: middle;
     text-align: center;
-    font-size: 30rpx;
+    font-size: 32rpx;
     padding:auto 10rpx;
     margin:20rpx auto;
     background: @btn;
   }
+  }
+.cube .btnBox{
+    background: @bgc;
+}
+  .cube .btn{
+    // width:200rpx;
+    border-radius: 0;
+    margin:5rpx auto;
+    background: @btn-em;
   }
 </style>
 <script>
@@ -52,6 +61,10 @@ export default class MatchActive extends wepy.component{
       type:Object,
       default:{},
       twoWay:true,
+     },
+     mode:{
+       type:String,
+       default:null
      }
  }
   methods={

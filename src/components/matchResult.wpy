@@ -28,7 +28,7 @@
   background: @btn;
   padding:30rpx;
   margin-top:40rpx;
-  margin-bottom:20rpx;
+  // margin-bottom:20rpx;
 }
 .itemHead{
   display: flex;

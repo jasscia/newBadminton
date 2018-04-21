@@ -312,8 +312,8 @@ const calcContorlAttr=function(matchInfo){
   contorlAttr.ifDone=matchInfo.status===3
   contorlAttr.ifGoingon=(matchInfo.status===2)
   contorlAttr.ifStarted=(matchInfo.status>1)
-  contorlAttr.ifStopSingup=(matchInfo.status>1)
-  contorlAttr.ifOkToStart=(matchInfo.players.length>=5 && contorlAttr.ifOwner && matchInfo.status<2)
+  contorlAttr.ifStopSingup=(matchInfo.status>=1)
+  contorlAttr.ifOkToStart=(matchInfo.players.length>=4 && contorlAttr.ifOwner && matchInfo.status<2)
   contorlAttr.ifOktoSignup=(!matchInfo.ifIn&&!contorlAttr.ifStopSingup)
   contorlAttr.ifOktoShare=contorlAttr.ifStarted
   contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup

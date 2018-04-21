@@ -52,10 +52,6 @@ export default class myGameList extends wepy.page{
     console.log('myjoin',this.matchInfoList)
     this.$apply()
   }
-  async onShow(){
-    this.matchInfoList = await downLoadMatchInfoList()
-    this.$apply()
-  }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')

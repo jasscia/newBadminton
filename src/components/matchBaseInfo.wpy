@@ -17,6 +17,10 @@
     <view class="title">状态</view>
     <view class="content">{{matchInfo.status}}</view>
   </view>
+  <view class="item">
+    <view class="title">报名人数</view>
+    <view class="content">{{matchInfo.players.length}}人已报名</view>
+  </view>
 </block>
 </template>
 

@@ -73,10 +73,6 @@ export default class mycreate extends wepy.page{
     console.log('mycreate',this.matchInfoList)
     this.$apply()
   }
-  async onShow(){
-    this.matchInfoList = await downLoadMatchInfoList('mycreate')
-    this.$apply()
-  }
   async onShareAppMessage(res){
     await initUserInfo();
     return share('/pages/main/main.wpy')

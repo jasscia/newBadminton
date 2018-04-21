@@ -45,7 +45,8 @@ function badmin(personNum,roundPre){
     if(this.result[1].length<this.round){
           this.result="排阵失败 Try one more time!"
         }else{
-    console.table(this.result);}
+    // console.table(this.result);
+  }
   }
   badmin.prototype.init=function(){
     //这里开始标示 flag的状态，初始的均为0，flag代表出现次数

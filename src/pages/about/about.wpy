@@ -4,15 +4,15 @@
     <view class="content">
       <view class="item">采用“轮转制”，支持任意多的队员 任意多场次</view>
       <view class="item">根据参赛人数和每人场次，自动生成对阵方案，使每个人都尽量多地与不同人搭档、对垒</view>
-      <view class="item">兼具趣味性、竞技性、公平性</view>
+      <view class="item">兼具趣味性、竞技性</view>
       <view class="item">只针适用于双打比赛</view>
     </view>
     <view class="title">使用方法</view>
     <view class="content">
-      <view class="item">首先发起者录入所有参赛队员姓名</view>
-      <view class="item">然后选择性地根据队员个人实力，适当调整队员顺序，目的是生成更合理的布阵方式，避免出现两强vs两弱的情况</view>
-      <view class="item">点击生成对阵表，程序将为您呈现所有的布阵方案</view>
-      <view class="item">进入赛事直播界面，根据依次布阵方案，完成比赛，并将对阵双方得分计入程序</view>
+      <view class="item">创建比赛</view>
+      <view class="item">要求好友参加比赛，满员后即可开赛</view>
+      <view class="item">点击生成对阵表，程序将为您呈现所有的布阵方案，1次计算不保证100%成功</view>
+      <view class="item">进入赛事界面，根据依次布阵方案，完成比赛，并将对阵双方得分计入程序</view>
       <view class="item">完成所有比赛后，可以查看比赛结果排名榜</view>
     </view>
     <view class="title">注意事项</view>
@@ -20,10 +20,6 @@
       <view class="item">队员数量应在4人以上（包含4人）</view>
       <view class="item">场次与队员数量的成积，应能被4整除</view>
     </view>
-    <view class="title">其他说明</view>
-    <view class="content">程序暂不为您保存历史记录，请谅解</view>
-    <view class="title">联系我们</view>
-    <view class="content">如您有信息需要反馈，欢迎添加微信号anhao20110526</view>
   </view>
 </template>
 

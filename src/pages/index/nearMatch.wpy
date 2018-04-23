@@ -2,7 +2,7 @@
 <template>
   <view class="wrapper">
     <view class="errPage" wx:if="{{matchCount===0}}">
-      没有正在报名的比赛
+      近期没什么的赛事
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
@@ -79,6 +79,13 @@
           url:`/pages/detail/detail?gameid=${gameid}`
         })
       }
+  }
+  events={
+    async updatematchinfoList(){
+      this.matchInfoList = await downLoadMatchInfoList('all')
+      // console.log('all',this.matchInfoList)
+      this.$apply()
+    }
   }
 }
 </script>

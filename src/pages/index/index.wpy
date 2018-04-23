@@ -43,6 +43,9 @@
 
     this.$apply()
   }
+  // refresh(){
+  //     this.$broadcast('updatematchinfoList')
+  //   }
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList('all')
     // wx.setStorageSync('activeMatchInfo',{})

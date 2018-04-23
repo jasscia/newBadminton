@@ -44,7 +44,7 @@ export default class Live extends wepy.page {
     matchInfo:{},
     gameid:null,
     limit:null,
-    titleList:['设置','对阵表','时实战况'],
+    titleList:['设置','对阵表','战况'],
     activeBar:'设置'
   }
   onShareAppMessage(){

@@ -209,11 +209,12 @@ const formatTime =(date,mark='/') => {
 const share=function(path){
   return {
       path: path,
+      imageUrl:'/image/share.png',
       success: function(res) {
-        // console.log("转发成功")
+        console.log("转发成功",res,path)
       },
       fail: function(res) {
-        // console.log("转发失败")
+        console.log("转发失败",res,path)
       }
     }
 }

@@ -79,6 +79,9 @@ export default class CreateNewAgain extends wepy.page {
     this.initDateRange();
     this.initDateTime();
   }
+  async onUnload(){
+    
+  }
   initDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
     let start=new Date(Date.now()+1*24*3600*1000),
         formatStart=formatTime(start,'-').trim().split(' ');//formatTime输出的格式为 年-月-日 时：分：秒
@@ -123,6 +126,17 @@ export default class CreateNewAgain extends wepy.page {
           icon:'success',
           duration:1500,
           success:()=>{
+            let pagesQueqe=getCurrentPages()
+            let length=pagesQueqe.length
+            // console.log(len,pagesQueqe)
+            if(length>=2){
+              let mainPage=pagesQueqe[length-2]
+              // let indexPage=pagesQueqe[0]
+              mainPage.refresh&&mainPage.refresh()
+              // if(indexPage!==mainPage){
+              //   indexPage.refresh&&indexPage.refresh()
+              // }
+            }
             wx.navigateBack({delta: 1})
           }
         })

@@ -16,6 +16,9 @@ const downLoadMatchInfoList=async function(type){
   if(res.data.code===1){
     let matchInfoList=res.data.data;
     for(let matchInfo of matchInfoList){
+      if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
+        matchInfo.status=1
+      }
       matchInfo.ifIn=judgeIfIn(matchInfo)
       matchInfo.contorlAttr=calcContorlAttr(matchInfo)
       transformStatusAndTimeOfMatchInfo(matchInfo);
@@ -32,6 +35,9 @@ const downLoadMatchInfo=async function(gameid){
   let res= await htr(url,method,data);
   let matchInfo=res.data.data;
   if(matchInfo){
+    if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
+      matchInfo.status=1
+    }
     matchInfo.progressData=calcprogress(matchInfo)
     matchInfo.ifIn=judgeIfIn(matchInfo)
     matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)
@@ -204,10 +210,10 @@ const share=function(path){
   return {
       path: path,
       success: function(res) {
-        console.log("转发成功")
+        // console.log("转发成功")
       },
       fail: function(res) {
-        console.log("转发失败")
+        // console.log("转发失败")
       }
     }
 }

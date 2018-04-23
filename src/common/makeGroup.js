@@ -1,4 +1,6 @@
-function badmin(personNum,roundPre){
+import {htr} from './util';
+  //方案1
+  function badmin(personNum,roundPre){
     this.personNum=personNum;//参赛人数
     this.roundPre=roundPre;//预设的 每人参赛场数
     this.maxTime=Math.ceil(roundPre/(personNum-1),0);//为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最多次数
@@ -33,7 +35,7 @@ function badmin(personNum,roundPre){
         return;
       }
     }
-    console.log(count);
+    // console.log(count);
       let personflags=[],teammateflags=[];
       for(let person of Object.keys(this.personFlag)){
         personflags.push(this.personFlag[person])
@@ -41,7 +43,7 @@ function badmin(personNum,roundPre){
       for(let teammeat of Object.keys(this.teamMateFlag)){
         teammateflags.push(this.teamMateFlag[teammeat])
       }
-    console.log('personflags=',personflags,'teammateflags=',teammateflags);
+    // console.log('personflags=',personflags,'teammateflags=',teammateflags);
     if(this.result[1].length<this.round){
           this.result="排阵失败 Try one more time!"
         }else{
@@ -154,4 +156,19 @@ function rand(L,R){
     return Math.round(Math.random()*(R-L),0)+L
   }
 
-  export default badmin
+
+  //方案2
+  const requestTableList = async function(personCount,roundCount) {
+    let url = `https://gzbtestsystem.cn/badminton/againsttable?NumberOfPeople=${personCount}&RoundsOfPerson=${roundCount}&format=json`;
+    let method = "GET";
+    let data={};
+    let res=await htr(url,method,data);
+    if(res.data.AgainstTable){
+      return res.data.AgainstTable
+    }
+    if(res.data.ResponseStatus){
+      // console.log(res.data.ResponseStatus.Message)
+      return res.data.ResponseStatus.Message
+    }
+  }
+  export { badmin,requestTableList}

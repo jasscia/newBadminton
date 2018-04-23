@@ -1,8 +1,8 @@
 <template>
   <view class="matchActive {{mode==='cube'?'cube':''}}">
     <view class="btnBox">
-      <button class="btn" open-type="share" wx:if="{{matchInfo.contorlAttr.ifOktoShare}}">分享赛事</button>
-      <button class="btn" open-type="share" wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
+      <button class="btn" open-type="share" @tap="share" data-gameid="{{matchInfo.id}}" wx:if="{{matchInfo.contorlAttr.ifOktoShare}}">分享赛事</button>
+      <button class="btn" open-type="share" @tap="share" data-gameid="{{matchInfo.id}}"  wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
       <button class="btn" @tap.stop="signup" wx:if="{{matchInfo.contorlAttr.ifOktoSignup}}" >报名</button>
       <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifOkToStart}}">开赛</button> 
       <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifStarted}}">查看赛事详情</button> 
@@ -95,6 +95,9 @@ async signup(){
         wx.navigateTo({
           url:`/pages/live/live?gameid=${this.matchInfo.id}`
         })
+    },
+    share(){
+      console.log('')
     }
   }
 }

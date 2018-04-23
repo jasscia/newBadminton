@@ -49,7 +49,7 @@ export default class myGameList extends wepy.page{
     }
   async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList('myjoin')
-    console.log('myjoin',this.matchInfoList)
+    // console.log('myjoin',this.matchInfoList)
     this.$apply()
   }
   async onShareAppMessage(res){

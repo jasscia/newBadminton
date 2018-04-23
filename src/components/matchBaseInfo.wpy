@@ -48,6 +48,8 @@
       height: 40px;
       line-height: 40px;
       vertical-align: middle;
+      overflow: hidden;
+      white-space: nowrap;
     }
     .content{
       width:500rpx;

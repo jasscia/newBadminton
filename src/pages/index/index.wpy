@@ -38,6 +38,7 @@
       }
     }
   async onLoad(){
+    
     this.matchInfoList = await downLoadMatchInfoList('all')
     // console.log('all',this.matchInfoList)
 

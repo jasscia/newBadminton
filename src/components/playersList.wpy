@@ -46,6 +46,8 @@
         height:30rpx;
         line-height:30rpx;
         vertical-align: middle;
+        white-space: nowrap;
+        overflow: hidden;
       }
     }
   }

@@ -38,7 +38,7 @@
         <view class="side right">修改</view>
       </view>
       <view class="item" @tap.stop="gotoAbout">
-        <text class="side left">关于我们</text>
+        <text class="side left">关于</text>
         <text class="side right"></text>
       </view>
     </view>
@@ -91,7 +91,7 @@
 }
 .part2{
   padding:10px;
-  background: @bgc-card;
+  background:#f9f9f9;
   .score {
     font-size: 55px;
     font-family: 'Arial Narrow';

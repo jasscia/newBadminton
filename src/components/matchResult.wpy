@@ -25,7 +25,7 @@
 <style lang="less" scoped>
 @import '../common/common.less';
 .progress{
-  background: @btn;
+  // background: @btn;
   padding:30rpx;
   margin-top:40rpx;
   // margin-bottom:20rpx;

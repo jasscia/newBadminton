@@ -52,15 +52,6 @@
     right:18rpx;
     bottom:20rpx;
   }
-  // .visualValue{
-  //   display: flex;
-  //   .value1{
-  //     font-size:70rpx;
-  //   }
-  //   .value2{
-  //     font-size: 30rpx;
-  //   }
-  // }
 }
 .cycle {
   display: inline-block;
@@ -70,7 +61,7 @@
   text-align: center;
   line-height: 100px;
   font-size: 0;
-  background: @bgc;
+  background: @bgc-card;
   border-radius: 50%;
   border-radius: 10rpx solid transparent;
 }
@@ -99,6 +90,15 @@
   left: 0;
   clip: rect(50px 100px 100px 0);
   transform: rotate(0deg);
+}
+.less.bg1{
+  transition: transform .5s linear;
+}
+.more.bg1{
+  transition: transform .3s linear;
+}
+.more.bg2{
+  transition: transform .3s linear .3s;
 }
 </style>
 

@@ -87,6 +87,10 @@
       font-weight: lighter;
     }
   }
+  .row4{
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .row5{
     height:30px;
     display: flex;

@@ -12,7 +12,9 @@ const downLoadMatchInfoList=async function(type){
     data.token=token
   }
   let  method="GET";
+  wx.showLoading({})
   let res=await htr(url,method,data);
+  wx.hideLoading({})
   if(res.data.code===1){
     let matchInfoList=res.data.data;
     for(let matchInfo of matchInfoList){
@@ -32,7 +34,9 @@ const downLoadMatchInfo=async function(gameid){
   let url=URLList.getGameInfoURL+'\/'+gameid,
       method="GET",
       data={};
+  wx.showLoading({})
   let res= await htr(url,method,data);
+  wx.hideLoading({})
   let matchInfo=res.data.data;
   if(matchInfo){
     if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){

@@ -1,5 +1,7 @@
 # 羽球自由赛
 采用微信小程序 wepy框架编写       实现了业余羽毛球爱好者 组织团体赛的一系列功能 包括创建、报名、邀请好友、生成对阵方案、计分、统计排名等功能<br>
+## 二维码
+![二维码](./src/image/scancode.jpg)
 ## 关键技术问题
 * 父子组件通信
 * 页面间通信
@@ -22,16 +24,3 @@
 * wepy build -w
 * 将生成的dist 文件添加到微信开发者工具的项目中
 * do what you want you to
-## 效果展示
-##### 首页
->>>>>![首页](./src/image/all.jpeg)
-##### 我的赛事（翻转动画）
->>>>>![翻转前](./src/image/my1.jpeg) ![翻转后](./src/image/my2.jpeg)
-##### 比赛详情
->>>>>![开始比赛](./src/image/start.jpeg) ![对阵方案及计分](./src/image/table.jpeg)![排名](./src/image/result.png)
-##### 个人主页
->>>>>![个人主页](./src/image/custom.jpeg)
-#####  创建赛事
->>>>>![创建赛事](./src/image/create.png)
-##### 分享赛事/邀请参赛
->>>>>![分享赛事/邀请参赛](./src/image/invate.jpeg)

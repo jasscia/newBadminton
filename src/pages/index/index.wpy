@@ -16,14 +16,14 @@
   import {initUserInfo,downLoadMatchInfo,downLoadMatchInfoList,transformStatusAndTimeOfMatchInfo,judgeIfIn} from '../../common/common';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
-  import rankingList from './rankingList';
+  // import rankingList from './rankingList';
   import 'wepy-async-function';
 
   export default class Index extends wepy.page {
     components = {
       header:header,
       nearMatch:nearMatch,
-      rankingList:rankingList,
+      // rankingList:rankingList,
     }
     data = {
       matchInfoList:[],

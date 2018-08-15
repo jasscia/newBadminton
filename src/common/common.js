@@ -10,6 +10,7 @@ const downLoadMatchInfoList=async function(type){
   if(type!=="all"){
     token=await getToken();
     data.token=token
+    console.log('downLoadMatchInfoList',token)
   }
   let  method="GET";
   wx.showLoading({})
@@ -172,7 +173,6 @@ const postGroupList=async function(gameid,list){
 }
 const getGroupInfo=async function(gameid){
   let token=await getToken();
-
   let url=URLList.getGroupInfoURl,
       method="GET",
       data={

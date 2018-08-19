@@ -16,7 +16,7 @@ import {htr} from './util';
     for (let i = 0; i < this.personNum; i++) {
       this.personList.push(i+1);
       for (let j = i + 1; j < this.personNum; j++) {
-        teamMate = [i + 1, j + 1].join(' ');
+        let teamMate = [i + 1, j + 1].join(' ');
         this.teamMateList.push(teamMate);//初始化 teamMate标示库
       }
     }
@@ -60,13 +60,13 @@ import {htr} from './util';
             let tryTimes_2=0;//标示某一个位置的尝试次数
             do{//找到一个随机数，使他能被放在 item 中
               ifOk=false
-              index_person=random(0,this.personNum-1)
+              let index_person=random(0,this.personNum-1)
               if(this.personFlag[index_person]<this.roundPer && !item.includes(this.personList[index_person])){//随机生成的的数字不能是已经达到上限 且 不能与item其他成员重复
                 if(i%2){
                   let biger=Math.max(item[i-1],this.personList[index_person]);
                   let smaller=Math.min(item[i-1],this.personList[index_person]);
                   let team=[smaller,biger].join(' ');
-                  index_teamMate=this.teamMateList.indexOf(team);
+                  let index_teamMate=this.teamMateList.indexOf(team);
                   let limit=this.maxTime
                   let verTeamMateFlag=this.teamMateFlag.slice()
                   verTeamMateFlag[index_teamMate]++

@@ -35,7 +35,8 @@ export default class extends wepy.app {
     }
   };
 
-  async onLaunch() {
+  //async onLaunch() {
+  async onLoad() {
     await initUserInfo()
     this.setKeepScreenOn();
   }

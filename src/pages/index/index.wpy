@@ -1,7 +1,9 @@
 <template>
   <view class="container">
+    
     <!-- <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header> -->
     <nearMatch wx:if="{{activeBar===titleList[0]}}" :matchInfoList.sync="matchInfoList"></nearMatch>
+
     <!-- <rankingList  wx:if="{{activeBar===titleList[1]}}" :matchInfoList.sync="matchInfoList"></rankingList> -->
   </view>
 </template>

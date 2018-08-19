@@ -1,17 +1,20 @@
 <template>
   <view class="container">
-    <view class="part part1" @tap="navigateToBaseInfoPage">
+    <view wx:if = "{{!userInfo.avatar_url}}">
+      <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">授权</button>
+    </view>
+    <view class="part part1" @tap="navigateToBaseInfoPage"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item">
         <image class="avatar" src="{{userInfo.avatar_url}}"/>
         <view class="nickname">{{userInfo.nick_name}}</view>
       </view>
       <view class="item"></view>
     </view>
-    <view class="part part2">
+    <view class="part part2"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item title">个人数据</view>
       <cycleProgressBar :value.sync="value" :comment.sync="comment"></cycleProgressBar>
     </view>
-    <view class="part part3">
+    <view class="part part3"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item title">得分统计</view>
       <view class="item content">
         <view class="subItem">
@@ -32,7 +35,7 @@
         </view>
     </view>
     </view>
-    <view class="part part4">
+    <view class="part part4"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item" @tap.stop="navigateToBaseInfoPage">
         <view class="side left">我的资料</view>
         <view class="side right">修改</view>

@@ -74,7 +74,7 @@ const updateMatchInfo =async function(gameid,options){
   }
 }
  
-const initUserInfo=async function() {
+const initUserInfo=async function(e) {
   let userInfo=wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
   let token=userInfo.token;
   if(userInfo && token){//如果缓存了userinfo 和 token 直接返回
@@ -82,7 +82,18 @@ const initUserInfo=async function() {
   }
   if(!userInfo || !token){//如果没有缓存，说明用户没有登录 没有授权
     let resOfcode=await login();//先登录获取 临时code
-    let resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
+    let resOfuserInfo;
+    try {
+      if (e && e.detail) {
+        resOfuserInfo = e.detail
+      } else {
+        resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
+      }
+    } catch (e){
+      wx.switchTab({
+        url:'/pages/custom/custom'
+      })
+    }
     if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){
       setStorage('userInfo',{})
       return {}//若用户中断的登录 授权，直接返回，失败
@@ -100,6 +111,7 @@ const initUserInfo=async function() {
     return userInfo
   }
 }
+
 const addPlayer=async function(gameid){
   let token=await getToken();
 

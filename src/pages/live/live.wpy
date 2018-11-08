@@ -8,7 +8,8 @@
     <matchDataSetInlive  :matchInfo.sync="matchInfo" ></matchDataSetInlive>
     </block>
     <againstTableInlive wx:if="{{activeBar===titleList[1]}}" 
-                        :matchInfo.sync="matchInfo" ></againstTableInlive>
+                        :matchInfo.sync="matchInfo" 
+                        :activedGroupIndex.sync="activedGroupIndex"></againstTableInlive>
     <matchResultInlive  wx:if="{{activeBar===titleList[2]}}" 
                         :matchInfo.sync="matchInfo" ></matchResultInlive>
   </view>
@@ -21,7 +22,7 @@
 
 <script>
 import wepy from 'wepy'
-import {initUserInfo, getGroupInfo,downLoadMatchInfo,share,updateMatchInfo,calcprogress} from "../../common/common";
+import {initUserInfo, getGroupInfo, putGroupInfo, downLoadMatchInfo, share, updateMatchInfo, calcprogress} from "../../common/common";
 import header from '../../components/header'
 import matchDataSet from '../../components/matchDataSet'
 import playersList from '../../components/playersList'
@@ -45,7 +46,21 @@ export default class Live extends wepy.page {
     gameid:null,
     limit:null,
     titleList:['设置','对阵表','战况'],
-    activeBar:'设置'
+    activeBar:'设置',
+    activedGroupIndex: null,
+  }
+
+  watch={
+    activeBar(newBar, oldBar) {
+      if(oldBar === "对阵表" && this.activedGroupIndex !== null) {
+        this.$emit('submitScore', this.activedGroupIndex)
+      }
+    },
+    activedGroupIndex(new_index, old_index) {
+      if(old_index !== null) {
+        this.$emit('submitScore', old_index)
+      } 
+    }
   }
   onShareAppMessage(){
    return  share('/pages/live/lve?gameid='+this.gameid)
@@ -54,19 +69,15 @@ export default class Live extends wepy.page {
     this.gameid= parseInt(options.gameid)
     this.matchInfo=await downLoadMatchInfo(this.gameid)
     this.$apply()
-
   }
+
+  onUnload(){
+    if(this.activedGroupIndex !== null){
+      this.$emit('submitScore', this.activedGroupIndex)
+    }
+  }
+
   events={
-    changeActiveBar(from){
-      if(from==='from baseData'){
-        this.activeBar=this.titleList[1]
-      }
-    },
-    async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
-      this.matchInfo=await downLoadMatchInfo(this.gameid)
-      // console.log('updataMatchInfo id runing',this.matchInfo)
-      this.$apply()
-    },
     updataScoreOfMatch(matchInfo){
       this.matchInfo.progressData=calcprogress(matchInfo)
       if(this.matchInfo.progressData.progress===100){
@@ -78,6 +89,32 @@ export default class Live extends wepy.page {
       }
       this.matchInfo.groupWithInfo=matchInfo.groupWithInfo
       this.$apply()
+    },
+    changeActiveBar(from){
+      if(from==='from baseData'){
+        this.activeBar=this.titleList[1]
+      }
+    },
+    async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
+      this.matchInfo=await downLoadMatchInfo(this.gameid)
+      this.$apply()
+    },
+
+    submitScore(index) {
+      let groupInfo=this.matchInfo.group[index]
+      let gameid=this.matchInfo.id
+      let groupid=groupInfo.id
+      let score_a=groupInfo.score_a
+      let score_b=groupInfo.score_b
+      let status=groupInfo.status
+
+      putGroupInfo(groupid,{
+        gameid:gameid,
+        score_a:score_a,
+        score_b:score_b,
+        status:status,
+      })
+      this.$emit('updataScoreOfMatch',this.matchInfo)
     }
   }
 }

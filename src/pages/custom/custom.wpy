@@ -1,7 +1,8 @@
 <template>
   <view class="container">
     <view wx:if = "{{!userInfo.avatar_url}}">
-      <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">授权</button>
+      <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">登录</button>
+      <!-- <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">授权</button> -->
     </view>
     <view class="part part1" @tap="navigateToBaseInfoPage"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item">
@@ -19,7 +20,7 @@
       <view class="item content">
         <view class="subItem">
           <view class="row1">{{myMatchData.total}}</view>
-          <view class="row2">场次</view>
+          <view class="row2">总场次</view>
         </view>
         <view class="subItem">
           <view class="row1">{{myMatchData.win}}</view>
@@ -50,51 +51,52 @@
 
 <style lang="less" scoped>
 @import '../../common/common.less';
-.custom{
+.custom {
   background: @bgc;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 }
-.part{
-  margin-bottom:10px;
+.part {
+  margin-bottom: 10px;
   font-size: 16px;
 }
-.part1{
+.part1 {
   background: @btn-em;
-  padding:50px 30px 10px;
+  padding: 20px 30px 10px;
   text-align: center;
-  margin-bottom:0;
-  .avatar{
-    height: 60px;
-    width: 60px;
+  margin-bottom: 0;
+  .avatar {
+    height: 100px;
+    width: 100px;
     border-radius: 50%;
     background-size: cover;
   }
-  .edit{
+  .edit {
     height: 0;
-    width:15px;
+    width: 15px;
     border-radius: 50%;
-    background:@bgc-card;
+    background: @bgc-card;
     opacity: 0.5;
-    font-size:14px;
-    color:red;
-    margin:auto;
-    padding-right:50px;
+    font-size: 14px;
+    color: red;
+    margin: auto;
+    padding-right: 50px;
   }
-  .name{
+  .name {
     text-align: center;
   }
-  .sumary,.other{
-    margin:5px auto;
-    width:500rpx;
-    display:flex;
+  .sumary,
+  .other {
+    margin: 5px auto;
+    width: 500rpx;
+    display: flex;
     justify-content: space-around;
     font-size: 12px;
   }
 }
-.part2{
-  padding:10px;
-  background:#f9f9f9;
+.part2 {
+  padding: 10px;
+  background: #f9f9f9;
   .score {
     font-size: 55px;
     font-family: 'Arial Narrow';
@@ -102,60 +104,64 @@
     z-index: 1;
   }
 }
-.part4{
-  .item{
+.part4 {
+  .item {
     display: flex;
     background: @bgc-card;
-    padding:10px;
-    margin:10px 0;
+    padding: 10px;
+    margin: 10px 0;
   }
-  .right{
-    flex:1;
+  .right {
+    flex: 1;
     text-align: right;
-    color:@font-side;
+    color: @font-side;
     font-size: 14px;
   }
-  .right::after{
+  .right::after {
     content: '>';
-    margin-left:0.5ch;
+    margin-left: 0.5ch;
   }
 }
-.part3{
+.part3 {
   background: @bgc-card;
-  padding:10px;
-  .content{
+  padding: 10px;
+  .content {
     display: flex;
-    padding:10px 0;
+    padding: 10px 0;
     justify-content: space-around;
-    .subItem{
-      width: 120rpx;
-      background: @btn;
-      .row1,.row2{
-        width:100%;
+    .subItem {
+      width: 25%;
+      padding: 0 10rpx;
+      border-radius: 5rpx;
+      .row1,
+      .row2 {
         text-align: center;
+        background: @btn;
       }
-      .row1{
+      .row1 {
         line-height: 60rpx;
-        font-size: 60rpx;
-        font-weight: 900
-        // padding-top:15px;
-        // background: @btn;
+        font-size: 48rpx;
+        font-weight: 700;
+        padding-top: 10rpx;
+        border-top-left-radius: 10rpx;
+        border-top-right-radius: 10rpx;
       }
-      .row2{
-        line-height: 30rpx;
+      .row2 {
+        line-height: 40rpx;
         font-size: 24rpx;
-        // margin-top:-13px;
+        border-bottom-left-radius: 10rpx;
+        border-bottom-right-radius: 10rpx;
       }
-      .raito{
+      .raito {
         position: relative;
       }
-      .raito::after{
-        content:'%';
-        height:30rpx;
+      .raito::after {
+        content: '%';
+        height: 30rpx;
         font-size: 28rpx;
         position: absolute;
-        right:0;
-        bottom:24rpx;
+        right: 0;
+        bottom: 24rpx;
       }
     }
   }
@@ -163,41 +169,58 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {initUserInfo,getMyMatchData} from '../../common/common';
-import itemList from "./itemList";
-import cycleProgressBar from "../../components/cycleProgressBar";
+import { initUserInfo, getMyMatchData } from '../../common/common';
+import itemList from './itemList';
+import cycleProgressBar from '../../components/cycleProgressBar';
 export default class Custom extends wepy.page {
-    config = {};
-    components={
-      itemList:itemList,
-      cycleProgressBar:cycleProgressBar,
-    };
-    data = {
-      userInfo:{},
-      userInfoOther:{},
-      myMatchData:{},
-      comment:'综合实力',
-      value:0
-    };
+  config = {};
+  components = {
+    itemList: itemList,
+    cycleProgressBar: cycleProgressBar
+  };
+  data = {
+    userInfo: {
+      avatar_url: '',
+      nick_name: ''
+    },
+    userInfoOther: {},
+    myMatchData: {
+      total: '###',
+      failed: '###',
+      win: '###',
+      winrate: '###'
+    },
+    comment: '综合实力',
+    value: 100
+  };
 
   async onLoad() {
-      this.userInfo=await initUserInfo()
-      this.userInfoOther=wx.getStorageSync('userOtherInfo')
-      this.myMatchData=await getMyMatchData()
-      this.myMatchData.winrate=this.myMatchData.winrate.split(/([.%])/)[0]
-      this.value=this.myMatchData.winrate
-      this.$apply()
-    };
-    methods = {
-      navigateToBaseInfoPage(){
-        wx.navigateTo({
-          url:"/pages/custom/baseInfo"
-        })
-      },
-      gotoAbout(){
-        wx.navigateTo({
-          url:"/pages/about/about"
-        })}
-    };
+    this.initPage();
+  }
+  async initPage(data) {
+    this.userInfo = await initUserInfo(data);
+    if (this.userInfo && this.userInfo.token) {
+      this.userInfoOther = wx.getStorageSync('userOtherInfo');
+      this.myMatchData = await getMyMatchData();
+      this.myMatchData.winrate = this.myMatchData.winrate.split(/([.%])/)[0];
+      this.value = this.myMatchData.winrate;
+      this.$apply();
+    }
+  }
+  methods = {
+    navigateToBaseInfoPage() {
+      wx.navigateTo({
+        url: '/pages/custom/baseInfo'
+      });
+    },
+    initUserInfo(e) {
+      this.initPage(e);
+    },
+    gotoAbout() {
+      wx.navigateTo({
+        url: '/pages/about/about'
+      });
+    }
+  };
 }
 </script>

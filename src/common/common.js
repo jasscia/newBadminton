@@ -82,17 +82,22 @@ const initUserInfo=async function(e) {
   }
   if(!userInfo || !token){//如果没有缓存，说明用户没有登录 没有授权
     let resOfcode=await login();//先登录获取 临时code
+    console.log('code-----', resOfcode);
     let resOfuserInfo;
     try {
       if (e && e.detail) {
         resOfuserInfo = e.detail
       } else {
         resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
+        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作
+        
       }
     } catch (e){
+      console.log('catch---- ', e);
       wx.switchTab({
         url:'/pages/custom/custom'
       })
+      return {};
     }
     if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){
       setStorage('userInfo',{})
@@ -236,6 +241,9 @@ const share=function(path){
 }
 const getMyMatchData=async function(){
   let token=await getToken();
+  if(!token) {
+    return ;
+  }
   let url=URLList.getMyMatchDataURL
   let method='GET'
   let data={token}
@@ -249,7 +257,7 @@ const getMyMatchData=async function(){
 const getToken=async function(){
   let userInfo=await initUserInfo()
   if(!userInfo || !userInfo.token){
-    return {}
+    return ""
   }
   let token=userInfo.token;
   if(token){

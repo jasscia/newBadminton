@@ -3,7 +3,7 @@
   <view class="warp"> 
   <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
     <!-- <view class="againstTable"> -->
-    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{activedGroupIndex===index?'selected':''}}" 
+    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}" 
           @tap='itemTap' data-where="body" data-index="{{index}}">
       <view class="side">
         <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
@@ -160,23 +160,18 @@ padding:20px 0;
 
 <script>
 import wepy from 'wepy';
-import { putGroupInfo } from "../common/common";
 import badmin from '../common/makeGroup'
 export default class AgainstTable extends wepy.component {
   props={
     matchInfo:{
       type:Object,
-      default:{}
-    }
-  }
-  data={
-    activedGroupIndex:null
-  }
-  watch={
-    matchInfo(newMatchInfo,o){
-      // console.log('matchInfo changed fn in table',newMatchInfo)
-      this.groupList=newMatchInfo.groupWithInfo
-      this.$apply()
+      default:{},
+      twoWay: true,
+    },
+    activedGroupIndex: {
+      type: Number,
+      default: null,
+      twoWay: true,
     }
   }
   methods={
@@ -185,53 +180,47 @@ export default class AgainstTable extends wepy.component {
       let where=dataset.where||e.currentTarget.dataset.where
       let index=e.currentTarget.dataset.index
       let way=dataset.way
+      let status=this.matchInfo && this.matchInfo.group[index] && this.matchInfo.group[index].status
       if(!where){
-        return}//1-1有点击到任何地方 什么都不做
-      let groupInfo=this.matchInfo.group[index]
-      let gameid=this.matchInfo.id
-      let groupid=groupInfo.id
-      let score_a=groupInfo.score_a
-      let score_b=groupInfo.score_b
-      let status=(groupInfo.status)
+        return
+      }//1-1有点击到任何地方 什么都不做
       if(where==='finish'){
-        status=groupInfo.status=1//当点击了完成 修改
-        this.activedGroupIndex=null
+        this.matchInfo.group[index].status = 1//当点击了完成 修改
+        this.activedGroupIndex=index
+        // this.activedGroupIndex=null
+        this.$emit('submitScore', index)
       }
       if(where==='look'){
-        status=groupInfo.status=0
+        this.matchInfo.group[index].status=0
         this.activedGroupIndex=index
       }
       if(where==='sideA'){
         if (way === "more") {
-          score_a=++groupInfo.score_a
+          // score_a=++groupInfo.score_a
+          this.matchInfo.group[index].score_a++
         }
-        if (way === "less"&&groupInfo.score_a!==0){
-          score_a=--groupInfo.score_a
+        if (way === "less" && this.matchInfo.group[index].score_a!==0){
+          // score_a=--groupInfo.score_a
+          this.matchInfo.group[index].score_a--
         }
-      this.activedGroupIndex=index
+        this.activedGroupIndex=index
       }
       if(where==='sideB'){
         if (way === "more") {
-          score_b=++groupInfo.score_b
+          // score_b=++groupInfo.score_b
+          this.matchInfo.group[index].score_b++
         }
-        if (way === "less"&&groupInfo.score_b!==0){
-          score_b=--groupInfo.score_b
+        if (way === "less" && this.matchInfo.group[index].score_b!==0){
+          // score_b=--groupInfo.score_b
+          this.matchInfo.group[index].score_b--
         }
-      this.activedGroupIndex=index
-      }
-      if(where==='body' && status){//当点击了body 但是如果此时状态是完成状态 则不激活
-        this.activedGroupIndex=null
-      }
-      if(where==='body' && !status){
         this.activedGroupIndex=index
       }
-      putGroupInfo(groupid,{
-        gameid:gameid,
-        score_a:score_a,
-        score_b:score_b,
-        status:status})
-      this.$emit('updataScoreOfMatch',this.matchInfo)
-    }
+      if(where==='body'){
+        this.activedGroupIndex=index
+        // this.activedGroupIndex=null
+      }
+    },
   }
 }
 </script>

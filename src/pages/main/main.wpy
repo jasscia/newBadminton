@@ -31,22 +31,16 @@ export default class Main extends wepy.page{
       myJoin:myJoin,
     }
     onshow(){
-      // console.log('fff')
       this.$broadcast('updatematchinfoList')
     }
     refresh(){
       this.$broadcast('updatematchinfoList')
     }
-    onLoad(){
-      // console.log('llllll')
-    }
+
   onShareAppMessage(res){
-    // await initUserInfo();
     let from=res.from;
     let gameid=res.target.dataset.gameid
-    // console.log('分享：',from,'/pages/detail/detail?gameid='+gameid,res)
     if(from==='button'){
-      // console.log('start')
       return share('/pages/detail/detail?gameid='+gameid)
     }
   }

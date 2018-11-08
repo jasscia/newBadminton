@@ -1,10 +1,6 @@
 <template>
-  <view class="container">
-    
-    <!-- <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header> -->
+  <view class="container">   
     <nearMatch wx:if="{{activeBar===titleList[0]}}" :matchInfoList.sync="matchInfoList"></nearMatch>
-
-    <!-- <rankingList  wx:if="{{activeBar===titleList[1]}}" :matchInfoList.sync="matchInfoList"></rankingList> -->
   </view>
 </template>
 <style lang="less" scoped>
@@ -18,14 +14,12 @@
   import {initUserInfo,downLoadMatchInfo,downLoadMatchInfoList,transformStatusAndTimeOfMatchInfo,judgeIfIn} from '../../common/common';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
-  // import rankingList from './rankingList';
   import 'wepy-async-function';
 
   export default class Index extends wepy.page {
     components = {
       header:header,
       nearMatch:nearMatch,
-      // rankingList:rankingList,
     }
     data = {
       matchInfoList:[],
@@ -39,19 +33,13 @@
         }
       }
     }
-  async onLoad(){
-    
+  async onLoad(){    
     this.matchInfoList = await downLoadMatchInfoList('all')
-    // console.log('all',this.matchInfoList)
-
     this.$apply()
   }
-  // refresh(){
-  //     this.$broadcast('updatematchinfoList')
-  //   }
+  
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList('all')
-    // wx.setStorageSync('activeMatchInfo',{})
     this.$apply()
   }
   async onShareAppMessage(res){

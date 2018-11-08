@@ -19,23 +19,27 @@ export default class extends wepy.app {
       backgroundColor: '#eeeeee',
       navigationBarTextStyle: 'black',
       navigationBarBackgroundColor: '#eeeeee',
-      navigationBarTitleText: 'CGGC羽球赛'
+      navigationBarTitleText: '羽毛球自由对阵赛'
     },
     tabBar: {
+      selectedColor: '#5f9ea0',
       list: [
         {pagePath: 'pages/index/index',
+          iconPath: 'image/near.png',
+          selectedIconPath: 'image/near2.png',
           text: '近期赛事'},
         {pagePath: 'pages/main/main',
+          iconPath: 'image/my.png',
+          selectedIconPath: 'image/my2.png',
           text: '我的赛事'},
         {pagePath: 'pages/custom/custom',
+          iconPath: 'image/result.png',
+          selectedIconPath: 'image/result2.png',
           text: '个人中心'},
-        // {pagePath: 'pages/about/about',
-        //   text: '关于'}
       ]
     }
   };
 
-  //async onLaunch() {
   async onLoad() {
     await initUserInfo()
     this.setKeepScreenOn();

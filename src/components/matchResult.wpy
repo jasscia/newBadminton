@@ -95,7 +95,7 @@ export default class Result extends wepy.component  {
   props= {
     matchInfo:{
       type:String,
-      default:null
+      default:null,
     }
   }
   data={
@@ -107,13 +107,9 @@ export default class Result extends wepy.component  {
   }
   watch={
     matchInfo(newMatchInfo){
-      // console.log('matchInfo changed fn in result',newMatchInfo)
       this.progress=newMatchInfo.progressData.progress
-      // console.log('progress',this.progress)
       let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
-      // console.log('calcedScore',calcedScore)
       let res = this.orderScore(calcedScore);
-      // console.log('res',res)
       this.result= res[0];
       this.resultKeys=res[1]
       this.$apply()
@@ -170,12 +166,10 @@ export default class Result extends wepy.component  {
         continue;
       }
       if (obj[key_of_max][3] > obj[keys[i]][3]) {//先比较 胜/负比
-        // key_of_max = keys[i];
       } else if (obj[key_of_max][3] < obj[keys[i]][3]) {
         key_of_max = keys[i];
       } else {
         if (obj[key_of_max][0] >= obj[keys[i]][0]) {//再比较净胜分
-          // key_of_max  = keys[i]
         } else {
           key_of_max = keys[i];
         }

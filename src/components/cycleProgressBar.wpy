@@ -80,7 +80,7 @@
 
 .bg1,
 .bg2 {
-  border: 10px solid orange;
+  border: 8rpx solid orange;
   border-radius: 50%;
   height: 100%;
   width: 100%;

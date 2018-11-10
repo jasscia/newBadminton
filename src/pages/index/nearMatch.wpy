@@ -83,7 +83,6 @@
   events={
     async updatematchinfoList(){
       this.matchInfoList = await downLoadMatchInfoList('all')
-      // console.log('all',this.matchInfoList)
       this.$apply()
     }
   }

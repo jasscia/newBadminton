@@ -2,14 +2,12 @@
 <template>
   <view class="warp"> 
   <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
-    <!-- <view class="againstTable"> -->
     <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}" 
           @tap='itemTap' data-where="body" data-index="{{index}}">
       <view class="side">
         <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
         <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
       </view>
-      <!-- <view class="score"> -->
       <view class="handleBtnGroup">
         <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="more"  hover-class="hover">+</button>
         <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="less"  hover-class="hover">-</button>
@@ -28,13 +26,11 @@
         <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="more" hover-class="hover">+</button>
         <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="less"  hover-class="hover">-</button>
       </view>
-      <!-- </view> -->
       <view class="side">
         <view class="name">{{groupInfo.id_b1.real_name||groupInfo.id_b1.nick_name}}</view>
         <view class="name">{{groupInfo.id_b2.real_name||groupInfo.id_b2.nick_name}}</view>
       </view>
     </view>
-  <!-- </view> -->
   </repeat>
   <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
   </view>

@@ -3,8 +3,8 @@
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
     <mygame wx:if="{{userInfo.avatar_url}}"             
             :matchInfoList.sync="matchInfoList"
-            :mode="mode"
-            :activeBar.sync="activeBar"></mygame>
+            :activeBar.sync="activeBar"
+            :mode="mode"></mygame>
     <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
   </view>
 </template>
@@ -42,12 +42,9 @@ export default class Main extends wepy.page{
     this.$emit('initPage')
   }
 
-  onshow(){
-    this.$broadcast('updatematchinfoList')
-  }
-
-  refresh(){
-    this.$broadcast('updatematchinfoList')
+  async refresh(){
+      this.matchInfoList = await downLoadMatchInfoList(this.type)
+      this.$apply()
   }
 
   onShareAppMessage(res){

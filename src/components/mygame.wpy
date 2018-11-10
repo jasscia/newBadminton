@@ -75,9 +75,18 @@ import twoSide from '../components/twoSide';
 import matchActive from '../components/matchActive';
 export default class Mygame extends wepy.component {
   props={
-    matchInfoList:[],
-    activeBar: '我创建的比赛',
-    mode:'withPanle'
+    matchInfoList: {
+        type:Array,
+        default:[]
+      },
+    activeBar: {
+        type:String,
+        default:'',
+      },
+    mode: {
+        type:String,
+        default:'',
+      },
   }
 
   components = {

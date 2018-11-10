@@ -21,7 +21,7 @@
   </view> 
 </template>
 <style lang="less" scoped>
-  @import '../../common/common.less';
+  @import '../common/common.less';
   .warp{
     .add{
       margin-top:40rpx;
@@ -56,11 +56,11 @@
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
-import matchInfo from '../../components/matchInfo';
-import twoSide from '../../components/twoSide';
-import matchActive from '../../components/matchActive';
-import authorizion from '../../components/authorizion'
+import {initUserInfo,downLoadMatchInfoList,share} from '../common/common';
+import matchInfo from '../components/matchInfo';
+import twoSide from '../components/twoSide';
+import matchActive from '../components/matchActive';
+import authorizion from '../components/authorizion'
 export default class mycreate extends wepy.page{
     data={
       userInfo:{},

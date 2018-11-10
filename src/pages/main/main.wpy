@@ -1,8 +1,11 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <myCreate wx:if="{{activeBar===titleList[0]}}"></myCreate>
-    <myJoin  wx:if="{{activeBar===titleList[1]}}"></myJoin>
+    <mygame wx:if="{{userInfo.avatar_url}}"             
+            :matchInfoList.sync="matchInfoList"
+            :mode="mode"
+            :activeBar.sync="activeBar"></mygame>
+    <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
   </view>
 </template>
 <style lang="less" scoped>
@@ -13,35 +16,84 @@
 </style>
 <script>
 import wepy from "wepy";
-import {share} from '../../common/common';
-import myCreate from './mycreate';
-import myJoin from './myjoin';
+import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
+import mygame from '../../components/mygame';
 import header from '../../components/header';
+import authorizion from '../../components/authorizion'
 export default class Main extends wepy.page{
   config={
     navigationBarTitleText:'我的赛事'
   }
     data={
+      userInfo: {},
+      matchInfoList: [],
       activeBar:'我创建的比赛',
-      titleList:['我创建的比赛','我参与的比赛']
+      titleList:['我创建的比赛','我参与的比赛'],
+      mode: 'withPanle',
+      type: 'mycreate'
    }
     components = {
-      myCreate:myCreate,
+      mygame:mygame,
       header:header,
-      myJoin:myJoin,
+      authorizion:authorizion,
     }
-    onshow(){
-      this.$broadcast('updatematchinfoList')
-    }
-    refresh(){
-      this.$broadcast('updatematchinfoList')
-    }
+
+  onLoad(){
+    this.$emit('initPage')
+  }
+
+  onshow(){
+    this.$broadcast('updatematchinfoList')
+  }
+
+  refresh(){
+    this.$broadcast('updatematchinfoList')
+  }
 
   onShareAppMessage(res){
     let from=res.from;
     let gameid=res.target.dataset.gameid
     if(from==='button'){
       return share('/pages/detail/detail?gameid='+gameid)
+    } else {
+     return share('/pages/main/main.wpy')
+    }
+  }
+
+  watch = {
+    activeBar() {
+      if(this.activeBar == this.titleList[0]){
+        this.type='mycreate'
+      } else if(this.activeBar == this.titleList[1]) {
+        this.type= 'myjoin'
+      }
+      this.$emit('initPage')
+    }
+  }
+  events = {
+    turnOverCard(index){
+      this.$broadcast('turnOverCard', index)
+    },
+
+    createNewAgainst(){
+      wx.navigateTo({
+        url:"/pages/main/createNewAgainst"
+      })
+    },
+
+    async updatematchinfoList(){
+      this.matchInfoList = await downLoadMatchInfoList(this.activeType)
+      this.$apply()
+    },
+
+    async initPage(data) {
+      let userInfo = await initUserInfo(data);
+
+      if (userInfo && userInfo.token) {
+        this.userInfo = userInfo;
+        this.matchInfoList = await downLoadMatchInfoList(this.type)
+        this.$apply();
+      }
     }
   }
 }

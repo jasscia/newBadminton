@@ -1,8 +1,7 @@
 <template>
   <view class="container">
     <view wx:if = "{{!userInfo.avatar_url}}">
-      <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">登录</button>
-      <!-- <button open-type = "getUserInfo" bindgetuserinfo = "initUserInfo">授权</button> -->
+      <authorizion />
     </view>
     <view class="part part1" @tap="navigateToBaseInfoPage"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item">
@@ -172,11 +171,13 @@ import wepy from 'wepy';
 import { initUserInfo, getMyMatchData } from '../../common/common';
 import itemList from './itemList';
 import cycleProgressBar from '../../components/cycleProgressBar';
+import authorizion from '../../components/authorizion'
 export default class Custom extends wepy.page {
   config = {};
   components = {
     itemList: itemList,
-    cycleProgressBar: cycleProgressBar
+    cycleProgressBar: cycleProgressBar,
+    authorizion: authorizion,
   };
   data = {
     userInfo: {
@@ -195,32 +196,33 @@ export default class Custom extends wepy.page {
   };
 
   async onLoad() {
-    this.initPage();
+    this.$emit('initPage');
   }
-  async initPage(data) {
-    this.userInfo = await initUserInfo(data);
-    if (this.userInfo && this.userInfo.token) {
-      this.userInfoOther = wx.getStorageSync('userOtherInfo');
-      this.myMatchData = await getMyMatchData();
-      this.myMatchData.winrate = this.myMatchData.winrate.split(/([.%])/)[0];
-      this.value = this.myMatchData.winrate;
-      this.$apply();
-    }
-  }
+  
   methods = {
     navigateToBaseInfoPage() {
       wx.navigateTo({
         url: '/pages/custom/baseInfo'
       });
     },
-    initUserInfo(e) {
-      this.initPage(e);
-    },
     gotoAbout() {
       wx.navigateTo({
         url: '/pages/about/about'
       });
     }
-  };
+  }
+  events = {
+    async initPage(data) {
+      console.log('emit');
+      this.userInfo = await initUserInfo(data);
+      if (this.userInfo && this.userInfo.token) {
+        this.userInfoOther = wx.getStorageSync('userOtherInfo');
+        this.myMatchData = await getMyMatchData();
+        this.myMatchData.winrate = this.myMatchData.winrate.split(/([.%])/)[0];
+        this.value = this.myMatchData.winrate;
+        this.$apply();
+      }
+    }
+  }
 }
 </script>

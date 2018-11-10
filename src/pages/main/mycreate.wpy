@@ -1,9 +1,12 @@
 <template>
   <view class="warp create">
-    <view class="add" @tap.stop="createNewAgainst">
+    <view wx:if="{{!userInfo.avatar_url}}">
+      <authorizion />
+    </view>
+    <view class="add" @tap.stop="createNewAgainst" wx:if="{{userInfo.avatar_url}}">
       <button>创建赛事</button>
     </view>   
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo"   wx:if="{{userInfo.avatar_url}}">
       <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSideInMycreate :index.sync="index">
             <block slot='frontSide'>
@@ -56,7 +59,8 @@ import wepy from "wepy";
 import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
 import twoSide from '../../components/twoSide';
-import matchActive from '../../components/matchActive'
+import matchActive from '../../components/matchActive';
+import authorizion from '../../components/authorizion'
 export default class mycreate extends wepy.page{
     data={
       userInfo:{},
@@ -66,12 +70,11 @@ export default class mycreate extends wepy.page{
     components = {
       matchInfoInMycreate:matchInfo,
       twoSideInMycreate:twoSide,
-      matchActiveInMycreate:matchActive
+      matchActiveInMycreate:matchActive,
+      authorizion:authorizion
     }
   async onLoad(){
-    this.matchInfoList = await downLoadMatchInfoList('mycreate')
-    // console.log('mycreate',this.matchInfoList)
-    this.$apply()
+    this.$emit('initPage');
   }
   async onShareAppMessage(res){
     await initUserInfo();
@@ -90,10 +93,19 @@ export default class mycreate extends wepy.page{
   }
   events={
     async updatematchinfoList(){
-    this.matchInfoList = await downLoadMatchInfoList('mycreate')
-    // console.log('mycreate',this.matchInfoList)
-    this.$apply()
-  }
+      this.matchInfoList = await downLoadMatchInfoList('mycreate')
+      // console.log('mycreate',this.matchInfoList)
+      this.$apply()
+    },
+    async initPage(data) {
+      console.log('emit');
+      this.userInfo = await initUserInfo(data);
+      console.log('userInfo', this.userInfo);
+      if (this.userInfo && this.userInfo.token) {
+        this.matchInfoList = await downLoadMatchInfoList('mycreate')
+      }
+      this.$apply();
+    }
   }
 }
 </script>

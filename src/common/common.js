@@ -80,7 +80,7 @@ const initUserInfo=async function(e) {
   if(userInfo && token){//如果缓存了userinfo 和 token 直接返回
     return userInfo
   }
-  if(!userInfo || !token){//如果没有缓存，说明用户没有登录 没有授权
+  if(!(userInfo&&token)){//如果没有缓存，说明用户没有登录 没有授权
     let resOfcode=await login();//先登录获取 临时code
     console.log('code-----', resOfcode);
     let resOfuserInfo;
@@ -89,14 +89,14 @@ const initUserInfo=async function(e) {
         resOfuserInfo = e.detail
       } else {
         resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
-        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作
-        
+        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作  
       }
     } catch (e){
-      console.log('catch---- ', e);
-      wx.switchTab({
-        url:'/pages/custom/custom'
-      })
+      // console.log('catch---- ', e);
+      // wx.switchTab({
+      //   url:'/pages/custom/custom'
+      // })
+      setStorage('userInfo',{})
       return {};
     }
     if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){

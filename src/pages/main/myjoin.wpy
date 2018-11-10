@@ -1,9 +1,12 @@
 <template>
   <view class="warp join">
-    <view class="errPage" wx:if="{{!matchInfoList.length}}">
+    <view wx:if="{{!userInfo.avatar_url}}">
+      <authorizion />
+    </view>
+    <view class="errPage" wx:if="{{userInfo.avatar_url && !matchInfoList.length}}">
       没有参加任何比赛
     </view>
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo"  wx:if="{{userInfo.avatar_url}}">
       <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSideInMyjoin :index.sync="index">
             <block slot='frontSide'>
@@ -49,7 +52,8 @@ import wepy from "wepy";
 import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
 import matchInfo from '../../components/matchInfo';
 import twoSide from '../../components/twoSide';
-import matchActive from '../../components/matchActive'
+import matchActive from '../../components/matchActive';
+import authorizion from '../../components/authorizion'
 export default class myGameList extends wepy.page{
     data={
       userInfo:{},
@@ -59,12 +63,11 @@ export default class myGameList extends wepy.page{
     components = {
       matchInfoInMyjoin:matchInfo,
       twoSideInMyjoin:twoSide,
-      matchActiveInMyjoin:matchActive
+      matchActiveInMyjoin:matchActive,
+      authorizion:authorizion,
     }
   async onLoad(){
-    this.matchInfoList = await downLoadMatchInfoList('myjoin')
-    // console.log('myjoin',this.matchInfoList)
-    this.$apply()
+    this.$emit('initPage')
   }
   async onShareAppMessage(res){
     await initUserInfo();
@@ -81,7 +84,16 @@ export default class myGameList extends wepy.page{
     this.matchInfoList = await downLoadMatchInfoList('myjoin')
     // console.log('myjoin',this.matchInfoList)
     this.$apply()
-  }
+  },
+  async initPage(data) {
+      console.log('emit');
+      this.userInfo = await initUserInfo(data);
+      console.log('userInfo', this.userInfo);
+      if (this.userInfo && this.userInfo.token) {
+        this.matchInfoList = await downLoadMatchInfoList('myjoin')
+      }
+      this.$apply();
+    }
   }
 }
 </script>

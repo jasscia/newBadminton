@@ -1,8 +1,7 @@
-
 <template>
-  <view class="warp"> 
+  <view class="warp">
   <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
-    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}" 
+    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}"
           @tap='itemTap' data-where="body" data-index="{{index}}">
       <view class="side">
         <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
@@ -15,7 +14,7 @@
       <view class="score scoreL">{{groupInfo.score_a}}</view>
       <view class="sub" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
         <view>第{{index+1}}场</view>
-        <button wx:if="{{groupInfo.status!==1}}" data-where="finish"  class="finishBtn">点这结束</button> 
+        <button wx:if="{{groupInfo.status!==1}}" data-where="finish"  class="finishBtn">点这结束</button>
         <button wx:else  class="finishBtn" data-where="look" >点这查看</button>
       </view>
       <view class="sub" wx:else>
@@ -94,10 +93,10 @@ padding:20px 0;
     }
     .score{
       height:160rpx;
-      text-align: center; 
+      text-align: center;
       line-height: 160rpx;
-      font-size:60rpx; 
-      background:@btn; 
+      font-size:60rpx;
+      background:@btn;
     }
     .scoreL{
       border-bottom-left-radius: 50%;
@@ -117,9 +116,9 @@ padding:20px 0;
       border-radius: 20%;
       font-size: 25rpx;
       padding:0;
-      } 
+      }
     }
-  }  
+  }
 }
 
 .done::before{

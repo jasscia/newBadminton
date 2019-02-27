@@ -1,79 +1,14 @@
-import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,
+import {formateDate,transformStatusAndTimeOfMatchInfo,
         getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
-const downLoadMatchInfoList=async function(type){
-  let url;
-  if(type==="mycreate"){url=URLList.getGameListMyURL}
-  if(type==="all"){url=URLList.getGameListAllURL}
-  if(type==="myjoin"){url=URLList.getGameListMyjoinURL}
-  let token;
-  let data={};
-  if(type!=="all"){
-    token=await getToken();
-    data.token=token
-    console.log('downLoadMatchInfoList',token)
-  }
-  let  method="GET";
-  wx.showLoading({})
-  let res=await htr(url,method,data);
-  wx.hideLoading({})
-  if(res.data.code===1){
-    let matchInfoList=res.data.data;
-    for(let matchInfo of matchInfoList){
-      if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
-        matchInfo.status=1
-      }
-      matchInfo.ifIn=judgeIfIn(matchInfo)
-      matchInfo.contorlAttr=calcContorlAttr(matchInfo)
-      transformStatusAndTimeOfMatchInfo(matchInfo);
-    }
-    return matchInfoList
-  }else{
-    return []
-  }  
-}
-const downLoadMatchInfo=async function(gameid){
-  let url=URLList.getGameInfoURL+'\/'+gameid,
-      method="GET",
-      data={};
-  wx.showLoading({})
-  let res= await htr(url,method,data);
-  wx.hideLoading({})
-  let matchInfo=res.data.data;
-  if(matchInfo){
-    if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
-      matchInfo.status=1
-    }
-    matchInfo.progressData=calcprogress(matchInfo)
-    matchInfo.ifIn=judgeIfIn(matchInfo)
-    matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)
-    matchInfo.contorlAttr=calcContorlAttr(matchInfo)
-    matchInfo.limitForLive=calcLimitForLive(matchInfo)
-    return transformStatusAndTimeOfMatchInfo(matchInfo);
-  }else{
-    return {}
-  }
-}
 const judgeIfIn=function(matchInfo){
     let players=matchInfo.players
     let uid=wx.getStorageSync('userInfo').uid
     let ifIn=false;
-    if(Array.isArray(players)){ 
+    if(Array.isArray(players)){
       ifIn=players.some((player)=>{return player.user.uid===uid})
     }
     return ifIn
   }
-const updateMatchInfo =async function(gameid,options){
-  let token=await getToken();
-  let url=URLList.putGameInfoURL+'\/'+gameid,
-      method="PUT",
-      data=options;
-  data.token=token;
-  let res=await htr(url,method,data)
-  if(res.data.code===1){
-    return res.data.data
-  }
-}
- 
 const initUserInfo=async function(e) {
   let userInfo=wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
   let token=userInfo.token;
@@ -89,7 +24,7 @@ const initUserInfo=async function(e) {
         resOfuserInfo = e.detail
       } else {
         resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
-        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作  
+        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作
       }
     } catch (e){
       // console.log('catch---- ', e);
@@ -117,106 +52,6 @@ const initUserInfo=async function(e) {
   }
 }
 
-const addPlayer=async function(gameid){
-  let token=await getToken();
-
-  let url=URLList.addplayerURL,
-      method="POST",
-      data={
-        token:token,
-        gameid:gameid
-      };
-  let res=await htr(url,method,data);
-  if(res.data.code===1){
-    return res.data.data;//其实是matchInfoList,只有gameid 和 user 信息列表
-  }else{
-    return {}
-  }
-}
-const changeRealname=async function(realName){
-  let userInfo=wx.getStorageSync('userInfo')
-  let token=await getToken();
-
-  let url=URLList.changeRealnameURl,
-      method='POST',
-      data={token:token,
-            real_name:realName};
-  let res=await htr(url,method,data);
-  if(res.data.code===1){
-    userInfo.real_name=realName
-    await setStorage('userInfo',userInfo)
-    return res.data.data //包含昵称和真是姓名的对象
-  }else{
-    return {}
-  }
-}
-const createGame=async function(formData){
-  let token=await getToken();
-
-  let url=URLList.postGameInfoURL,
-      method="POST",
-      data={
-        token:token,
-        gamename:formData.theme,
-        status:0,
-        note:null,
-        address:formData.address,
-        begintime:formData.begintime,
-        auto_signup:formData.auto_signup
-      };
-  let res=await htr(url,method,data)
-  if(res.data.code===1){
-    return res.data.data
-  }else{
-    return {}
-  }
-}
-const postGroupList=async function(gameid,list){
-  let token=await getToken();
-
-  let url=URLList.postGroupListURl,
-      method="POST",
-      data={
-        token:token,
-        gameid:gameid,
-        list:list
-      };
-   let res=await htr(url,method,data)
-   if(res.data.code===1){
-     return res.data.data
-   }else{
-     return {}
-   }
-}
-const getGroupInfo=async function(gameid){
-  let token=await getToken();
-  let url=URLList.getGroupInfoURl,
-      method="GET",
-      data={
-        token:token,
-        gameid:gameid
-      };
-  let res=await htr(url,method,data)
-  if(res.data.code===1){
-    return res.data.data
-  }else{
-    return {}
-  }
-}
-const putGroupInfo=async function(groupid,options){
-  let token=await getToken();
-
-  let url=URLList.postGroupListURl+'\/'+groupid,
-      method="PUT",
-      data=options;
-  data.token=token;
-  let res=await htr(url,method,data)
-  if(res.data.code===1){
-    return res.data.data
-  }else{
-    return {}
-  }
-}
 const formatTime =(date,mark='/') => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -227,6 +62,7 @@ const formatTime =(date,mark='/') => {
 
   return [year, month, day].map(formatNumber).join(mark) + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
+
 const share=function(path){
   return {
       path: path,
@@ -238,21 +74,6 @@ const share=function(path){
         console.log("转发失败",res,path)
       }
     }
-}
-const getMyMatchData=async function(){
-  let token=await getToken();
-  if(!token) {
-    return ;
-  }
-  let url=URLList.getMyMatchDataURL
-  let method='GET'
-  let data={token}
-  let res= await htr(url,method,data)
-  if(res.data.code===1){
-    return res.data.data
-  }else{
-    return {}
-  }
 }
 const getToken=async function(){
   let userInfo=await initUserInfo()
@@ -319,7 +140,7 @@ const calcprogress=function(matchInfo){
   let groupList=matchInfo.group
   if(!groupList || !groupList.length){
     return{doneNum,totalNum,progress}
-  } 
+  }
   let doneList=groupList.filter(groupInfo => {
     return groupInfo.status
   });

@@ -8,11 +8,11 @@ import {htr} from './util';
     this.maxRepeatTeam = 0;
     this.round = personNum * roundPer / 4;//总共的场数  四个人算一场
     this.result = {};//数组用于存放 最终结果
-    this.personList=[]; 
+    this.personList=[];
     this.personFlag = [];//数组用于存放 每个人在全过程中出现的次数
     this.teamMateList=[];
     this.teamMateFlag = [];//数组用于存放 每两个人组队teamMeat 在全过程中出现的次数
-  
+
     for (let i = 0; i < this.personNum; i++) {
       this.personList.push(i+1);
       for (let j = i + 1; j < this.personNum; j++) {
@@ -23,7 +23,7 @@ import {htr} from './util';
     this.maxRepeatTeam=this.round*2-this.minTime*this.teamMateList.length;
     this.personFlag.length=this.personList.length;
     this.teamMateFlag.length=this.teamMateList.length;
-  
+
     this.start();
   }
   Badmin.prototype.start = function () {//从这里开始
@@ -33,7 +33,7 @@ import {htr} from './util';
       }
       if (this.personNum < 4) {
         this.result = '数据不符合要求，人数不能少于4人';
-        return    
+        return
       }
       this.getRes();
       if (this.result.length < this.round) {
@@ -101,7 +101,7 @@ import {htr} from './util';
           }
         }
         tryTimes_1++
-      } while (this.result[1].length<this.round && tryTimes_1<this.round*4) 
+      } while (this.result[1].length<this.round && tryTimes_1<this.round*4)
     }
     Badmin.prototype.update=function(item){
       let teamA=[item[0],item[1]].join(' ');
@@ -116,7 +116,6 @@ import {htr} from './util';
         this.result[i+1].push(item[i]);
       }
     }
-  
     function swip(arr,i,j){
       let temp=arr[i];
           arr[i]=arr[j];
@@ -147,7 +146,7 @@ import {htr} from './util';
       }
       if (this.personNum < 4) {
         this.result = '数据不符合要求，人数不能少于4人';
-        return    
+        return
       }
       this.getRes();
       if (this.result[1].length < this.round) {

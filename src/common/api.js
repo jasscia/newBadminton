@@ -17,6 +17,16 @@ const URLList={
 //show loading
 //xhr请求
 //hide loading
+const api_getToken = async function(code, nickName, avatarUrl){
+  let url = URLList.getToken,
+      method="GET",
+      data={code:code,
+            nick_name:nickName,
+            avatar_url:avatarUrl}
+  let res = await htr(url, method, data);
+  return res.token;
+}
+
 const api_getMatchInfoList = async function(type, data) {
   let url = urlList.gameList[type];
   let res = await htr(url , 'GET', data);
@@ -24,7 +34,7 @@ const api_getMatchInfoList = async function(type, data) {
 }
 
 const api_getMatchInfo = async function(gameid) {
-  let url = URLList.getGameInfo +'\/'+gameid,
+  let url = URLList.gameInfo +'\/'+gameid,
   let res = await htr(url, 'GET', data);
 //     if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
 //       matchInfo.status=1
@@ -39,7 +49,7 @@ const api_getMatchInfo = async function(gameid) {
 }
 
 const api_updateMatchInfo = async function(gameid) {
-  let url = URLList.getGameInfo +'\/'+gameid,
+  let url = URLList.gameInfo +'\/'+gameid,
   let res = await htr(url, 'PUT', data);
   return res || {}
 }
@@ -97,6 +107,7 @@ const api_getPersonalInfo = async function(){
   return res || {}
 }
 export {
+  api_getToken,
   api_getMatchInfoList,
   api_getMatchInfo,
   api_updateMatchInfo,

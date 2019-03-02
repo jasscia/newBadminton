@@ -1,72 +1,55 @@
 import {formateDate,transformStatusAndTimeOfMatchInfo,
         getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
-const judgeIfIn=function(matchInfo){
-    let players=matchInfo.players
-    let uid=wx.getStorageSync('userInfo').uid
-    let ifIn=false;
-    if(Array.isArray(players)){
-      ifIn=players.some((player)=>{return player.user.uid===uid})
-    }
-    return ifIn
+
+const judgeIfIn = function(matchInfo){
+  let players = matchInfo.players
+  let uid = wx.getStorageSync('userInfo').uid
+  let ifIn = false;
+  if(Array.isArray(players)){
+    ifIn = players.some((player) => {return player.user.uid === uid})
   }
-const initUserInfo=async function(e) {
-  let userInfo=wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
-  let token=userInfo.token;
-  if(userInfo && token){//如果缓存了userinfo 和 token 直接返回
+  return ifIn
+}
+
+const initUserInfo = async function(e) {
+  let userInfo = wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
+  if(userInfo && userInfo.token){//如果缓存了userinfo 和 token 直接返回
     return userInfo
   }
-  if(!(userInfo&&token)){//如果没有缓存，说明用户没有登录 没有授权
-    let resOfcode=await login();//先登录获取 临时code
-    console.log('code-----', resOfcode);
-    let resOfuserInfo;
+  if(!userInfo || !userInfo.token){//如果没有缓存，说明用户没有登录 没有授权
+    let code = await login();//先登录获取 临时code
     try {
       if (e && e.detail) {
-        resOfuserInfo = e.detail
+        userInfo = e.detail
       } else {
-        resOfuserInfo=await getUserInfoWithoutToken();//获取登录后授权使用的 头像 昵称信息
+        userInfo = await getUserInfo();//获取登录后授权使用的 头像 昵称信息
         //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作
       }
     } catch (e){
-      // console.log('catch---- ', e);
-      // wx.switchTab({
-      //   url:'/pages/custom/custom'
-      // })
       setStorage('userInfo',{})
       return {};
     }
-    if(resOfcode.errMsg!=='login:ok' || resOfuserInfo.errMsg!=='getUserInfo:ok'){
+    if(!code || !userInfo){
       setStorage('userInfo',{})
       return {}//若用户中断的登录 授权，直接返回，失败
     }
-    let code=resOfcode.code;
-    let nickName=resOfuserInfo.userInfo.nickName;
-    let avatarUrl=resOfuserInfo.userInfo.avatarUrl
+
     //这里是登录的时候拿到的用户信息，用code nickname avatarurl 去换token
-    userInfo=await getUserInfoWithToken(code,nickName,avatarUrl)
-    if(!userInfo.token){//标示拿到了带有openid的 用户信息
+    token = await getToken(code, userInfo.nickName, userInfo.avatarUrl)
+    if(!token){//标示拿到了带有openid的 用户信息
       setStorage('userInfo',{})
       return {}//失败
     }
+    userInfo.token = token
     setStorage('userInfo',userInfo)//全部信息拿到后 存储userInfo
     return userInfo
   }
 }
 
-const formatTime =(date,mark='/') => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
-
-  return [year, month, day].map(formatNumber).join(mark) + ' ' + [hour, minute, second].map(formatNumber).join(':')
-}
-
-const share=function(path){
+const share = function(path){
   return {
       path: path,
-      imageUrl:'/image/share.png',
+      imageUrl: '/image/share.png',
       success: function(res) {
         console.log("转发成功",res,path)
       },
@@ -75,32 +58,17 @@ const share=function(path){
       }
     }
 }
-const getToken=async function(){
-  let userInfo=await initUserInfo()
-  if(!userInfo || !userInfo.token){
-    return ""
-  }
-  let token=userInfo.token;
-  if(token){
-    return token
-  }else{
-    return ''
-  }
-}
 
-const getPlayersUidList=async function(gameid){
-  let matchInfo=await downLoadMatchInfo(gameid)
-  if(!matchInfo){
-    return []
-  }
-  let playersList=matchInfo.players
+const getPlayersUidList = async function(matchInfo){
+  let playersList = matchInfo.players
   let playersUidList=[]
   playersList.forEach(userInfo => {
     playersUidList.push(userInfo.user.uid)
   });
   return playersUidList
 }
-const getUserInfoByUid=function(uid,playersList){
+
+const getUserInfoByUid = function(uid, playersList){
   let results=playersList.filter(playerInfo=>{
     return playerInfo.userid===uid
   })
@@ -167,6 +135,7 @@ const calcContorlAttr=function(matchInfo){
   contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup
   return contorlAttr
 }
+
 //判断权限
 const calcLimitForLive=function(matchInfo){
 let my_uid=wx.getStorageSync('userInfo').uid
@@ -184,20 +153,11 @@ if(matchInfo.status===2){
 }
   return'writableAll'
 }
-export {downLoadMatchInfoList,
-        downLoadMatchInfo,
-        updateMatchInfo,
-        getPlayersUidList,
-        judgeIfIn,
-        initUserInfo,
-        addPlayer,
-        changeRealname,
-        createGame,
-        formatTime,
-        share,
-        postGroupList,
-        getGroupInfo,
-        putGroupInfo,
-        // transGroupListToGroupListWithPlayerInfo,
-        getMyMatchData,
-        calcprogress}
+
+export {
+  getPlayersUidList,
+  judgeIfIn,
+  initUserInfo,
+  share,
+  calcprogress
+}

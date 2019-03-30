@@ -1,11 +1,3 @@
-
-
-/**
- * wx.login -> serverLogin ->getToken
- */
-
-
-
 function wxLogin(){
   return new Promise((resolve,reject)=>{
     wx.login({

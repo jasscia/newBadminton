@@ -1,11 +1,6 @@
-
-
 function getUserInfo(){
 
 }
-
-
-
 
 export {
   getUserInfo

@@ -41,13 +41,8 @@ export default class extends wepy.app {
   };
 
   async onLoad() {
+    console.log('onload')
     await initUserInfo()
-    this.setKeepScreenOn();
-  }
-  setKeepScreenOn(){
-    wx.setKeepScreenOn({
-      keepScreenOn:true
-    })
   }
 }
 </script>

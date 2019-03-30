@@ -1,5 +1,5 @@
-import {formateDate,transformStatusAndTimeOfMatchInfo,
-        getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from './util';
+import {formateDate, transformStatusAndTimeOfMatchInfo,
+        getUserInfoWithToken, getUserInfoWithoutToken, login, formatNumber, setStorage} from './util';
 
 const judgeIfIn = function(matchInfo){
   let players = matchInfo.players
@@ -23,7 +23,7 @@ const initUserInfo = async function(e) {
         userInfo = e.detail
       } else {
         userInfo = await getUserInfo();//获取登录后授权使用的 头像 昵称信息
-        //这里 由于微信版本更新， wx.getUserInfo 可能会补正常工作
+        //这里 由于微信版本更新， wx.getUserInfo 可能会不正常工作
       }
     } catch (e){
       setStorage('userInfo',{})

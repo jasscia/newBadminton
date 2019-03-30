@@ -1,5 +1,5 @@
 <template>
-  <view class="container">   
+  <view class="container">
     <nearMatch wx:if="{{activeBar===titleList[0]}}" :matchInfoList.sync="matchInfoList"></nearMatch>
   </view>
 </template>
@@ -33,11 +33,11 @@
         }
       }
     }
-  async onLoad(){    
+  async onLoad(){
     this.matchInfoList = await downLoadMatchInfoList('all')
     this.$apply()
   }
-  
+
   async onShow(){
     this.matchInfoList = await downLoadMatchInfoList('all')
     this.$apply()

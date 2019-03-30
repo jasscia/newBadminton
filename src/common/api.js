@@ -34,7 +34,7 @@ const api_getMatchInfoList = async function(type, data) {
 }
 
 const api_getMatchInfo = async function(gameid) {
-  let url = URLList.gameInfo +'\/'+gameid,
+  let url = URLList.gameInfo +'\/'+gameid;
   let res = await htr(url, 'GET', data);
 //     if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
 //       matchInfo.status=1
@@ -49,7 +49,7 @@ const api_getMatchInfo = async function(gameid) {
 }
 
 const api_updateMatchInfo = async function(gameid) {
-  let url = URLList.gameInfo +'\/'+gameid,
+  let url = URLList.gameInfo +'\/'+gameid;
   let res = await htr(url, 'PUT', data);
   return res || {}
 }
@@ -61,7 +61,7 @@ const api_addPlayer=async function(data){
 }
 
 const api_changeRealname=async function(data){
-  let url=URLList.changeRealname,
+  let url=URLList.changeRealname;
   let res = await htr(url, 'POST',data);
 //     userInfo.real_name=realName
 //     await setStorage('userInfo',userInfo)
@@ -78,19 +78,19 @@ const api_createGame = async function(data){
 //         begintime:formData.begintime,
 //         auto_signup:formData.auto_signup
 //       };
-  let url=URLList.gameInfo,
+  let url=URLList.gameInfo;
   let res = await htr(url, 'POST',data);
   return res || {}
 }
 
 const api_postGroupList = async function(data) {
-  let url=URLList.groupList,
+  let url=URLList.groupList;
   let res = await htr(url, 'POST',data);
   return res || {}
 }
 
 const api_getGroupList = async function(data) {
-  let url=URLList.groupList,
+  let url=URLList.groupList;
   let res = await htr(url, 'GET',data);
   return res || {}
 }

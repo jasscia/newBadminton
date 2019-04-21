@@ -1,11 +1,15 @@
 
 <template>
   <view class="container">
-  <matchActiveInDetail :matchInfo.sync="matchInfo" :mode.sync="mode"></matchActiveInDetail>
-  <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
-  <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
-  <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}"
-              :matchInfo.sync="matchInfo"></matchResultInDetail>
+  <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
+  <view  wx:if="{{userInfo.avatar_url}}">
+    <matchActiveInDetail :matchInfo.sync="matchInfo" :mode.sync="mode"></matchActiveInDetail>
+      <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
+      <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
+      <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}"
+                  :matchInfo.sync="matchInfo"></matchResultInDetail>
+  </view>
+  
 </view>
 </template>
 
@@ -42,24 +46,28 @@
 
 <script>
 import wepy from 'wepy'
-import { downLoadMatchInfo,share,addPlayer} from "../../common/common"
+import {initUserInfo, downLoadMatchInfo,share,addPlayer} from "../../common/common"
 import playersList from '../../components/playersList'
 import matchBaseInfo from '../../components/matchBaseInfo'
 import matchResult from '../../components/matchResult'
 import matchActive from '../../components/matchActive'
+import authorizion from '../../components/authorizion'
 
 export default class BaseData extends wepy.page {
   components={
     playersListInDetail:playersList,
     matchBaseInfoInDetail:matchBaseInfo,
     matchActiveInDetail:matchActive,
-    matchResultInDetail:matchResult
+    matchResultInDetail:matchResult,
+    authorizion:authorizion,
   }
 data={
+    userInfo: {},
     matchInfo:{},
     mode:'cube'
   }
  async onLoad(options){
+   this.$emit('initPage')
    this.gameid=options.gameid
    this.matchInfo=await downLoadMatchInfo(this.gameid)
    this.$apply()
@@ -71,5 +79,17 @@ data={
  onShareAppMessage(){
    return  share('/pages/detail/detail?gameid='+this.gameid)
  }
+ events = {
+  async initPage(data) {
+        let userInfo = await initUserInfo(data);
+
+        if (userInfo && userInfo.token) {
+          this.userInfo = userInfo;
+          this.matchInfo=await downLoadMatchInfo(this.gameid);
+          this.$apply();
+        }
+      }
+ }
+ 
 }
 </script>

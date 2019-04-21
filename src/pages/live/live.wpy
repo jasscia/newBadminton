@@ -31,7 +31,7 @@ import againstTable from '../../components/againstTable'
 import matchResult from '../../components/matchResult'
 export default class Live extends wepy.page {
   config = {
-    navigatorBatText:'比赛实况'
+    navigationBarTitleText:'比赛实况'
   }
   components={
     LiveHeader:header,

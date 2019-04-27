@@ -54,9 +54,9 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {addPlayer,downLoadMatchInfo} from '../common/common'
+import {api_addPlayer, api_getMatchInfo} from '../common/api'
 export default class MatchActive extends wepy.component{
- props={  
+ props={
     matchInfo:{
       type:Object,
       default:{},
@@ -67,12 +67,15 @@ export default class MatchActive extends wepy.component{
        default:null
      }
  }
+ onLoad() {
+   console.log(`amt---`, this.matchInfo)
+ }
   methods={
 async signup(){
-  let gameid=this.matchInfo.id
-     let res=await addPlayer(gameid)
+  let gameid = this.matchInfo.id
+     let res=await api_addPlayer({gameid: gameid})
      if(res){
-        this.matchInfo=await downLoadMatchInfo(gameid)
+        this.matchInfo=await api_getMatchInfo(gameid)
         this.$apply()
             wx.showToast({
               title:'报名成功',

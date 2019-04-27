@@ -7,22 +7,27 @@
     <ul class="tip_side">
       <li>获取你的公开信息（昵称，头像等）</li>
     </ul>
-    <button  class="btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">确认授权</button>
+    <button  class="btn" open-type="getUserInfo" @tap="auth">确认授权</button>
   </div>
 </template>
 
 <script>
 import wepy from 'wepy';
-export default class Authorizion extends wepy.component {
+import {auth} from '../../common/login';
+export default class Auth extends wepy.page {
   methods = {
-    getUserInfo(e) {
-      this.$emit('initPage', e);
+    async auth() {
+      let res = await auth();
+      console.log('res', res)
+      if (res) {
+        wx.navigateBack()
+      }
     }
   }
 }
 </script>
 <style lang="less" scoped>
-@import '../common/common.less';
+@import '../../common/common.less';
   .avatar {
     display: block;
     width: 200rpx;

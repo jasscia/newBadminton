@@ -3,9 +3,9 @@
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
     <block   wx:if="{{activeBar===titleList[0]}}">
-  <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
-  <playersListInlive :matchInfo.sync="matchInfo"></playersListInlive>
-    <matchDataSetInlive  :matchInfo.sync="matchInfo" ></matchDataSetInlive>
+      <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
+      <playersListInlive :matchInfo.sync="matchInfo"></playersListInlive>
+      <matchDataSetInlive  :matchInfo.sync="matchInfo"></matchDataSetInlive>
     </block>
     <againstTableInlive wx:if="{{activeBar===titleList[1]}}" 
                         :matchInfo.sync="matchInfo" 
@@ -22,7 +22,9 @@
 
 <script>
 import wepy from 'wepy'
-import {initUserInfo, getGroupInfo, putGroupInfo, downLoadMatchInfo, share, updateMatchInfo, calcprogress} from "../../common/common";
+import {api_putGroupInfo, api_getMatchInfo, api_updateMatchInfo} from "../../common/api";
+import {share} from "../../common/util";
+import {calcprogress} from "../../common/common";
 import header from '../../components/header'
 import matchDataSet from '../../components/matchDataSet'
 import playersList from '../../components/playersList'
@@ -31,7 +33,7 @@ import againstTable from '../../components/againstTable'
 import matchResult from '../../components/matchResult'
 export default class Live extends wepy.page {
   config = {
-    navigatorBatText:'比赛实况'
+    navigationBarTitleText:'比赛实况'
   }
   components={
     LiveHeader:header,
@@ -67,7 +69,7 @@ export default class Live extends wepy.page {
  }
   async onLoad(options){
     this.gameid= parseInt(options.gameid)
-    this.matchInfo=await downLoadMatchInfo(this.gameid)
+    this.matchInfo=await api_getMatchInfo(this.gameid)
     this.$apply()
   }
 
@@ -82,21 +84,23 @@ export default class Live extends wepy.page {
       this.matchInfo.progressData=calcprogress(matchInfo)
       if(this.matchInfo.progressData.progress===100){
         this.matchInfo.status=3
-        updateMatchInfo(this.gameid,{status:3})
+        api_updateMatchInfo(this.gameid,{status:3})
       }else{
         this.matchInfo.status=2
-        updateMatchInfo(this.gameid,{status:2})
+        api_updateMatchInfo(this.gameid,{status:2})
       }
       this.matchInfo.groupWithInfo=matchInfo.groupWithInfo
       this.$apply()
     },
+
     changeActiveBar(from){
       if(from==='from baseData'){
         this.activeBar=this.titleList[1]
       }
     },
+
     async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
-      this.matchInfo=await downLoadMatchInfo(this.gameid)
+      this.matchInfo = await api_getMatchInfo(this.gameid)
       this.$apply()
     },
 
@@ -108,7 +112,7 @@ export default class Live extends wepy.page {
       let score_b=groupInfo.score_b
       let status=groupInfo.status
 
-      putGroupInfo(groupid,{
+      api_putGroupInfo(groupid,{
         gameid:gameid,
         score_a:score_a,
         score_b:score_b,

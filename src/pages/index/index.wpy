@@ -11,7 +11,8 @@
 </style>
 <script>
   import wepy from 'wepy';
-  import {initUserInfo,downLoadMatchInfo,downLoadMatchInfoList,transformStatusAndTimeOfMatchInfo,judgeIfIn} from '../../common/common';
+  import {judgeIfIn} from '../../common/common';
+  import {api_getMatchInfoList} from '../../common/api';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
   import 'wepy-async-function';
@@ -22,28 +23,27 @@
       nearMatch:nearMatch,
     }
     data = {
+      type: 'all',
       matchInfoList:[],
       activeBar:'近期赛事',
       titleList:['近期赛事','球员排行榜']
     }
-    computed={
-      matchCount(){
-        if(this.matchInfo && this.matchInfoList.length!==undefined){
-          return this.matchInfoList.length
-        }
-      }
-    }
   async onLoad(){
-    this.matchInfoList = await downLoadMatchInfoList('all')
-    this.$apply()
+    this.$emit('getMatchInfoList')
   }
 
   async onShow(){
-    this.matchInfoList = await downLoadMatchInfoList('all')
-    this.$apply()
+    // this.$emit('getMatchInfoList')
   }
+  
   async onShareAppMessage(res){
     return share('/pages/index/index.wpy')
+  }
+  events = {
+    async getMatchInfoList(data) {
+      this.matchInfoList = await api_getMatchInfoList(this.type)
+      this.$apply();
+    }
   }
 }
 </script>

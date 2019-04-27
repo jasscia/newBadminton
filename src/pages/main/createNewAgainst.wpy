@@ -32,7 +32,8 @@
 
 <script>
 import wepy from 'wepy';
-import {formatTime,createGame} from '../../common/common';
+import {formatTime} from '../../common/util';
+import {api_createGame} from '../../common/api';
 import item2colunm from '../../components/item2colunm';
 export default class CreateNewAgain extends wepy.page {
   config={
@@ -49,7 +50,7 @@ export default class CreateNewAgain extends wepy.page {
     titleList:[
       {
         title:'团体名称',
-        name:'theme',
+        name:'gamename',
         value:'',
         type:'strng',
         require: true,
@@ -80,13 +81,15 @@ export default class CreateNewAgain extends wepy.page {
       }
     ]
   }
+
   async onLoad(option){
     this.initDateRange();
     this.initDateTime();
   }
+
   async onUnload(){
-    
   }
+
   initDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
     let start=new Date(Date.now()+1*24*3600*1000),
         formatStart=formatTime(start,'-').trim().split(' ');//formatTime输出的格式为 年-月-日 时：分：秒
@@ -96,6 +99,7 @@ export default class CreateNewAgain extends wepy.page {
     this.dateRange.end.date=formatEnd[0];
     this.titleList[3].date=this.dateRange+start.date
   }
+
   initDateTime(){
     Object.keys(this.titleList).map(key=>{//按照 Data range 范围，对于date的item 初始化其中的数值
       if(this.titleList[key].name==='date'){
@@ -103,6 +107,7 @@ export default class CreateNewAgain extends wepy.page {
       }
     })
   }
+
   methods={
     async submit(e){
       let formData=e.detail.value,
@@ -127,7 +132,7 @@ export default class CreateNewAgain extends wepy.page {
         }
       })
       if(time){newFormData['begintime']=date+' '+time+':00'}
-      if(await createGame(newFormData)){
+      if(await api_createGame(newFormData)){
         wx.showToast({
           title:'创建成功,返回赛事列表',
           icon:'success',

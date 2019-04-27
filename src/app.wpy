@@ -12,6 +12,7 @@ export default class extends wepy.app {
       'pages/about/about',
       'pages/live/live',
       'pages/custom/baseInfo',
+      'pages/auth/auth',
       'pages/main/createNewAgainst'
     ],
     window: {

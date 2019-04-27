@@ -42,7 +42,8 @@
 
 <script>
 import wepy from 'wepy'
-import { downLoadMatchInfo,share,addPlayer} from "../../common/common"
+import {share} from '../../common/common'
+import {api_getMatchInfo} from '../../common/api'
 import playersList from '../../components/playersList'
 import matchBaseInfo from '../../components/matchBaseInfo'
 import matchResult from '../../components/matchResult'
@@ -50,26 +51,35 @@ import matchActive from '../../components/matchActive'
 
 export default class BaseData extends wepy.page {
   components={
-    playersListInDetail:playersList,
-    matchBaseInfoInDetail:matchBaseInfo,
     matchActiveInDetail:matchActive,
+    matchBaseInfoInDetail:matchBaseInfo,
+    playersListInDetail:playersList,
     matchResultInDetail:matchResult
   }
 data={
+    gameid: null,
     matchInfo:{},
     mode:'cube'
   }
- async onLoad(options){
-   this.gameid=options.gameid
-   this.matchInfo=await downLoadMatchInfo(this.gameid)
-   this.$apply()
+ onLoad(options){
+   this.gameid = options.gameid
+   this.$emit('getMatchInfo')
  }
- async onShow(options){
-   this.matchInfo=await downLoadMatchInfo(this.gameid)
-   this.$apply()
+
+ onShow(options){
+  //  this.$emit('getMatchInfo')
  }
+
  onShareAppMessage(){
    return  share('/pages/detail/detail?gameid='+this.gameid)
+ }
+
+ events = {
+   async getMatchInfo() {
+     this.matchInfo = await api_getMatchInfo(this.gameid)
+     console.log('match info = ', this.matchInfo)
+     this.$apply()
+   }
  }
 }
 </script>

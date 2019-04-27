@@ -1,8 +1,8 @@
 <template>
   <view class="container">
-    <view wx:if = "{{!userInfo.avatar_url}}">
+    <!-- <view wx:if = "{{!userInfo.avatar_url}}">
       <authorizion />
-    </view>
+    </view> -->
     <view class="part part1" @tap="navigateToBaseInfoPage"  wx:if = "{{userInfo.avatar_url}}">
       <view class="item">
         <image class="avatar" src="{{userInfo.avatar_url}}"/>
@@ -171,13 +171,13 @@ import wepy from 'wepy';
 import { initUserInfo, getMyMatchData } from '../../common/common';
 import itemList from './itemList';
 import cycleProgressBar from '../../components/cycleProgressBar';
-import authorizion from '../../components/authorizion'
+// import authorizion from '../../components/authorizion'
 export default class Custom extends wepy.page {
   config = {};
   components = {
     itemList: itemList,
     cycleProgressBar: cycleProgressBar,
-    authorizion: authorizion,
+    // authorizion: authorizion,
   };
   data = {
     userInfo: {

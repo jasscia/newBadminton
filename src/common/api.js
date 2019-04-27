@@ -1,67 +1,104 @@
+import {userInfo} from './login'
+import {fmtMatchInfo} from './util'
+
 const host = "https://kkiqq.cn/"
-const URLList={
+const urlList={
   gameInfo: host + "api/badminton/game",
   gameList: {
-    my: host + "api/badminton/game",
+    mycreate: host + "api/badminton/game",
     myjoin: host + "api/badminton/signuplist",
     all: host + "api/badminton/gamelist",
   },
   groupList: host + 'api/badminton/group',
   addPlayer: host + "api/badminton/game/addplayer",
+  deletePlayer: host + "api/badminton/game/player",
   getToken: host + 'api/badminton/qlogin',
   changeRealname: host + 'api/badminton/userrename',
   getPersonalInfo: host + 'api/badminton/personalinfo'
 };
 
+const htr = function(url , method, data){
+  console.log('htr=', ...arguments)
+  wx.showLoading({})
+  return new Promise((resolve, reject = () => {
+    console.error(...arguments)
+    wx.hideLoading({})
+  }) => {
+    wx.request({
+      url,
+      method,
+      data: Object.assign(data || {}, {token: data && data.token || userInfo.token}),
+      success: (res) => {
+        let statusCode = res.statusCode
+        let data = res.data
+        console.log(statusCode, data)
+        if (statusCode >= 200 && statusCode < 300 || statusCode == 304) {
+          if (url == urlList.getToken && data.token) {
+            wx.hideLoading({})
+            resolve(data)
+          } else if (data && data.code == 1) {
+            wx.hideLoading({})
+            resolve(data.data)
+          } else if (data && data.code == 401) {
+            wx.navigateTo({
+              url: '/pages/auth/auth',
+            })
+          } else {
+            reject()
+          }
+        } else {
+          reject()
+        }
+      },
+      fail: reject
+    })
+  })
+}
 //获取token
 //show loading
 //xhr请求
 //hide loading
 const api_getToken = async function(code, nickName, avatarUrl){
-  let url = URLList.getToken,
+  let url = urlList.getToken,
       method="GET",
-      data={code:code,
-            nick_name:nickName,
-            avatar_url:avatarUrl}
+      data={code: code,
+            nick_name: nickName,
+            avatar_url: avatarUrl}
   let res = await htr(url, method, data);
-  return res.token;
+  return res;
 }
 
 const api_getMatchInfoList = async function(type, data) {
   let url = urlList.gameList[type];
   let res = await htr(url , 'GET', data);
+  res = res || []
+  res.map((matchInfo) => {
+    return fmtMatchInfo(matchInfo)
+  })
   return res || []
 }
 
-const api_getMatchInfo = async function(gameid) {
-  let url = URLList.gameInfo +'\/'+gameid;
+const api_getMatchInfo = async function(gameid, data) {
+  let url = urlList.gameInfo +'\/'+gameid;
   let res = await htr(url, 'GET', data);
-//     if(!matchInfo.status&&matchInfo.players&&matchInfo.players.length>=16){
-//       matchInfo.status=1
-//     }
-//     matchInfo.progressData=calcprogress(matchInfo)
-//     matchInfo.ifIn=judgeIfIn(matchInfo)
-//     matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)
-//     matchInfo.contorlAttr=calcContorlAttr(matchInfo)
-//     matchInfo.limitForLive=calcLimitForLive(matchInfo)
-//     return transformStatusAndTimeOfMatchInfo(matchInfo);
+  res = fmtMatchInfo(res)
   return res || {}
 }
 
-const api_updateMatchInfo = async function(gameid) {
-  let url = URLList.gameInfo +'\/'+gameid;
+const api_updateMatchInfo = async function(gameid, data) {
+  let url = urlList.gameInfo +'\/'+gameid;
   let res = await htr(url, 'PUT', data);
   return res || {}
 }
 
 const api_addPlayer=async function(data){
-  let url = URLList.addPlayer
+  let url = urlList.addPlayer
   let res = await htr(url, 'POST', data)
   return res || {}
 }
 
 const api_changeRealname=async function(data){
-  let url=URLList.changeRealname;
+  let url = urlList.changeRealname;
   let res = await htr(url, 'POST',data);
 //     userInfo.real_name=realName
 //     await setStorage('userInfo',userInfo)
@@ -78,31 +115,31 @@ const api_createGame = async function(data){
 //         begintime:formData.begintime,
 //         auto_signup:formData.auto_signup
 //       };
-  let url=URLList.gameInfo;
+  let url = urlList.gameInfo;
   let res = await htr(url, 'POST',data);
   return res || {}
 }
 
 const api_postGroupList = async function(data) {
-  let url=URLList.groupList;
+  let url = urlList.groupList;
   let res = await htr(url, 'POST',data);
   return res || {}
 }
 
 const api_getGroupList = async function(data) {
-  let url=URLList.groupList;
+  let url = urlList.groupList;
   let res = await htr(url, 'GET',data);
   return res || {}
 }
 
 const api_putGroupInfo = async function(groupid, data){
-  let url=URLList.groupList+'\/'+groupid
+  let url = urlList.groupList+'\/'+groupid
   let res=await htr(url, 'PUT',data)
   return res || {}
 }
 
 const api_getPersonalInfo = async function(){
-  let url=URLList.getPersonalInfo
+  let url = urlList.getPersonalInfo
   let res= await htr(url, 'GET',data)
   return res || {}
 }

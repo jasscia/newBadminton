@@ -1,11 +1,10 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <mygame wx:if="{{userInfo.avatar_url}}"             
-            :matchInfoList.sync="matchInfoList"
+    <mygame :matchInfoList.sync="matchInfoList"
             :activeBar.sync="activeBar"
             :mode="mode"></mygame>
-    <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
+    <!-- <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion> -->
   </view>
 </template>
 <style lang="less" scoped>
@@ -16,10 +15,11 @@
 </style>
 <script>
 import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
+import {share} from '../../common/common';
+import {api_getMatchInfoList} from '../../common/api';
 import mygame from '../../components/mygame';
 import header from '../../components/header';
-import authorizion from '../../components/authorizion'
+// import authorizion from '../../components/authorizion'
 export default class Main extends wepy.page{
   config={
     navigationBarTitleText:'我的赛事'
@@ -27,24 +27,27 @@ export default class Main extends wepy.page{
     data={
       userInfo: {},
       matchInfoList: [],
-      activeBar:'我创建的比赛',
-      titleList:['我创建的比赛','我参与的比赛'],
+      activeBar:'我创建的',
+      titleList:['我创建的','我参与的'],
       mode: 'withPanle',
-      type: 'mycreate'
+      type: 'mycreate',
    }
     components = {
       mygame:mygame,
       header:header,
-      authorizion:authorizion,
+      // authorizion:authorizion,
     }
 
   onLoad(){
-    this.$emit('initPage')
+    this.$emit('getMatchInfoList')
+  }
+
+  onShow() {
+    // this.$emit('getMatchInfoList')
   }
 
   async refresh(){
-      this.matchInfoList = await downLoadMatchInfoList(this.type)
-      this.$apply()
+     this.$emit('getMatchInfoList')
   }
 
   onShareAppMessage(res){
@@ -64,7 +67,7 @@ export default class Main extends wepy.page{
       } else if(this.activeBar == this.titleList[1]) {
         this.type= 'myjoin'
       }
-      this.$emit('initPage')
+      this.$emit('getMatchInfoList')
     }
   }
   events = {
@@ -78,19 +81,9 @@ export default class Main extends wepy.page{
       })
     },
 
-    async updatematchinfoList(){
-      this.matchInfoList = await downLoadMatchInfoList(this.activeType)
-      this.$apply()
-    },
-
-    async initPage(data) {
-      let userInfo = await initUserInfo(data);
-
-      if (userInfo && userInfo.token) {
-        this.userInfo = userInfo;
-        this.matchInfoList = await downLoadMatchInfoList(this.type)
-        this.$apply();
-      }
+    async getMatchInfoList() {
+      this.matchInfoList = await api_getMatchInfoList(this.type)
+      this.$apply();
     }
   }
 }

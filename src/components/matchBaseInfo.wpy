@@ -67,5 +67,10 @@ export default class matchBaseInfo extends wepy.component {
       default:{}
     }
   }
+  watch = {
+    matchInfo(n,o) {
+      console.log(n,o)
+    }
+  }
 }
 </script>

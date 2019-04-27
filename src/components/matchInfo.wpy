@@ -1,7 +1,7 @@
 <template>
 <view class="matchInfo"> 
     <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
-      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'signupable':'unsignupable'}}">{{matchInfo.status}}</text>
+      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'signupable':'unsignupable'}}">{{statusList[matchInfo.status]}}</text>
       <text class="status {{matchInfo.ifIn?'signuped':'unsignup'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
@@ -140,7 +140,9 @@
 </style>
 <script>
 import wepy from 'wepy';
-import {updateMatchInfo,share,downLoadMatchInfo} from '../common/common'
+import {updateMatchInfo, share, downLoadMatchInfo} from '../common/common'
+import {statusList} from '../common/config'
+import {formateDate} from '../common/util'
 export default class matchInfo extends wepy.component{
   props={
     matchInfo:{
@@ -150,13 +152,20 @@ export default class matchInfo extends wepy.component{
     mode:{
       type:String,
       default:'withoutPanle'
+    },
+    // bgColor: {
+    //   type: String,
+    //   default: '#fff',
+    // }
+  }
+  onLoad() {
+    // console.log(`bg color ${this.bgColor}`)
+  }
+  methods={
+      emitGotoLive(e){
+      this.$emit('goToLive',e)
     }
   }
-methods={
-  emitGotoLive(e){
-    this.$emit('goToLive',e)
-  }
-}
 }
 </script>
 

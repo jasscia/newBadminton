@@ -58,8 +58,8 @@
 
 <script>
 import wepy from 'wepy'
-import { initUserInfo,postGroupList,updateMatchInfo,downLoadMatchInfo} from "../common/common"
-import {Badmin,badmin,requestTableList} from '../common/makeGroup'
+import {api_postGroupList, api_updateMatchInfo} from "../common/api"
+import {Badmin, badmin, requestTableList} from '../common/makeGroup'
 // import playersList from './playersList'
 
 export default class MatchDataSet extends wepy.component{
@@ -82,8 +82,8 @@ export default class MatchDataSet extends wepy.component{
     }
  watch={
    matchInfo(matchInfo){
-     this.playersList=matchInfo.players
-     this.gameid=matchInfo.id
+     this.playersList = matchInfo.players
+     this.gameid = matchInfo.id
      this.$apply()
     //  console.log('matchInfo changed in baseData',matchInfo)
    }
@@ -119,8 +119,8 @@ export default class MatchDataSet extends wepy.component{
         this.groupList=this.transOrderWithPLayerId(groupListJustWithOrder,this.playersList)
         //得到用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
         //一旦生成对阵表 说明比赛开始了，也要去改变比赛的状态
-        await postGroupList(this.gameid,this.groupList)
-        await updateMatchInfo(this.gameid,{status:2})
+        await api_postGroupList({gameid: this.gameid, list: this.groupList})
+        await api_updateMatchInfo(this.gameid,{status:2})
         //通知 父页面去获取更新
         this.$emit('updataMatchInfo')
         //这个改变 是为了页面跳转

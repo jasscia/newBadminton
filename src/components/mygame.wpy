@@ -88,11 +88,22 @@ export default class Mygame extends wepy.component {
         default:'',
       },
   }
-
+  
   components = {
     matchInfo:matchInfo,
     twoSide:twoSide,
     matchActive:matchActive,
+  }
+
+  onLoad(option){
+    console.log('my game on load') 
+  }
+
+  watch = {
+    matchInfoList(n, o){
+      console.log('oooooooo')
+      console.log(n, o)
+    }
   }
 
   methods={

@@ -1,36 +1,27 @@
-const setStorage = function(key,data) {
+import {userInfo} from './login'
+
+const setStorage = function(key, data) {
   wx.setStorage({
     key: key,
     data: data
   });
 }
 
-const login = function(){
-  return new Promise((resolve,reject)=>{
-    wx.login({
-      success: (res) => {resolve(res.code)},
-      fail: reject
-    })
-  })
-}
-
-const getUserInfo = function(){
-  return new Promise((resolve,reject)=>{
-    wx.getUserInfo({
-      success: (res) => {resolve(res.userInfo)},
-      fail: reject
-    })
-  })
-}
-
-const transformStatusAndTimeOfMatchInfo = function(matchInfo){
+const fmtMatchInfo = function(matchInfo){
   let status=['报名中','报名结束','正在比赛','比赛结束'];
-  if(status[matchInfo.status]){
-    matchInfo.status=status[matchInfo.status]
-  };
-  matchInfo.begintime=formateDate(new Date(matchInfo.begintime));
-  matchInfo.created_at=formateDate(new Date(matchInfo.created_at));
-  matchInfo.updated_at=formateDate(new Date(matchInfo.updated_at));
+
+  if(!matchInfo.status && matchInfo.players && matchInfo.players.length >= 16){                                                  
+    matchInfo.status = 1                                                                                             
+  }
+                                                                                                                       
+  matchInfo.progressData = _calcprogress(matchInfo)                                                                           
+  matchInfo.ifIn = _judgeIfIn(matchInfo)                                                                                      
+  matchInfo.groupWithInfo = _getGroupListWithPlayerInfo(matchInfo)                                                            
+  matchInfo.contorlAttr = _calcContorlAttr(matchInfo)                                                                         
+  matchInfo.limitForLive = _calcLimitForLive(matchInfo)
+
+  _transStatus(matchInfo)
+  _transTime(matchInfo)
   return matchInfo;
 }
 
@@ -47,7 +38,7 @@ const formateDate=(time)=>{
   })
 }
 
-const formatTime =(date, mark='/') => {
+const formateTime =(date, mark='/') => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -64,45 +55,122 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
-const htr = function(url , method, data){
-  wx.showLoading({})
-  return new Promise((resolve, reject = () => {
-    console.error(...arguments)
-    wx.hideLoading({})
-  }) => {
-    wx.request({
-      url,
-      method,
-      data,
-      success: (res) => {
-        let code = res.statusCode
-        let data = res.data
-        if (code >= 200 && code < 300 || code == 304) {
-          if (data && data.code == 1) {
-            wx.hideLoading({})
-            resolve(data.data)
-          } else {
-            reject()
-          }
-        } else if (code == 401) {
-          login().then(() => {htr(url, method, data)}, reject)
-          reject()
-        } else {
-          reject()
-        }
-      },
-      fail: reject
-    })
-  })
-}
 
 export {
-  htr,
   formateDate,
   formateTime,
-  transformStatusAndTimeOfMatchInfo,
-  getUserInfo,
-  login,
+  fmtMatchInfo,
   formatNumber,
   setStorage
 }
+
+const _calcprogress=function(matchInfo){                                                                                 
+  let doneNum=0                                                                                                         
+  let totalNum=0                                                                                                        
+  let progress=0                                                                                                        
+  let groupList=matchInfo.group                                                                                         
+  if(!groupList || !groupList.length){                                                                                  
+    return{doneNum,totalNum,progress}                                                                                   
+  }                                                                                                                     
+  let doneList=groupList.filter(groupInfo => {                                                                          
+    return groupInfo.status                                                                                             
+  });                                                                                                                   
+  doneNum=doneList.length                                                                                               
+  totalNum=groupList.length                                                                                             
+  if(totalNum){                                                                                                         
+    progress=Math.round(doneNum/totalNum*100,2)                                                                         
+  }                                                                                                                     
+  return {doneNum,totalNum,progress}                                                                                    
+}   
+
+const _judgeIfIn=function(matchInfo){                                                                                    
+  let players=matchInfo.players                                                                                       
+  let uid=wx.getStorageSync('userInfo').uid                                                                       
+  let ifIn=false;                                                                                                     
+  if(Array.isArray(players)){                                                                                         
+    ifIn=players.some((player)=>{return player.user.uid===uid})                                                       
+  }                                                                                                                   
+  return ifIn                                                                                                         
+}
+
+const _getGroupListWithPlayerInfo=function(matchInfo){                                                                   
+  let groupListOnlyPlayerUid=[]                                                                                                                                                                                     
+  let groupListWithPlayerInfo=[]                                                                                        
+  let playersList=[]                                                                                                    
+   if(matchInfo.players){                                                                                               
+     playersList=matchInfo.players                                                                                      
+   }else{return []}                                                                                                     
+   if(matchInfo.group){                                                                                                 
+     groupListOnlyPlayerUid=matchInfo.group                                                                             
+   }else{return []}                                                                                                     
+                                                                                                                        
+   let uKey=['id_a1','id_a2','id_b1','id_b2']                                                                           
+   groupListOnlyPlayerUid.forEach((groupInfo,index)=>{                                                                  
+    groupListWithPlayerInfo[index]=groupInfo                                                                            
+     for(let key of uKey){                                                                                              
+       let uid=groupInfo[key]                                                                                           
+       groupListWithPlayerInfo[index][key] = _getUserInfoByUid(uid,playersList)                                            
+     }                                                                                                                  
+   })                                                                                                                   
+   return groupListWithPlayerInfo                                                                                       
+}
+
+const _calcContorlAttr=function(matchInfo){                                                                                   
+  let contorlAttr={}                                                                                                         
+  if(!matchInfo){return {}}                                                                                                  
+  let userInfo=wx.getStorageSync('userInfo')                                                                                 
+  contorlAttr.ifOwner= matchInfo.owner.uid===userInfo.uid                                                               
+  contorlAttr.ifDone=matchInfo.status===3                                                                               
+  contorlAttr.ifGoingon=(matchInfo.status===2)                                                                          
+  contorlAttr.ifStarted=(matchInfo.status>1)                                                                            
+  contorlAttr.ifStopSingup=(matchInfo.status>=1)                                                                        
+  contorlAttr.ifOkToStart=(matchInfo.players.length>=4 && contorlAttr.ifOwner && matchInfo.status<2)                    
+  contorlAttr.ifOktoSignup=(!matchInfo.ifIn&&!contorlAttr.ifStopSingup)                                                 
+  contorlAttr.ifOktoShare=contorlAttr.ifStarted                                                                         
+  contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup                                                                   
+  return contorlAttr                                                                                                    
+}                                                                                                                    
+//判断权限                                                                                                              
+const _calcLimitForLive=function(matchInfo){                                                                             
+let my_uid=wx.getStorageSync('userInfo').uid                                                                            
+if(!my_uid){//                                                                                                          
+  return 'readOnly'                                                                                                     
+}                                                                                                                       
+if(matchInfo.owner.uid!==my_uid){                                                                                       
+  return'readOnly'                                                                                                      
+}                                                                                                                       
+if(matchInfo.status===3){                                                                                               
+  return'readOnly'                                                                                                      
+}                                                                                                                       
+if(matchInfo.status===2){                                                                                               
+  return'writableOnlyScore'                                                                                             
+}                                                                                                                       
+  return'writableAll'                                                                                                   
+}
+
+//修改状态
+
+const _statusList = ['报名中','报名结束','正在比赛','比赛结束']
+
+const _transStatus = function(matchInfo) {
+  console.log(matchInfo.status)
+  matchInfo.status = _statusList[matchInfo.status || 0]
+  console.log(matchInfo.status)
+}
+
+const _transTime = function(matchInfo) {
+  matchInfo.begintime=formateDate(new Date(matchInfo.begintime));
+  matchInfo.created_at=formateDate(new Date(matchInfo.created_at));
+  matchInfo.updated_at=formateDate(new Date(matchInfo.updated_at));
+}
+
+const _getUserInfoByUid = function(uid, playersList){                                                                                                                                                                   
+  let results = playersList.filter(playerInfo=>{                                                                               
+    return playerInfo.userid===uid                                                                                      
+  })                                                                                                                         
+  if(results.length){                                                                                                        
+    let userInfo={...results[0].user}                                                                                        
+    userInfo.uid=results[0].userid;                                                                                          
+    return userInfo                                                                                                          
+  }                                                                                                                          
+} 

@@ -43,6 +43,7 @@
 
 <script>
   import wepy from 'wepy';
+  // import {bgColorList} from '../../common/config';
   // import matchCard from '../../components/matchCard';
   // import twoSide from '../../components/twoSide';
   import matchInfo from '../../components/matchInfo';
@@ -57,6 +58,10 @@
     }
   }
 
+  data={
+    // bgColorList: bgColorList,
+  }
+
   computed={
     matchCount(){
       if(this.matchInfo && this.matchInfoList.length!==undefined){
@@ -69,7 +74,9 @@
     matchInfo:matchInfo,
     // matchActive:matchActive
   }
-  async onLoad(){  }
+  async onLoad(){ 
+    // console.log('-----', this.bgColorList)
+   }
   onShow(){}
 
   methods={

@@ -1,5 +1,6 @@
 import {formateDate, transformStatusAndTimeOfMatchInfo,
-        getUserInfoWithToken, getUserInfoWithoutToken, login, formatNumber, setStorage} from './util';
+        getUserInfoWithToken, getUserInfoWithoutToken, login, getUserInfo, formatNumber, setStorage} from './util';
+import {api_getToken} from './api'
 
 const judgeIfIn = function(matchInfo){
   let players = matchInfo.players
@@ -13,6 +14,7 @@ const judgeIfIn = function(matchInfo){
 
 const initUserInfo = async function(e) {
   let userInfo = wx.getStorageSync('userInfo')//先看是否已经缓存了 用户信息
+   
   if(userInfo && userInfo.token){//如果缓存了userinfo 和 token 直接返回
     return userInfo
   }
@@ -35,7 +37,8 @@ const initUserInfo = async function(e) {
     }
 
     //这里是登录的时候拿到的用户信息，用code nickname avatarurl 去换token
-    token = await getToken(code, userInfo.nickName, userInfo.avatarUrl)
+    token = await api_getToken(code, userInfo.nickName, userInfo.avatarUrl)
+
     if(!token){//标示拿到了带有openid的 用户信息
       setStorage('userInfo',{})
       return {}//失败
@@ -159,5 +162,5 @@ export {
   judgeIfIn,
   initUserInfo,
   share,
-  calcprogress
+  calcprogress,
 }

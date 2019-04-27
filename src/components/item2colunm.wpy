@@ -1,79 +1,75 @@
 <template>
-    <view class="item">
-          <label >{{item.title}}</label>
-          <picker wx:if="{{(item.name==='date')||(item.name==='time')}}" 
-                  mode="{{item.name}}" 
-                  start="{{dateRange['start'][item.name]}}" 
-                  end="{{dateRange['end'][item.name]}}"
-                  value="{{item.value}}" 
-                  @change="inputValue" 
-                  name="{{item.name}}">
-                  <view class="picker">{{item.value}}</view>
-          </picker>
-          <switch wx:if="{{item.name==='auto_signup'}}" 
-                  checked="{{item.value}}"
-                  @change="inputValue" 
-                  name="{{item.name}}"></switch>
-          <input  wx:if="{{(item.name!=='date')&&(item.name!=='time') &&(item.name!=='auto_signup')}}" 
-                  type="{{item.type}}" 
-                  value="{{item.value}}" 
-                  @change="inputValue" 
-                  name="{{item.name}}" />          
-    </view>
+  <view class="item">
+    <label>{{item.title}}</label>
+    <picker wx:if="{{(item.name==='date')||(item.name==='time')}}" mode="{{item.name}}" start="{{dateRange['start'][item.name]}}" end="{{dateRange['end'][item.name]}}" value="{{item.value}}" @change="inputValue" name="{{item.name}}">
+      <view class="picker">{{item.value}}</view>
+    </picker>
+    <switch wx:if="{{item.name==='auto_signup'}}" checked="{{item.value}}" @change="inputValue" name="{{item.name}}"></switch>
+    <input wx:if="{{(item.name!=='date')&&(item.name!=='time') &&(item.name!=='auto_signup')}}" type="{{item.type}}" value="{{item.value}}" @change="inputValue" name="{{item.name}}" />
+  </view>
 </template>
 <style lang="less" scoped>
-@import '../common/common.less';
-.item{
-    font-size:30rpx;
+  @import '../common/common.less';
+  .item {
+    font-size: 30rpx;
     background: @bgc-card;
-    margin:0 0 4px 0;
-    padding-left:30rpx;
+    margin: 0 0 4px 0;
+    padding-left: 30rpx;
     border-bottom: 2px solid @bgc;
-    label{
+    label {
       width: 150rpx;
       color: @font-side;
       font-weight: lighter;
     }
-    label,input,picker{
+    label,
+    input,
+    picker {
       display: inline-block;
       height: 60px;
       line-height: 60px;
       vertical-align: middle;
     }
-    input,picker,.picker{
-      width:500rpx;
+    input,
+    picker,
+    .picker {
+      width: 500rpx;
     }
   }
 </style>
 <script>
-import wepy from 'wepy';
-export default class Item2colunm extends wepy.component{
-  props={
-    item:{
-      type: Object, 
-      default: {
-        title:'',
-        name:'',
-        value:'',
-        type:''
-      }
-    },
-    dateRange:{
-      type:Object,
-      default:{
-          end:{time:"23:00",date:''},
-          start:{time:"04:00",date:''}
+  import wepy from 'wepy';
+  export default class Item2colunm extends wepy.component {
+    props = {
+      item: {
+        type: Object,
+        default: {
+          title: '',
+          name: '',
+          value: '',
+          type: ''
         }
-    }
-  };
-  
-  methods={
-     inputValue: function(e) {
-      this.item.value= e.detail.value;
-      // console.log(this.item.title,this.item.value)
+      },
+      dateRange: {
+        type: Object,
+        default: {
+          end: {
+            time: "23:00",
+            date: ''
+          },
+          start: {
+            time: "04:00",
+            date: ''
+          }
+        }
+      }
+    };
+    methods = {
+      inputValue: function(e) {
+        this.item.value = e.detail.value;
+        // console.log(this.item.title,this.item.value)
+      }
     }
   }
-}
 </script>
 
 

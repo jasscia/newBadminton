@@ -11,7 +11,8 @@ const urlList={
   },
   groupList: host + 'api/badminton/group',
   addPlayer: host + "api/badminton/game/addplayer",
-  deletePlayer: host + "api/badminton/game/player",
+  cancelPlayer: host + "api/badminton/game/cancel",
+  deletePlayer: host + "api/badminton/player",
   getToken: host + 'api/badminton/qlogin',
   changeRealname: host + 'api/badminton/userrename',
   getPersonalInfo: host + 'api/badminton/personalinfo'
@@ -38,7 +39,7 @@ const htr = function(url , method, data){
             resolve(data)
           } else if (data && data.code == 1) {
             wx.hideLoading({})
-            resolve(data.data)
+            resolve(data.data || data.message)
           } else if (data && data.code == 401) {
             wx.navigateTo({
               url: '/pages/auth/auth',
@@ -97,6 +98,18 @@ const api_addPlayer=async function(data){
   return res || {}
 }
 
+const api_cancelPlayer=async function(data){
+  let url = urlList.cancelPlayer
+  let res = await htr(url, 'DELETE', data)
+  return res || {}
+}
+
+const api_deletePlayer=async function(data){
+  let url = urlList.deletePlayer
+  let res = await htr(url, 'DELETE', data)
+  return res || {}
+}
+
 const api_changeRealname=async function(data){
   let url = urlList.changeRealname;
   let res = await htr(url, 'POST',data);
@@ -149,6 +162,8 @@ export {
   api_getMatchInfo,
   api_updateMatchInfo,
   api_addPlayer,
+  api_cancelPlayer,
+  api_deletePlayer,
   api_changeRealname,
   api_createGame,
   api_postGroupList,

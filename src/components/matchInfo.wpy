@@ -1,13 +1,13 @@
 <template>
-<view class="matchInfo"> 
+  <view class="matchInfo">
     <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
       <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'signupable':'unsignupable'}}">{{statusList[matchInfo.status]}}</text>
       <text class="status {{matchInfo.ifIn?'signuped':'unsignup'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
     <view class="statement-group" wx:if="{{mode==='withPanle'}}">
-      <text  class="statement wait"  wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
-      <text  class="statement {{matchInfo.contorlAttr.ifDone?'done':''}} {{matchInfo.contorlAttr.ifGoingon?'goingon':''}}"  wx:else>{{matchInfo.status}}</text>
+      <text class="statement wait" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
+      <text class="statement {{matchInfo.contorlAttr.ifDone?'done':''}} {{matchInfo.contorlAttr.ifGoingon?'goingon':''}}" wx:else>{{matchInfo.status}}</text>
     </view>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -19,7 +19,7 @@
       <view class="avatarList">
         <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
           <view class="avatar">
-            <image src="{{player.user.avatar_url}}"/>
+            <image src="{{player.user.avatar_url}}" />
           </view>
         </repeat>
       </view>
@@ -28,110 +28,112 @@
 </template>
 
 <style lang="less" scoped>
-@import '../common/common.less';
-  .matchInfo{
+  @import '../common/common.less';
+  .matchInfo {
     border-radius: 10px;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
   }
-  .row{
-    margin:20rpx;
+  .row {
+    margin: 20rpx;
   }
-  .row1{
+  .row1 {
     display: flex;
-    justify-content:space-between;
-    font-size:28rpx;
-    color:#333;
-    padding:0 10rpx;
-    .status{
+    justify-content: space-between;
+    font-size: 28rpx;
+    color: #333;
+    padding: 0 10rpx;
+    .status {
       border-radius: 6rpx;
     }
-    .signupable{
+    .signupable {
       background: @btn;
     }
-    .unsignupable{
+    .unsignupable {
       background: tomato;
     }
-    .signuped{
-      color:@btn-em;
+    .signuped {
+      color: @btn-em;
     }
-    .unsignup{}
+    .unsignup {}
   }
-  .statement-group{
+  .statement-group {
     font-size: 30rpx;
-    color:@font;
-   text-align: right;
-   padding:0;
+    color: @font;
+    text-align: right;
+    padding: 0;
   }
-  .statement{
-    background:cadetblue;
+  .statement {
+    background: cadetblue;
   }
-  .statement.wait{
+  .statement.wait {
     background: lightgoldenrodyellow;
   }
-  .statement.done{
+  .statement.done {
     background: tomato;
   }
-  .statement.goingon{
+  .statement.goingon {
     background: orange;
-  }
-  // }
-  .row2{
+  } // }
+  .row2 {
     font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    .owner{
+    .owner {
       font-size: 12px;
       display: inline;
       font-weight: lighter;
     }
   }
-  .row4{
+  .row4 {
     overflow: hidden;
     white-space: nowrap;
   }
-  .row5{
-    height:30px;
+  .row5 {
+    height: 30px;
     display: flex;
     justify-content: space-between;
-    .avatarList{
+    .avatarList {
       // margin-right: 10rpx;
-      flex:1;
+      flex: 1;
       display: flex;
       flex-wrap: nowrap;
       overflow: hidden;
       justify-content: flex-end;
-      .avatar{
-        width:42rpx;
-        box-sizing: border-box; 
+      .avatar {
+        width: 42rpx;
+        box-sizing: border-box;
         border-radius: 50%;
         text-align: right;
       }
-      image{
-        height:28px;
-        width:28px;
+      image {
+        height: 28px;
+        width: 28px;
         border-radius: 50%;
         background-size: cover;
         float: right;
-        border:4rpx solid @bgc-card;
+        border: 4rpx solid @bgc-card;
       }
     }
   }
-  .row2::before{
-    content:"\e6fe";
+  .row2::before {
+    content: "\e6fe";
   }
-  .row3::before{
-    content:"\e735";
+  .row3::before {
+    content: "\e735";
   }
- .row4::before{
-    content:"\e6ec";
+  .row4::before {
+    content: "\e6ec";
   }
-  .row5::before{
-    content:"\e700";
+  .row5::before {
+    content: "\e700";
   }
-  .row2::before,.row3::before,.row4::before,.row5::before{    
-    width:20px;
+  .row2::before,
+  .row3::before,
+  .row4::before,
+  .row5::before {
+    width: 20px;
     display: inline-block;
     text-align: left;
     font-family: "iconfont";
@@ -139,33 +141,41 @@
   }
 </style>
 <script>
-import wepy from 'wepy';
-import {updateMatchInfo, share, downLoadMatchInfo} from '../common/common'
-import {statusList} from '../common/config'
-import {formateDate} from '../common/util'
-export default class matchInfo extends wepy.component{
-  props={
-    matchInfo:{
-      type:Object,
-      default:{},
-     },
-    mode:{
-      type:String,
-      default:'withoutPanle'
-    },
-    // bgColor: {
-    //   type: String,
-    //   default: '#fff',
-    // }
-  }
-  onLoad() {
-    // console.log(`bg color ${this.bgColor}`)
-  }
-  methods={
-      emitGotoLive(e){
-      this.$emit('goToLive',e)
+  import wepy from 'wepy';
+  import {
+    updateMatchInfo,
+    share,
+    downLoadMatchInfo
+  } from '../common/common'
+  import {
+    statusList
+  } from '../common/config'
+  import {
+    formateDate
+  } from '../common/util'
+  export default class matchInfo extends wepy.component {
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {},
+      },
+      mode: {
+        type: String,
+        default: 'withoutPanle'
+      },
+      // bgColor: {
+      //   type: String,
+      //   default: '#fff',
+      // }
+    }
+    onLoad() {
+      // console.log(`bg color ${this.bgColor}`)
+    }
+    methods = {
+      emitGotoLive(e) {
+        this.$emit('goToLive', e)
+      }
     }
   }
-}
 </script>
 

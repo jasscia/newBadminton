@@ -1,68 +1,71 @@
 <template>
-<view class="warp" animation="{{animationData[index]}}">
-  <view class="frontSide side" hidden="{{ifShowbackSide[index]}}">
-    <slot name="frontSide" ></slot>
-  </view>
-  <view  class="backSide side" hidden="{{!ifShowbackSide[index]}}">
-    <slot name="backSide"></slot>
+  <view class="warp" animation="{{animationData[index]}}">
+    <view class="frontSide side" hidden="{{ifShowbackSide[index]}}">
+      <slot name="frontSide"></slot>
     </view>
-</view>
+    <view class="backSide side" hidden="{{!ifShowbackSide[index]}}">
+      <slot name="backSide"></slot>
+    </view>
+  </view>
 </template>
 
 <style lang="less" scoped>
-@import '../common/common.less';
-.warp{
+  @import '../common/common.less';
+  .warp {
     position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-  .side{
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .side {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    .backSide {
+      transform-origin: center center;
+      transform: rotateX(180deg);
+    }
   }
-  .backSide{
-    transform-origin: center center;
-    transform: rotateX(180deg);
-  }
-}
 </style>
 <script>
-import wepy from 'wepy';
-export default class twoSide extends wepy.component{
-    props={
-      index:{
-        type:Number,
-        default:0
+  import wepy from 'wepy';
+  export default class twoSide extends wepy.component {
+    props = {
+      index: {
+        type: Number,
+        default: 0
       }
     }
-    data={animationData:[],
-        ifShowbackSide:[],
-        animation:'',}
-  onLoad(){
-    this.animation=wx.createAnimation({
-                    duration: 800,
-                    timingFunction: 'ease-out',
-                    transformOrigin: '50% 50% 0'
-                });
-  }
-  events={
-    turnOverCard(index){
-      if(index===undefined){return}
-     
-      if(this.ifShowbackSide[index]===undefined){
-        this.ifShowbackSide[index]=true;
-      }else{
-        this.ifShowbackSide[index]=!this.ifShowbackSide[index];
-      }
-      let rotateDeg=(this.ifShowbackSide[index]?180:0);
+    data = {
+      animationData: [],
+      ifShowbackSide: [],
+      animation: '',
+    }
+    onLoad() {
+      this.animation = wx.createAnimation({
+        duration: 800,
+        timingFunction: 'ease-out',
+        transformOrigin: '50% 50% 0'
+      });
+    }
+    events = {
+      turnOverCard(index) {
+        if (index === undefined) {
+          return
+        }
+        if (this.ifShowbackSide[index] === undefined) {
+          this.ifShowbackSide[index] = true;
+        } else {
+          this.ifShowbackSide[index] = !this.ifShowbackSide[index];
+        }
+        let rotateDeg = (this.ifShowbackSide[index] ? 180 : 0);
         this.animation.rotateX(rotateDeg).step();
-        this.animationData[index]=this.animation.export();
+        this.animationData[index] = this.animation.export();
       }
+    }
   }
-}
 </script>
 

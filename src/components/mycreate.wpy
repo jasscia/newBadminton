@@ -1,52 +1,49 @@
 <template>
   <view class="warp create">
-    <view wx:if="{{!userInfo.avatar_url}}">
-      <authorizion />
-    </view>
     <view class="add" @tap.stop="createNewAgainst" wx:if="{{userInfo.avatar_url}}">
       <button>创建赛事</button>
-    </view>   
-    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo"   wx:if="{{userInfo.avatar_url}}">
-      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
+    </view>
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo" wx:if="{{userInfo.avatar_url}}">
+      <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSideInMycreate :index.sync="index">
-            <block slot='frontSide'>
-              <matchInfoInMycreate :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfoInMycreate>
-            </block>
-            <block slot='backSide'>
-              <matchActiveInMycreate :matchInfo.sync="matchInfo"></matchActiveInMycreate>
-            </block>
+          <block slot='frontSide'>
+            <matchInfoInMycreate :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfoInMycreate>
+          </block>
+          <block slot='backSide'>
+            <matchActiveInMycreate :matchInfo.sync="matchInfo"></matchActiveInMycreate>
+          </block>
         </twoSideInMycreate>
       </view>
     </repeat>
-  </view> 
+  </view>
 </template>
 <style lang="less" scoped>
   @import '../common/common.less';
-  .warp{
-    .add{
-      margin-top:40rpx;
+  .warp {
+    .add {
+      margin-top: 40rpx;
       border-radius: 10px;
       line-height: 100rpx;
       text-align: center;
       vertical-align: middle;
-      button{
+      button {
         display: inline-block;
-        background:@bgc-card;
+        background: @bgc-card;
         vertical-align: middle;
         height: 100px;
-        width:90%;
-        padding:0;
+        width: 90%;
+        padding: 0;
         line-height: 100px;
         font-size: 60rpx;
         letter-spacing: 20rpx;
-        color:@bgc;
+        color: @bgc;
       }
     }
-    .matchCard{
-      margin:20px;
-      padding-bottom:10px;
+    .matchCard {
+      margin: 20px;
+      padding-bottom: 10px;
       font-size: 12px;
-      color:#666;
+      color: #666;
       background: @bgc-card;
       border-radius: 10px;
       position: relative;
@@ -55,59 +52,62 @@
   }
 </style>
 <script>
-import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,share} from '../common/common';
-import matchInfo from '../components/matchInfo';
-import twoSide from '../components/twoSide';
-import matchActive from '../components/matchActive';
-import authorizion from '../components/authorizion'
-export default class mycreate extends wepy.page{
-    data={
-      userInfo:{},
-      matchInfoList:[],
-      mode:'withPanle'
-   }
-    components = {
-      matchInfoInMycreate:matchInfo,
-      twoSideInMycreate:twoSide,
-      matchActiveInMycreate:matchActive,
-      authorizion:authorizion
+  import wepy from "wepy";
+  import {
+    api_getMatchInfoList
+  } from '../common/api';
+  import {
+    share
+  } from '../common/util';
+  import matchInfo from '../components/matchInfo';
+  import twoSide from '../components/twoSide';
+  import matchActive from '../components/matchActive';
+  export default class mycreate extends wepy.page {
+    data = {
+      userInfo: {},
+      matchInfoList: [],
+      mode: 'withPanle'
     }
-  async onLoad(){
-    this.$emit('initPage');
-  }
-  async onShareAppMessage(res){
-    await initUserInfo();
-    return share('/pages/main/main.wpy')
-  }
-  methods={
-      createNewAgainst(){
+    components = {
+      matchInfoInMycreate: matchInfo,
+      twoSideInMycreate: twoSide,
+      matchActiveInMycreate: matchActive,
+    }
+    async onLoad() {
+      this.$emit('initPage');
+    }
+    async onShareAppMessage(res) {
+      await initUserInfo();
+      return share('/pages/main/main.wpy')
+    }
+    methods = {
+      createNewAgainst() {
         wx.navigateTo({
-          url:"/pages/main/createNewAgainst"
+          url: "/pages/main/createNewAgainst"
         })
       },
-      turnOverCard(e){
-        let index=e.currentTarget.dataset.index
-        this.$broadcast('turnOverCard',index)
+      turnOverCard(e) {
+        let index = e.currentTarget.dataset.index
+        this.$broadcast('turnOverCard', index)
       }
-  }
-  events={
-    async updatematchinfoList(){
-      this.matchInfoList = await downLoadMatchInfoList('mycreate')
-      // console.log('mycreate',this.matchInfoList)
-      this.$apply()
-    },
-    async initPage(data) {
-      console.log('emit');
-      this.userInfo = await initUserInfo(data);
-      console.log('userInfo', this.userInfo);
-      if (this.userInfo && this.userInfo.token) {
-        this.matchInfoList = await downLoadMatchInfoList('mycreate')
+    }
+    events = {
+      async updatematchinfoList() {
+        this.matchInfoList = await api_getMatchInfoList('mycreate')
+        // console.log('mycreate',this.matchInfoList)
+        this.$apply()
+      },
+      async initPage(data) {
+        console.log('emit');
+        this.userInfo = await initUserInfo(data);
+        console.log('userInfo', this.userInfo);
+        if (this.userInfo && this.userInfo.token) {
+          this.matchInfoList = await api_getMatchInfoList('mycreate')
+        }
+        this.$apply();
       }
-      this.$apply();
     }
   }
-}
 </script>
 
 

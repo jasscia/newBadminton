@@ -9,10 +9,6 @@ const setStorage = function(key, data) {
 
 const fmtMatchInfo = function(matchInfo){
   let status=['报名中','报名结束','正在比赛','比赛结束'];
-
-  if(!matchInfo.status && matchInfo.players && matchInfo.players.length >= 16){                                                  
-    matchInfo.status = 1                                                                                             
-  }
                                                                                                                        
   matchInfo.progressData = _calcprogress(matchInfo)                                                                           
   matchInfo.ifIn = _judgeIfIn(matchInfo)                                                                                      
@@ -120,15 +116,16 @@ const _calcContorlAttr=function(matchInfo){
   if(!matchInfo){return {}}                                                                                                  
   let userInfo=wx.getStorageSync('userInfo')                                                                                 
   contorlAttr.ifOwner= matchInfo.owner.uid===userInfo.uid                                                               
-  contorlAttr.ifDone=matchInfo.status===3                                                                               
-  contorlAttr.ifGoingon=(matchInfo.status===2)                                                                          
-  contorlAttr.ifStarted=(matchInfo.status>1)                                                                            
-  contorlAttr.ifStopSingup=(matchInfo.status>=1)                                                                        
-  contorlAttr.ifOkToStart=(matchInfo.players.length>=4 && contorlAttr.ifOwner && matchInfo.status<2)                    
-  contorlAttr.ifOktoSignup=(!matchInfo.ifIn&&!contorlAttr.ifStopSingup)                                                 
-  contorlAttr.ifOktoShare=contorlAttr.ifStarted                                                                         
+  contorlAttr.ifDone=matchInfo.status === 3                                                                               
+  contorlAttr.ifGoingon=(matchInfo.status === 2)                                                                          
+  contorlAttr.ifStarted=(matchInfo.status > 1)                                                                            
+  contorlAttr.ifStopSingup=(matchInfo.status >=1 || matchInfo.players.length >= 16 )                                                                        
+  contorlAttr.ifOkToStart=(matchInfo.players.length >=4 && contorlAttr.ifOwner && matchInfo.status < 2)                    
+  contorlAttr.ifOktoSignup=(!matchInfo.ifIn &&! contorlAttr.ifStopSingup)
+  contorlAttr.ifOktoSignout=(matchInfo.ifIn &&! contorlAttr.ifStopSingup)                                               
+  contorlAttr.ifOktoShare=contorlAttr.ifStarted
   contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup                                                                   
-  return contorlAttr                                                                                                    
+  return contorlAttr
 }                                                                                                                    
 //判断权限                                                                                                              
 const _calcLimitForLive=function(matchInfo){                                                                             
@@ -153,9 +150,7 @@ if(matchInfo.status===2){
 const _statusList = ['报名中','报名结束','正在比赛','比赛结束']
 
 const _transStatus = function(matchInfo) {
-  console.log(matchInfo.status)
   matchInfo.status = _statusList[matchInfo.status || 0]
-  console.log(matchInfo.status)
 }
 
 const _transTime = function(matchInfo) {

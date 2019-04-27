@@ -2,16 +2,13 @@
 <template>
   <view class="container">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
-    <block   wx:if="{{activeBar===titleList[0]}}">
+    <block wx:if="{{activeBar===titleList[0]}}">
       <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
-      <playersListInlive :matchInfo.sync="matchInfo"></playersListInlive>
-      <matchDataSetInlive  :matchInfo.sync="matchInfo"></matchDataSetInlive>
+      <playersListInlive :matchInfo.sync="matchInfo" from="live"></playersListInlive>
+      <matchDataSetInlive :matchInfo.sync="matchInfo"></matchDataSetInlive>
     </block>
-    <againstTableInlive wx:if="{{activeBar===titleList[1]}}" 
-                        :matchInfo.sync="matchInfo" 
-                        :activedGroupIndex.sync="activedGroupIndex"></againstTableInlive>
-    <matchResultInlive  wx:if="{{activeBar===titleList[2]}}" 
-                        :matchInfo.sync="matchInfo" ></matchResultInlive>
+    <againstTableInlive wx:if="{{activeBar===titleList[1]}}" :matchInfo.sync="matchInfo" :activedGroupIndex.sync="activedGroupIndex"></againstTableInlive>
+    <matchResultInlive wx:if="{{activeBar===titleList[2]}}" :matchInfo.sync="matchInfo"></matchResultInlive>
   </view>
 </template>
 
@@ -21,106 +18,111 @@
 
 
 <script>
-import wepy from 'wepy'
-import {api_putGroupInfo, api_getMatchInfo, api_updateMatchInfo} from "../../common/api";
-import {share} from "../../common/util";
-import {calcprogress} from "../../common/common";
-import header from '../../components/header'
-import matchDataSet from '../../components/matchDataSet'
-import playersList from '../../components/playersList'
-import matchBaseInfo from '../../components/matchBaseInfo'
-import againstTable from '../../components/againstTable'
-import matchResult from '../../components/matchResult'
-export default class Live extends wepy.page {
-  config = {
-    navigationBarTitleText:'比赛实况'
-  }
-  components={
-    LiveHeader:header,
-    matchDataSetInlive:matchDataSet,
-    playersListInlive:playersList,
-    matchBaseInfoInlive:matchBaseInfo,
-    againstTableInlive:againstTable,
-    matchResultInlive:matchResult
-  }
-  data={
-    matchInfo:{},
-    gameid:null,
-    limit:null,
-    titleList:['设置','对阵表','战况'],
-    activeBar:'设置',
-    activedGroupIndex: null,
-  }
-
-  watch={
-    activeBar(newBar, oldBar) {
-      if(oldBar === "对阵表" && this.activedGroupIndex !== null) {
-        this.$emit('submitScore', this.activedGroupIndex)
-      }
-    },
-    activedGroupIndex(new_index, old_index) {
-      if(old_index !== null) {
-        this.$emit('submitScore', old_index)
-      } 
+  import wepy from 'wepy'
+  import {
+    api_putGroupInfo,
+    api_getMatchInfo,
+    api_updateMatchInfo
+  } from "../../common/api";
+  import {
+    share
+  } from "../../common/util";
+  import {
+    calcprogress
+  } from "../../common/common";
+  import header from '../../components/header'
+  import matchDataSet from '../../components/matchDataSet'
+  import playersList from '../../components/playersList'
+  import matchBaseInfo from '../../components/matchBaseInfo'
+  import againstTable from '../../components/againstTable'
+  import matchResult from '../../components/matchResult'
+  export default class Live extends wepy.page {
+    config = {
+      navigationBarTitleText: '比赛实况'
     }
-  }
-  onShareAppMessage(){
-   return  share('/pages/live/lve?gameid='+this.gameid)
- }
-  async onLoad(options){
-    this.gameid= parseInt(options.gameid)
-    this.matchInfo=await api_getMatchInfo(this.gameid)
-    this.$apply()
-  }
-
-  onUnload(){
-    if(this.activedGroupIndex !== null){
-      this.$emit('submitScore', this.activedGroupIndex)
+    components = {
+      LiveHeader: header,
+      matchDataSetInlive: matchDataSet,
+      playersListInlive: playersList,
+      matchBaseInfoInlive: matchBaseInfo,
+      againstTableInlive: againstTable,
+      matchResultInlive: matchResult
     }
-  }
-
-  events={
-    updataScoreOfMatch(matchInfo){
-      this.matchInfo.progressData=calcprogress(matchInfo)
-      if(this.matchInfo.progressData.progress===100){
-        this.matchInfo.status=3
-        api_updateMatchInfo(this.gameid,{status:3})
-      }else{
-        this.matchInfo.status=2
-        api_updateMatchInfo(this.gameid,{status:2})
+    data = {
+      matchInfo: {},
+      gameid: null,
+      limit: null,
+      titleList: ['设置', '对阵表', '战况'],
+      activeBar: '设置',
+      activedGroupIndex: null,
+    }
+    watch = {
+      activeBar(newBar, oldBar) {
+        if (oldBar === "对阵表" && this.activedGroupIndex !== null) {
+          this.$emit('submitScore', this.activedGroupIndex)
+        }
+      },
+      activedGroupIndex(new_index, old_index) {
+        if (old_index !== null) {
+          this.$emit('submitScore', old_index)
+        }
       }
-      this.matchInfo.groupWithInfo=matchInfo.groupWithInfo
-      this.$apply()
-    },
-
-    changeActiveBar(from){
-      if(from==='from baseData'){
-        this.activeBar=this.titleList[1]
-      }
-    },
-
-    async updataMatchInfo(){//当重新生成对阵表的时候 需要更新matchinfo中的信息
+    }
+    onShareAppMessage() {
+      return share('/pages/live/lve?gameid=' + this.gameid)
+    }
+    async onLoad(options) {
+      this.gameid = parseInt(options.gameid)
       this.matchInfo = await api_getMatchInfo(this.gameid)
       this.$apply()
-    },
-
-    submitScore(index) {
-      let groupInfo=this.matchInfo.group[index]
-      let gameid=this.matchInfo.id
-      let groupid=groupInfo.id
-      let score_a=groupInfo.score_a
-      let score_b=groupInfo.score_b
-      let status=groupInfo.status
-
-      api_putGroupInfo(groupid,{
-        gameid:gameid,
-        score_a:score_a,
-        score_b:score_b,
-        status:status,
-      })
-      this.$emit('updataScoreOfMatch',this.matchInfo)
+    }
+    onUnload() {
+      if (this.activedGroupIndex !== null) {
+        this.$emit('submitScore', this.activedGroupIndex)
+      }
+    }
+    events = {
+      updataScoreOfMatch(matchInfo) {
+        this.matchInfo.progressData = calcprogress(matchInfo)
+        if (this.matchInfo.progressData.progress === 100) {
+          this.matchInfo.status = 3
+          api_updateMatchInfo(this.gameid, {
+            status: 3
+          })
+        } else {
+          this.matchInfo.status = 2
+          api_updateMatchInfo(this.gameid, {
+            status: 2
+          })
+        }
+        this.matchInfo.groupWithInfo = matchInfo.groupWithInfo
+        this.$apply()
+      },
+      changeActiveBar(from) {
+        if (from === 'from baseData') {
+          this.activeBar = this.titleList[1]
+        }
+      },
+      async updataMatchInfo() { //当重新生成对阵表的时候 需要更新matchinfo中的信息
+        this.matchInfo = await api_getMatchInfo(this.gameid)
+        this.$apply()
+      },
+      submitScore(index) {
+        let groupInfo = this.matchInfo.group[index]
+        let gameid = this.matchInfo.id
+        let groupid = groupInfo.id
+        let score_a = groupInfo.score_a
+        let score_b = groupInfo.score_b
+        let status = groupInfo.status
+        api_putGroupInfo(groupid, {
+          gameid: gameid,
+          score_a: score_a,
+          score_b: score_b,
+          status: status,
+        })
+        this.$emit('updataScoreOfMatch', this.matchInfo)
+      }
     }
   }
-}
 </script>
 

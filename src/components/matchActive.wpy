@@ -1,105 +1,162 @@
 <template>
   <view class="matchActive {{mode==='cube'?'cube':''}}">
     <view class="btnBox">
+      <!-- <button class="btn" @tap.stop="mocksignup">mock报名</button> -->
       <button class="btn" open-type="share" data-gameid="{{matchInfo.id}}" wx:if="{{matchInfo.contorlAttr.ifOktoShare}}">分享赛事</button>
-      <button class="btn" open-type="share" data-gameid="{{matchInfo.id}}"  wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
-      <button class="btn" @tap.stop="signup" wx:if="{{matchInfo.contorlAttr.ifOktoSignup}}" >报名</button>
-      <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifOkToStart}}">开赛</button> 
-      <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifStarted}}">查看赛事详情</button> 
+      <button class="btn" open-type="share" data-gameid="{{matchInfo.id}}" wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
+      <button class="btn" @tap.stop="signup" wx:if="{{matchInfo.contorlAttr.ifOktoSignup}}">报名</button>
+      <button class="btn" @tap.stop="signout" wx:if="{{matchInfo.contorlAttr.ifOktoSignout}}">取消报名</button>
+      <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifOkToStart}}">开赛</button>
+      <button class="btn" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifStarted}}">查看赛事详情</button>
       <button class="btn" @tap.stop="goToIndex">查看近期赛事</button>
     </view>
   </view>
 </template>
 
 <style lang="less" scoped>
-@import '../common/common.less';
-  .matchActive{
+  @import '../common/common.less';
+  .matchActive {
     border-radius: 10px;
     margin: 0;
-    padding:0;
+    padding: 0;
     height: 100%;
-  .btnBox{
-    display: flex;
-    flex-wrap: wrap;
-    background: @bgc-card;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    padding:20rpx 0;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 10rpx;
+    .btnBox {
+      display: flex;
+      flex-wrap: wrap;
+      background: @bgc-card;
+      align-content: center;
+      align-items: center;
+      justify-content: center;
+      padding: 20rpx 0;
+      height: 100%;
+      box-sizing: border-box;
+      border-radius: 10rpx;
+    }
+    .btn {
+      width: 200rpx;
+      height: 2.6em;
+      line-height: 2.6em;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 32rpx;
+      padding: auto 10rpx;
+      margin: 20rpx auto;
+      background: @btn;
+    }
   }
-  .btn{
-    width:200rpx;
-    height:2.6em;
-    line-height: 2.6em;
-    vertical-align: middle;
-    text-align: center;
-    font-size: 32rpx;
-    padding:auto 10rpx;
-    margin:20rpx auto;
-    background: @btn;
-  }
-  }
-.cube .btnBox{
+  .cube .btnBox {
     background: @bgc;
-}
-  .cube .btn{
+  }
+  .cube .btn {
     // width:200rpx;
     border-radius: 0;
-    margin:5rpx auto;
+    margin: 5rpx auto;
     background: @btn-em;
   }
 </style>
 <script>
-import wepy from 'wepy';
-import {api_addPlayer, api_getMatchInfo} from '../common/api'
-export default class MatchActive extends wepy.component{
- props={
-    matchInfo:{
-      type:Object,
-      default:{},
-      twoWay:true,
-     },
-     mode:{
-       type:String,
-       default:null
-     }
- }
- onLoad() {
-   console.log(`amt---`, this.matchInfo)
- }
-  methods={
-async signup(){
-  let gameid = this.matchInfo.id
-     let res=await api_addPlayer({gameid: gameid})
-     if(res){
-        this.matchInfo=await api_getMatchInfo(gameid)
-        this.$apply()
-            wx.showToast({
-              title:'报名成功',
-              icon:'success',
-              duration:1500
-            })
-          }else{
-            wx.showToast({
-              title:'报名失败',
-              duratuin:1500
-            })
-          }
+  import wepy from 'wepy';
+  import {
+    api_addPlayer,
+    api_cancelPlayer,
+    api_getMatchInfo
+  } from '../common/api'
+  export default class MatchActive extends wepy.component {
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {},
+        twoWay: true,
       },
-   goToIndex(){
-     wx.switchTab({
-       url:'/pages/index/index'
-     })
-   },
-    goToLive(e){
-        wx.navigateTo({
-          url:`/pages/live/live?gameid=${this.matchInfo.id}`
+      mode: {
+        type: String,
+        default: null
+      }
+    }
+    onLoad() {
+      console.log(`amt---`, this.matchInfo)
+    }
+    methods = {
+      mocksignup() {
+        let gameid = this.matchInfo.id
+        let mockPlayer = [
+          'oqYfD5AUZpHMgDJIQmLBVvpuRrcI',
+          'oqYfD5Pc2w6JZ8LAjn_q0v0LlsnM',
+          'oqYfD5MWtf7h6PPuiAHwHLsIM4xg',
+          'oqYfD5EjWKLCHFyudaDd0BXmbuGs',
+          'oqYfD5ONxBHn6MwLqGpjR_-D-mo0',
+          'oqYfD5AxKyd5BGjbwCvaCTiQBxS8',
+          'oqYfD5FZ--9vRWdr5HOeUyBd40Rg',
+          'oqYfD5NddYaRRUIbPSxsokW8_5so',
+          'oqYfD5HTASKhU6I1N9is56Rt5l7U',
+          'oqYfD5LCSKgBcC6194TKZ8a1J4o0',
+          'oqYfD5NGl-SR2Eh9pjuCLY0r_P9I',
+          'oqYfD5OW_Nv5U70uu14s9GRECnHs',
+          'oqYfD5Ewm_D9VSXEe3w_bcAKUnUI',
+          'oqYfD5CCDrI6WevDeabpr7Cl8kwY',
+          'oqYfD5FpMU0IoVxWvXf5tBFYrseQ',
+          'oqYfD5OHYg4WtUFQDyTci0XYY-L0',
+          'oqYfD5EEMijsLzC46aU1f5tQ6vmc',
+        ]
+        mockPlayer.forEach((token) => {
+          api_addPlayer({
+            gameid: gameid,
+            token: token,
+          })
         })
+      },
+      async signup(token) {
+        let gameid = this.matchInfo.id
+        let res = await api_addPlayer({
+          gameid: gameid,
+          // token: token,
+        })
+        if (res) {
+          this.matchInfo = await api_getMatchInfo(gameid)
+          this.$apply()
+          wx.showToast({
+            title: '报名成功',
+            icon: 'success',
+            duration: 1500
+          })
+        } else {
+          wx.showToast({
+            title: '报名失败',
+            duratuin: 1500
+          })
+        }
+      },
+      async signout() {
+        let gameid = this.matchInfo.id
+        let res = await api_cancelPlayer({
+          gameid: gameid
+        })
+        if (res) {
+          this.matchInfo = await api_getMatchInfo(gameid)
+          this.$apply()
+          wx.showToast({
+            title: '取消报名成功',
+            icon: 'success',
+            duration: 1500
+          })
+        } else {
+          wx.showToast({
+            title: '取消报名失败',
+            duratuin: 1500
+          })
+        }
+      },
+      goToIndex() {
+        wx.switchTab({
+          url: '/pages/index/index'
+        })
+      },
+      goToLive(e) {
+        wx.navigateTo({
+          url: `/pages/live/live?gameid=${this.matchInfo.id}`
+        })
+      }
     }
   }
-}
 </script>
 

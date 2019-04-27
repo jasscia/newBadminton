@@ -4,46 +4,47 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import  '../../common/common.less';
-.container{
-  margin-top:-30rpx;
-}
+  @import '../../common/common.less';
+  .container {
+    margin-top: -30rpx;
+  }
 </style>
 <script>
   import wepy from 'wepy';
-  import {judgeIfIn} from '../../common/common';
-  import {api_getMatchInfoList} from '../../common/api';
+  import {
+    judgeIfIn
+  } from '../../common/common';
+  import {
+    api_getMatchInfoList
+  } from '../../common/api';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
   import 'wepy-async-function';
-
   export default class Index extends wepy.page {
     components = {
-      header:header,
-      nearMatch:nearMatch,
+      header: header,
+      nearMatch: nearMatch,
     }
     data = {
       type: 'all',
-      matchInfoList:[],
-      activeBar:'近期赛事',
-      titleList:['近期赛事','球员排行榜']
+      matchInfoList: [],
+      activeBar: '近期赛事',
+      titleList: ['近期赛事', '球员排行榜']
     }
-  async onLoad(){
-    this.$emit('getMatchInfoList')
-  }
-
-  async onShow(){
-    // this.$emit('getMatchInfoList')
-  }
-  
-  async onShareAppMessage(res){
-    return share('/pages/index/index.wpy')
-  }
-  events = {
-    async getMatchInfoList(data) {
-      this.matchInfoList = await api_getMatchInfoList(this.type)
-      this.$apply();
+    async onLoad() {
+      // this.$emit('getMatchInfoList')
+    }
+    async onShow() {
+      this.$emit('getMatchInfoList')
+    }
+    async onShareAppMessage(res) {
+      return share('/pages/index/index.wpy')
+    }
+    events = {
+      async getMatchInfoList(data) {
+        this.matchInfoList = await api_getMatchInfoList(this.type)
+        this.$apply();
+      }
     }
   }
-}
 </script>

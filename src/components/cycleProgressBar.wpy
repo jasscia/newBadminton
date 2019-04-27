@@ -3,112 +3,119 @@
     <view class="cycle">
       <block wx:if="{{value<=50}}">
         <view class="less bg">
-        <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view> 
+          <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view>
         </view>
       </block>
       <block wx:if="{{value>50}}">
-          <view class="more bg">
-          <view class="more bg1" style="transform: rotate(180deg)"></view> 
-          <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view> 
-          </view>
+        <view class="more bg">
+          <view class="more bg1" style="transform: rotate(180deg)"></view>
+          <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view>
+        </view>
       </block>
       <view class="text">
         <view class="value {{visualvalue.doneNum?'progress':''}}">{{value}}</view>
         <view class="comment">{{comment}}</view>
       </view>
-    </view>      
+    </view>
   </view>
 </template>
 <style lang="less">
-@import '../common/common.less';
-.cycleProgressBar {
-  text-align: center;
-}
-.text{
-  height:100%;
-  width:100%;
-  text-align: center;
-  margin:auto;
-  .value,.comment{
-    color:@font;
-    margin:0;
+  @import '../common/common.less';
+  .cycleProgressBar {
+    text-align: center;
+  }
+  .text {
+    height: 100%;
     width: 100%;
     text-align: center;
+    margin: auto;
+    .value,
+    .comment {
+      color: @font;
+      margin: 0;
+      width: 100%;
+      text-align: center;
+      position: relative;
+    }
+    .value {
+      height: 60rpx;
+      font-size: 80rpx;
+    }
+    .comment {
+      height: 30rpx;
+      font-size: 24rpx;
+    }
+    .progress::after {
+      content: '%';
+      height: 30rpx;
+      font-size: 30rpx;
+      position: absolute;
+      right: 18rpx;
+      bottom: 20rpx;
+    }
+  }
+  .cycle {
+    display: inline-block;
     position: relative;
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    line-height: 100px;
+    font-size: 0;
+    background: @bgc-card;
+    border-radius: 50%;
+    border-radius: 10rpx solid transparent;
   }
-  .value{
-    height:60rpx;
-    font-size:80rpx;
-  }
-  .comment{
-    height:30rpx;
-    font-size:24rpx;
-  }
-  .progress::after{
-    content:'%';
-    height:30rpx;
-    font-size: 30rpx;
+  .bg {
+    height: 100%;
+    width: 100%;
     position: absolute;
-    right:18rpx;
-    bottom:20rpx;
+    top: 0; // background:@bgc;
+    border-radius: 50%; // opacity: 0.6;
   }
-}
-.cycle {
-  display: inline-block;
-  position: relative;
-  height: 100px;
-  width: 100px;
-  text-align: center;
-  line-height: 100px;
-  font-size: 0;
-  background: @bgc-card;
-  border-radius: 50%;
-  border-radius: 10rpx solid transparent;
-}
-.bg{
-  height:100%;
-  width:100%;
-  position: absolute;
-  top:0;
-  // background:@bgc;
-  border-radius: 50%;
-  // opacity: 0.6;
-}
-.less.bg{
-  clip: rect(0 100px 50px 0);
-}
-
-.bg1,
-.bg2 {
-  border: 8rpx solid orange;
-  border-radius: 50%;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
-  clip: rect(50px 100px 100px 0);
-  transform: rotate(0deg);
-}
-.less.bg1{
-  transition: transform .5s linear;
-}
-.more.bg1{
-  transition: transform .3s linear;
-}
-.more.bg2{
-  transition: transform .3s linear .3s;
-}
+  .less.bg {
+    clip: rect(0 100px 50px 0);
+  }
+  .bg1,
+  .bg2 {
+    border: 8rpx solid orange;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    clip: rect(50px 100px 100px 0);
+    transform: rotate(0deg);
+  }
+  .less.bg1 {
+    transition: transform .5s linear;
+  }
+  .more.bg1 {
+    transition: transform .3s linear;
+  }
+  .more.bg2 {
+    transition: transform .3s linear .3s;
+  }
 </style>
 
 <script>
-import wepy from 'wepy';
-export default class CycleProgressBar extends wepy.component {
-  props = {
-    value: { type: Number, default: 0 },
-    comment: { type: String, default: '' },
-    visualvalue:{type:Object,default:{}}
+  import wepy from 'wepy';
+  export default class CycleProgressBar extends wepy.component {
+    props = {
+      value: {
+        type: Number,
+        default: 0
+      },
+      comment: {
+        type: String,
+        default: ''
+      },
+      visualvalue: {
+        type: Object,
+        default: {}
+      }
+    }
   }
-}
 </script>

@@ -24,39 +24,38 @@
 </template>
 
 <style lang="less" scoped>
-@import '../../common/common.less';
-.container{
-  // padding:20rpx 40rpx;
-  .title{
-    font-size:36rpx;
-    margin:5rpx auto;
-    padding:15rpx;
-    background: @bgc-card;
-  }
-  .content{
-    font-size: 28rpx;
-    padding:15rpx 0;
-    padding-left: 40rpx;
-    color: @font-side;
-    // font-weight: 400;
-    background: @bgc-card;
-    .item{
-      padding:12rpx;
+  @import '../../common/common.less';
+  .container {
+    // padding:20rpx 40rpx;
+    .title {
+      font-size: 36rpx;
+      margin: 5rpx auto;
+      padding: 15rpx;
+      background: @bgc-card;
     }
-    .item::before{
-      font-family: "iconfont";
-      content:"\e703";
+    .content {
+      font-size: 28rpx;
+      padding: 15rpx 0;
+      padding-left: 40rpx;
+      color: @font-side; // font-weight: 400;
+      background: @bgc-card;
+      .item {
+        padding: 12rpx;
+      }
+      .item::before {
+        font-family: "iconfont";
+        content: "\e703";
+      }
     }
   }
-}
 </style>
 <script>
-import wepy from 'wepy'
-export default class Custom extends wepy.page {
-  onShareAppMessage() {
-    return {
-      path:'/pages/index/index'
+  import wepy from 'wepy'
+  export default class Custom extends wepy.page {
+    onShareAppMessage() {
+      return {
+        path: '/pages/index/index'
+      }
     }
   }
-}
 </script>

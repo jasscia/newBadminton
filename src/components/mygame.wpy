@@ -2,65 +2,63 @@
   <view class="warp">
     <view class="add" @tap.stop="createNewAgainst">
       <button>创建赛事</button>
-    </view>   
-
+    </view>
     <view class="errPage" wx:if="{{activeBar == '我参与的比赛' && !matchInfoList.length}}">
       没有参加任何比赛
     </view>
-    
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
-      <view  class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
+      <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSide :index.sync="index">
-            <block slot='frontSide'>
-              <matchInfo :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfo>
-            </block>
-            <block slot='backSide'>
-              <matchActive :matchInfo.sync="matchInfo"></matchActive>
-            </block>
+          <block slot='frontSide'>
+            <matchInfo :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfo>
+          </block>
+          <block slot='backSide'>
+            <matchActive :matchInfo.sync="matchInfo"></matchActive>
+          </block>
         </twoSide>
       </view>
     </repeat>
-  </view> 
+  </view>
 </template>
 <style lang="less" scoped>
   @import '../common/common.less';
-  .warp{
-    .add{
-      margin-top:40rpx;
+  .warp {
+    .add {
+      margin-top: 40rpx;
       border-radius: 10px;
       line-height: 100rpx;
       text-align: center;
       vertical-align: middle;
-      button{
+      button {
         display: inline-block;
-        background:@bgc-card;
+        background: @bgc-card;
         vertical-align: middle;
         height: 100px;
-        width:90%;
-        padding:0;
+        width: 90%;
+        padding: 0;
         line-height: 100px;
         font-size: 60rpx;
         letter-spacing: 20rpx;
-        color:@bgc;
+        color: @bgc;
       }
     }
-    .errPage{
-      margin:100rpx auto 0;
-      height:200rpx;
+    .errPage {
+      margin: 100rpx auto 0;
+      height: 200rpx;
       width: 90%;
       line-height: 200rpx;
       text-align: center;
       vertical-align: middle;
       background: @bgc-card;
       border-radius: 20rpx;
-      color:#666;
+      color: #666;
       letter-spacing: 5rpx;
     }
-    .matchCard{
-      margin:20px;
-      padding-bottom:10px;
+    .matchCard {
+      margin: 20px;
+      padding-bottom: 10px;
       font-size: 12px;
-      color:#666;
+      color: #666;
       background: @bgc-card;
       border-radius: 10px;
       position: relative;
@@ -69,54 +67,49 @@
   }
 </style>
 <script>
-import wepy from "wepy";
-import matchInfo from '../components/matchInfo';
-import twoSide from '../components/twoSide';
-import matchActive from '../components/matchActive';
-export default class Mygame extends wepy.component {
-  props={
-    matchInfoList: {
-        type:Array,
-        default:[]
+  import wepy from "wepy";
+  import matchInfo from '../components/matchInfo';
+  import twoSide from '../components/twoSide';
+  import matchActive from '../components/matchActive';
+  export default class Mygame extends wepy.component {
+    props = {
+      matchInfoList: {
+        type: Array,
+        default: []
       },
-    activeBar: {
-        type:String,
-        default:'',
+      activeBar: {
+        type: String,
+        default: '',
       },
-    mode: {
-        type:String,
-        default:'',
+      mode: {
+        type: String,
+        default: '',
       },
-  }
-  
-  components = {
-    matchInfo:matchInfo,
-    twoSide:twoSide,
-    matchActive:matchActive,
-  }
-
-  onLoad(option){
-    console.log('my game on load') 
-  }
-
-  watch = {
-    matchInfoList(n, o){
-      console.log('oooooooo')
-      console.log(n, o)
     }
-  }
-
-  methods={
-      turnOverCard(e){
-        let index=e.currentTarget.dataset.index
+    components = {
+      matchInfo: matchInfo,
+      twoSide: twoSide,
+      matchActive: matchActive,
+    }
+    onLoad(option) {
+      console.log('my game on load')
+    }
+    watch = {
+      matchInfoList(n, o) {
+        console.log('oooooooo')
+        console.log(n, o)
+      }
+    }
+    methods = {
+      turnOverCard(e) {
+        let index = e.currentTarget.dataset.index
         this.$emit('turnOverCard', index)
       },
-
       createNewAgainst() {
         this.$emit('createNewAgainst')
       }
+    }
   }
-}
 </script>
 
 

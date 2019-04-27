@@ -2,7 +2,7 @@
   <view class="container">
     <view class="search" @tap="gotoIndex">去看看近期的比赛</view>
     <form @submit="submit">
-      <repeat for="{{titleList}}" key="index" index="index" item="title">    
+      <repeat for="{{titleList}}" key="index" index="index" item="title">
         <item2colunm :item.sync="title" :dateRange.sync="dateRange"></item2colunm>
       </repeat>
       <button formType="submit">确定</button>
@@ -10,154 +10,160 @@
   </view>
 </template>
 <style lang="less" scoped>
-@import '../../common/common.less';
-.container{
-  .search{
-    height:300rpx;
-    line-height: 375rpx;
-    text-align: center;
-    vertical-align: middle;
-    border-bottom-left-radius:50% 10%;
-    border-bottom-right-radius:50% 10%;
-    background: @btn-em;
-    margin-bottom: 60rpx;
+  @import '../../common/common.less';
+  .container {
+    .search {
+      height: 300rpx;
+      line-height: 375rpx;
+      text-align: center;
+      vertical-align: middle;
+      border-bottom-left-radius: 50% 10%;
+      border-bottom-right-radius: 50% 10%;
+      background: @btn-em;
+      margin-bottom: 60rpx;
+    }
+    button {
+      margin: 60rpx auto;
+      width: 375rpx;
+      background: @btn-em;
+    }
   }
-  button{
-    margin:60rpx auto;
-    width: 375rpx;
-    background: @btn-em;
-  }
-}
 </style>
 
 <script>
-import wepy from 'wepy';
-import {formatTime} from '../../common/util';
-import {api_createGame} from '../../common/api';
-import item2colunm from '../../components/item2colunm';
-export default class CreateNewAgain extends wepy.page {
-  config={
-    navigationBarTitleText:'创建比赛'
-  }
-  components={
-    item2colunm:item2colunm
-  }
-  data={
-    dateRange:{
-      end:{time:"23:00",date:''},
-      start:{time:"04:00",date:''}
-    },
-    titleList:[
-      {
-        title:'团体名称',
-        name:'gamename',
-        value:'',
-        type:'strng',
+  import wepy from 'wepy';
+  import {
+    formateTime
+  } from '../../common/util';
+  import {
+    api_createGame
+  } from '../../common/api';
+  import item2colunm from '../../components/item2colunm';
+  export default class CreateNewAgain extends wepy.page {
+    config = {
+      navigationBarTitleText: '创建比赛'
+    }
+    components = {
+      item2colunm: item2colunm
+    }
+    data = {
+      dateRange: {
+        end: {
+          time: "23:00",
+          date: ''
+        },
+        start: {
+          time: "04:00",
+          date: ''
+        }
+      },
+      titleList: [{
+        title: '团体名称',
+        name: 'gamename',
+        value: '',
+        type: 'strng',
         require: true,
-      },{
-        title:'地点',
-        name:'address',
-        value:'',
-        type:'strng',
+      }, {
+        title: '地点',
+        name: 'address',
+        value: '',
+        type: 'strng',
         require: true,
-      },{
-        title:'日期',
-        name:'date',
-        value:'--',
-        type:'string',
+      }, {
+        title: '日期',
+        name: 'date',
+        value: '--',
+        type: 'string',
         require: true,
-      },{
-        title:'时间',
-        name:'time',
-        value:'09:00',
-        type:'string',
+      }, {
+        title: '时间',
+        name: 'time',
+        value: '09:00',
+        type: 'string',
         require: true,
-      },{
-        title:'我也报名',
-        name:'auto_signup',
-        value:true,
-        type:'boolean',
+      }, {
+        title: '我也报名',
+        name: 'auto_signup',
+        value: true,
+        type: 'boolean',
         require: false,
-      }
-    ]
-  }
-
-  async onLoad(option){
-    this.initDateRange();
-    this.initDateTime();
-  }
-
-  async onUnload(){
-  }
-
-  initDateRange(){//只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
-    let start=new Date(Date.now()+1*24*3600*1000),
-        formatStart=formatTime(start,'-').trim().split(' ');//formatTime输出的格式为 年-月-日 时：分：秒
-    let end=new Date(Date.now()+30*24*3600*1000),
-        formatEnd=formatTime(end,'-').trim().split(' ');
-    this.dateRange.start.date=formatStart[0];
-    this.dateRange.end.date=formatEnd[0];
-    this.titleList[3].date=this.dateRange+start.date
-  }
-
-  initDateTime(){
-    Object.keys(this.titleList).map(key=>{//按照 Data range 范围，对于date的item 初始化其中的数值
-      if(this.titleList[key].name==='date'){
-      this.titleList[key].value=this.dateRange.start.date;
-      }
-    })
-  }
-
-  methods={
-    async submit(e){
-      let formData=e.detail.value,
-          date=formData.date,
-          time=formData.time;
-      let newFormData={};//由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
-      let tag=Object.keys(formData).some(key=>{
-        if(key !== 'auto_signup') {
-            return !formData[key]
+      }]
+    }
+    async onLoad(option) {
+      this.initDateRange();
+      this.initDateTime();
+    }
+    async onUnload() {}
+    initDateRange() { //只允许在未来的1个月内创建比赛,计算从当下 到一个月后的时间
+      let start = new Date(Date.now() + 1 * 24 * 3600 * 1000),
+        formatStart = formateTime(start, '-').trim().split(' '); //formateTime输出的格式为 年-月-日 时：分：秒
+      let end = new Date(Date.now() + 30 * 24 * 3600 * 1000),
+        formatEnd = formateTime(end, '-').trim().split(' ');
+      this.dateRange.start.date = formatStart[0];
+      this.dateRange.end.date = formatEnd[0];
+      this.titleList[3].date = this.dateRange + start.date
+    }
+    initDateTime() {
+      Object.keys(this.titleList).map(key => { //按照 Data range 范围，对于date的item 初始化其中的数值
+        if (this.titleList[key].name === 'date') {
+          this.titleList[key].value = this.dateRange.start.date;
         }
-      })
-      if(tag){
-        wx.showToast({
-          title:'创建失败，字段不能为空',
-          icon:'none'
-        })
-        return
-        }
-      Object.keys(formData).map(key=>{
-        if(['time','date'].indexOf(key)===-1){
-          newFormData[key]=formData[key]
-        }
-      })
-      if(time){newFormData['begintime']=date+' '+time+':00'}
-      if(await api_createGame(newFormData)){
-        wx.showToast({
-          title:'创建成功,返回赛事列表',
-          icon:'success',
-          duration:1500,
-          success:()=>{
-            let pagesQueqe=getCurrentPages()
-            let length=pagesQueqe.length
-            if(length>=2){
-              let mainPage=pagesQueqe[length-2]
-              mainPage.refresh&&mainPage.refresh()
-            }
-            wx.navigateBack({delta: 1})
-          }
-        })
-      }else{
-        wx.showModal({
-          title:'创建失败'
-        })
-      }
-    },
-    gotoIndex(){
-      wx.switchTab({
-        url:'/pages/index/index'
       })
     }
+    methods = {
+      async submit(e) {
+        let formData = e.detail.value,
+          date = formData.date,
+          time = formData.time;
+        let newFormData = {}; //由于form提交的数据格式是date= time=，而后端交互需要提交 类似2018-04-07 13:14:07格式
+        let tag = Object.keys(formData).some(key => {
+          if (key !== 'auto_signup') {
+            return !formData[key]
+          }
+        })
+        if (tag) {
+          wx.showToast({
+            title: '创建失败，字段不能为空',
+            icon: 'none'
+          })
+          return
+        }
+        Object.keys(formData).map(key => {
+          if (['time', 'date'].indexOf(key) === -1) {
+            newFormData[key] = formData[key]
+          }
+        })
+        if (time) {
+          newFormData['begintime'] = date + ' ' + time + ':00'
+        }
+        if (await api_createGame(newFormData)) {
+          wx.showToast({
+            title: '创建成功,返回赛事列表',
+            icon: 'success',
+            duration: 1500,
+            success: () => {
+              let pagesQueqe = getCurrentPages()
+              let length = pagesQueqe.length
+              if (length >= 2) {
+                let mainPage = pagesQueqe[length - 2]
+                mainPage.refresh && mainPage.refresh()
+              }
+              wx.navigateBack({
+                delta: 1
+              })
+            }
+          })
+        } else {
+          wx.showModal({
+            title: '创建失败'
+          })
+        }
+      },
+      gotoIndex() {
+        wx.switchTab({
+          url: '/pages/index/index'
+        })
+      }
+    }
   }
-}
 </script>

@@ -1,10 +1,8 @@
 <!--pages/result/result.wxml-->
-<template>   
+<template>
   <view class="wrapper">
     <view class="progress">
-      <resultCycleProgressBar :value.sync="progress" 
-                              :comment.sync="comment" 
-                              :visualvalue.sync="doneData"></resultCycleProgressBar>
+      <resultCycleProgressBar :value.sync="progress" :comment.sync="comment" :visualvalue.sync="doneData"></resultCycleProgressBar>
     </view>
     <view class="itemHead">
       <view class='item1'>姓名</view>
@@ -13,171 +11,176 @@
       <view class='item4'>名次</view>
     </view>
     <repeat for="{{resultKeys}}" key="{{item}}" index="index" item="uid">
-      <view  class="item itemBody">
+      <view class="item itemBody">
         <view class='item1 NO-{{result[uid][4]}}'>{{result[uid][5]||result[uid][6]}}</view>
         <view class='item3'>{{result[uid][1]}}-{{result[uid][2]}}</view>
-        <view class='item2'>{{result[uid][0]}}</view>            
+        <view class='item2'>{{result[uid][0]}}</view>
         <view class='item4 NO-{{result[uid][4]}}'>{{result[uid][4]}}</view>
       </view>
-  </repeat>
+    </repeat>
   </view>
 </template>
 <style lang="less" scoped>
-@import '../common/common.less';
-.progress{
-  // background: @btn;
-  padding:30rpx;
-  margin-top:40rpx;
-  // margin-bottom:20rpx;
-}
-.itemHead{
-  display: flex;
-  // width:700rpx;
-  margin:0 auto;
-  height:80rpx;
-  line-height: 80rpx;
-  background: @btn-em;
-  // margin-top: 40rpx;
-  margin-bottom: -10rpx;
-  // border-bottom: 10rpx solid cadetblue;
-}
-.item{
-  display: flex;
-  // width:700rpx;
-  margin:25rpx auto;
-  height:80rpx;
-  line-height: 80rpx;
-  border-radius: 20rpx;
-  background: #fff;
-}
-.item1{
-  white-space:nowrap;
-  overflow: hidden;
-}
-.item1,.item2,.item3,.item4{
-  text-align: center;
-  vertical-align: middle; 
-}
-.item1,.item2,.item3{
-  width:180px
-}
-.item4{width:170rpx}
-.NO-1,.NO-2,.NO-3{
-  position: relative;
-}
-.NO-1::after,.NO-2::after,.NO-3::after{
-  font-family: "iconfont";
-  content: "\e725";
-  font-size: 40rpx;
-  position: absolute;
-  /* top:0;
-  right:0;
-  z-index: 999; */
-}
-.NO-1::after{ 
-  color: gold;
-}
-.NO-2::after{ 
-  color: coral;
-}
-.NO-3::after{ 
-  color: chartreuse;
-}
-
+  @import '../common/common.less';
+  .progress {
+    // background: @btn;
+    padding: 30rpx;
+    margin-top: 40rpx; // margin-bottom:20rpx;
+  }
+  .itemHead {
+    display: flex; // width:700rpx;
+    margin: 0 auto;
+    height: 80rpx;
+    line-height: 80rpx;
+    background: @btn-em; // margin-top: 40rpx;
+    margin-bottom: -10rpx; // border-bottom: 10rpx solid cadetblue;
+  }
+  .item {
+    display: flex; // width:700rpx;
+    margin: 25rpx auto;
+    height: 80rpx;
+    line-height: 80rpx;
+    border-radius: 20rpx;
+    background: #fff;
+  }
+  .item1 {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .item1,
+  .item2,
+  .item3,
+  .item4 {
+    text-align: center;
+    vertical-align: middle;
+  }
+  .item1,
+  .item2,
+  .item3 {
+    width: 180px
+  }
+  .item4 {
+    width: 170rpx
+  }
+  .NO-1,
+  .NO-2,
+  .NO-3 {
+    position: relative;
+  }
+  .NO-1::after,
+  .NO-2::after,
+  .NO-3::after {
+    font-family: "iconfont";
+    content: "\e725";
+    font-size: 40rpx;
+    position: absolute;
+    /* top:0;
+    right:0;
+    z-index: 999; */
+  }
+  .NO-1::after {
+    color: gold;
+  }
+  .NO-2::after {
+    color: coral;
+  }
+  .NO-3::after {
+    color: chartreuse;
+  }
 </style>
 <script>
-import wepy from 'wepy';
-import cycleProgressBar from "../components/cycleProgressBar";
-export default class Result extends wepy.component  {
-  components={
-    resultCycleProgressBar:cycleProgressBar
-  }
-  props= {
-    matchInfo:{
-      type:String,
-      default:null,
+  import wepy from 'wepy';
+  import cycleProgressBar from "../components/cycleProgressBar";
+  export default class Result extends wepy.component {
+    components = {
+      resultCycleProgressBar: cycleProgressBar
     }
-  }
-  data={
-    result:{},
-    resultKeys:[],
-    ifShowBtn:true,
-    comment:'完成进度',
-    progress:0
-  }
-  watch={
-    matchInfo(newMatchInfo){
-      this.progress=newMatchInfo.progressData.progress
-      let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
-      let res = this.orderScore(calcedScore);
-      this.result= res[0];
-      this.resultKeys=res[1]
-      this.$apply()
+    props = {
+      matchInfo: {
+        type: String,
+        default: null,
+      }
     }
-  }
-  calcScore(groupList) {
-    let result = {}
-    let uKey=['id_a1','id_a2','id_b1','id_b2']
-    for (let groupInfo of groupList) {
-      for (let i = 0; i < 4; i++) {
-        let key=uKey[i]
-        let playerId=groupInfo[key].uid//获取userid
-        let playerRealName=groupInfo[key].real_name//获取userid
-        let playerNickName=groupInfo[key].nick_name//获取userid
-        let playerAvatarUrl=groupInfo[key].avatar_url//获取userid
-        result[playerId] = result[playerId] || [0, 0, 0,0,0,playerRealName,playerNickName,playerAvatarUrl];//初始化结果数组【净胜分、胜场、负场、胜负差值、名次、姓名、昵称、头像】
-        if (i < 2) {
-          result[playerId][0] += (groupInfo.score_a - groupInfo.score_b);
-          result[playerId][1] += (groupInfo.score_a > groupInfo.score_b? 1 : 0);
-          result[playerId][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
-        } else {
-          result[playerId][0] += (groupInfo.score_b - groupInfo.score_a);//[0]是净胜分
-          result[playerId][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);//[1]胜的场次
-          result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);//[2]负的场次
+    data = {
+      result: {},
+      resultKeys: [],
+      ifShowBtn: true,
+      comment: '完成进度',
+      progress: 0
+    }
+    watch = {
+      matchInfo(newMatchInfo) {
+        this.progress = newMatchInfo.progressData.progress
+        let calcedScore = this.calcScore(newMatchInfo.groupWithInfo);
+        let res = this.orderScore(calcedScore);
+        this.result = res[0];
+        this.resultKeys = res[1]
+        this.$apply()
+      }
+    }
+    calcScore(groupList) {
+      let result = {}
+      let uKey = ['id_a1', 'id_a2', 'id_b1', 'id_b2']
+      for (let groupInfo of groupList) {
+        for (let i = 0; i < 4; i++) {
+          let key = uKey[i]
+          let playerId = groupInfo[key].uid //获取userid
+          let playerRealName = groupInfo[key].real_name //获取userid
+          let playerNickName = groupInfo[key].nick_name //获取userid
+          let playerAvatarUrl = groupInfo[key].avatar_url //获取userid
+          result[playerId] = result[playerId] || [0, 0, 0, 0, 0, playerRealName, playerNickName, playerAvatarUrl]; //初始化结果数组【净胜分、胜场、负场、胜负差值、名次、姓名、昵称、头像】
+          if (i < 2) {
+            result[playerId][0] += (groupInfo.score_a - groupInfo.score_b);
+            result[playerId][1] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);
+            result[playerId][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
+          } else {
+            result[playerId][0] += (groupInfo.score_b - groupInfo.score_a); //[0]是净胜分
+            result[playerId][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0); //[1]胜的场次
+            result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0); //[2]负的场次
+          }
+          result[playerId][3] = result[playerId][1] - result[playerId][2]; //[3]是胜-败的差值
         }
-        result[playerId][3] = result[playerId][1] - result[playerId][2];//[3]是胜-败的差值
       }
+      return result;
     }
-    return result;
-  }
-  orderScore(obj) {
-    let keys = Object.keys(obj);
-    let orderedKeys = [];
-    for (let i = 0; i < keys.length; i++) {
-      let key_of_max = this.findKeyOfMax(obj, orderedKeys);
-      orderedKeys.push(key_of_max)
-    }
-    let newObj = {};
-    for (let i=0; i < orderedKeys.length; i++) {
-      newObj[orderedKeys[i]] = obj[orderedKeys[i]].slice()
-      newObj[orderedKeys[i]][4]=i + 1     //[4]是名次
-    }
-    return [newObj,orderedKeys];
-  }
-  findKeyOfMax(obj, orderedKeys) {
-    let keys = Object.keys(obj);
-    let key_of_max = '';
-    for (let i = 0; i < keys.length; i++) {
-      if (orderedKeys.indexOf(keys[i]) !== -1) {//对于已经被找到的值 排除在本次查询之外
-        continue;
+    orderScore(obj) {
+      let keys = Object.keys(obj);
+      let orderedKeys = [];
+      for (let i = 0; i < keys.length; i++) {
+        let key_of_max = this.findKeyOfMax(obj, orderedKeys);
+        orderedKeys.push(key_of_max)
       }
-      if (!key_of_max) {//把第一个在查询范围内的值赋值为max
-        key_of_max = keys[i];
-        continue;
+      let newObj = {};
+      for (let i = 0; i < orderedKeys.length; i++) {
+        newObj[orderedKeys[i]] = obj[orderedKeys[i]].slice()
+        newObj[orderedKeys[i]][4] = i + 1 //[4]是名次
       }
-      if (obj[key_of_max][3] > obj[keys[i]][3]) {//先比较 胜/负比
-      } else if (obj[key_of_max][3] < obj[keys[i]][3]) {
-        key_of_max = keys[i];
-      } else {
-        if (obj[key_of_max][0] >= obj[keys[i]][0]) {//再比较净胜分
-        } else {
+      return [newObj, orderedKeys];
+    }
+    findKeyOfMax(obj, orderedKeys) {
+      let keys = Object.keys(obj);
+      let key_of_max = '';
+      for (let i = 0; i < keys.length; i++) {
+        if (orderedKeys.indexOf(keys[i]) !== -1) { //对于已经被找到的值 排除在本次查询之外
+          continue;
+        }
+        if (!key_of_max) { //把第一个在查询范围内的值赋值为max
           key_of_max = keys[i];
+          continue;
+        }
+        if (obj[key_of_max][3] > obj[keys[i]][3]) { //先比较 胜/负比
+        } else if (obj[key_of_max][3] < obj[keys[i]][3]) {
+          key_of_max = keys[i];
+        } else {
+          if (obj[key_of_max][0] >= obj[keys[i]][0]) { //再比较净胜分
+          } else {
+            key_of_max = keys[i];
+          }
         }
       }
+      return key_of_max;
     }
-    return key_of_max;
   }
-}
 </script>
 
 

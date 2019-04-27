@@ -1,33 +1,35 @@
 <template>
   <div class='wraper'>
-     <view class="avatar">
-        <open-data  type="userAvatarUrl"></open-data>
+    <view class="avatar">
+      <open-data type="userAvatarUrl"></open-data>
     </view>
     <div class="tip">为继续操作，需提供以下授权：</div>
     <ul class="tip_side">
       <li>获取你的公开信息（昵称，头像等）</li>
     </ul>
-    <button  class="btn" open-type="getUserInfo" @tap="auth">确认授权</button>
+    <button class="btn" open-type="getUserInfo" @tap="auth">确认授权</button>
   </div>
 </template>
 
 <script>
-import wepy from 'wepy';
-import {auth} from '../../common/login';
-export default class Auth extends wepy.page {
-  methods = {
-    async auth() {
-      let res = await auth();
-      console.log('res', res)
-      if (res) {
-        wx.navigateBack()
+  import wepy from 'wepy';
+  import {
+    auth
+  } from '../../common/login';
+  export default class Auth extends wepy.page {
+    methods = {
+      async auth() {
+        let res = await auth();
+        console.log('res', res)
+        if (res) {
+          wx.navigateBack()
+        }
       }
     }
   }
-}
 </script>
 <style lang="less" scoped>
-@import '../../common/common.less';
+  @import '../../common/common.less';
   .avatar {
     display: block;
     width: 200rpx;
@@ -36,16 +38,14 @@ export default class Auth extends wepy.page {
     border: 2px solid #fff;
     margin: 100rpx auto 30rpx;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    overflow:hidden;
+    overflow: hidden;
   }
-
   .tip {
     color: @font;
     font-size: 16px;
     margin: auto 60rpx;
     line-height: 60rpx;
   }
-
   .tip_side {
     display: block;
     margin: auto 80rpx;
@@ -53,7 +53,6 @@ export default class Auth extends wepy.page {
     color: @font-side;
     font-size: 14px;
   }
-
   .btn {
     margin: 60rpx auto;
     width: 630rpx;

@@ -1,4 +1,3 @@
-
 <template>
   <view class="wrapper">
     <view class="errPage" wx:if="{{matchCount===0}}">
@@ -6,94 +5,84 @@
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
-        <matchInfo  :matchInfo.sync="matchInfo"></matchInfo>
+        <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
       </view>
     </repeat>
   </view>
 </template>
 
-<style lang="less" >
+<style lang="less">
   @import '../../common/common.less';
-  .wrapper{
-    .errPage{
-      margin:100rpx auto 0;
-      height:200rpx;
+  .wrapper {
+    .errPage {
+      margin: 100rpx auto 0;
+      height: 200rpx;
       width: 90%;
       line-height: 200rpx;
       text-align: center;
       vertical-align: middle;
       background: @bgc-card;
       border-radius: 20rpx;
-      color:#666;
+      color: #666;
       letter-spacing: 5rpx;
     }
-    .matchCard{    
-      margin:30rpx;
-      padding:10rpx;
+    .matchCard {
+      margin: 30rpx;
+      padding: 10rpx;
       font-size: 12px;
-      color:#666;
+      color: #666;
       background: @bgc-card;
       border-radius: 10px;
-      position: relative;
-      // height: 300rpx;
+      position: relative; // height: 300rpx;
     }
   }
-
 </style>
 
 <script>
   import wepy from 'wepy';
-  // import {bgColorList} from '../../common/config';
-  // import matchCard from '../../components/matchCard';
-  // import twoSide from '../../components/twoSide';
   import matchInfo from '../../components/matchInfo';
-  // import matchActive from '../../components/matchActive';
-
   export default class Index extends wepy.page {
-  props={
-    matchInfoList:{
-      type:Array,
-      default:[],
-      twoWay:true
-    }
-  }
-
-  data={
-    // bgColorList: bgColorList,
-  }
-
-  computed={
-    matchCount(){
-      if(this.matchInfo && this.matchInfoList.length!==undefined){
-        return this.matchInfoList.length
+    props = {
+      matchInfoList: {
+        type: Array,
+        default: [],
+        twoWay: true
       }
     }
-  }
-  components = {
-    // twoSide:twoSide,
-    matchInfo:matchInfo,
-    // matchActive:matchActive
-  }
-  async onLoad(){ 
-    // console.log('-----', this.bgColorList)
-   }
-  onShow(){}
-
-  methods={
-      gotodetail(e){
-        let gameid=e.currentTarget.dataset.gameid;
+    data = {
+      // bgColorList: bgColorList,
+    }
+    computed = {
+      matchCount() {
+        if (this.matchInfo && this.matchInfoList.length !== undefined) {
+          return this.matchInfoList.length
+        }
+      }
+    }
+    components = {
+      // twoSide:twoSide,
+      matchInfo: matchInfo,
+      // matchActive:matchActive
+    }
+    async onLoad() {
+      // console.log('-----', this.bgColorList)
+    }
+    onShow() {}
+    methods = {
+      gotodetail(e) {
+        let gameid = e.currentTarget.dataset.gameid;
         wx.navigateTo({
-          url:`/pages/detail/detail?gameid=${gameid}`
+          url: `/pages/detail/detail?gameid=${gameid}`
         })
       }
-  }
-  events={
-    async updatematchinfoList(){
-      this.matchInfoList = await downLoadMatchInfoList('all')
-      this.$apply()
+    }
+    events = {
+      async updatematchinfoList() {
+        this.matchInfoList = await downLoadMatchInfoList('all')
+        this.$apply()
+      }
     }
   }
-}
 </script>
 
 

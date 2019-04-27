@@ -1,8 +1,8 @@
 <template>
-  <view class="matchInfo">
+  <view class="matchInfo card">
     <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
-      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'signupable':'unsignupable'}}">{{statusList[matchInfo.status]}}</text>
-      <text class="status {{matchInfo.ifIn?'signuped':'unsignup'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
+      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-nagative'}}">{{statusList[matchInfo.status]}}</text>
+      <text class="status {{matchInfo.ifIn?'label-info':'label-warn'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
     <view class="statement-group" wx:if="{{mode==='withPanle'}}">
@@ -46,16 +46,6 @@
     .status {
       border-radius: 6rpx;
     }
-    .signupable {
-      background: @btn;
-    }
-    .unsignupable {
-      background: tomato;
-    }
-    .signuped {
-      color: @btn-em;
-    }
-    .unsignup {}
   }
   .statement-group {
     font-size: 30rpx;
@@ -113,7 +103,7 @@
         border-radius: 50%;
         background-size: cover;
         float: right;
-        border: 4rpx solid @bgc-card;
+        border-width: 4rpx solid @white;
       }
     }
   }

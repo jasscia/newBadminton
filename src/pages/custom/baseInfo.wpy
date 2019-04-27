@@ -25,7 +25,7 @@
   import item2colunm from '../../components/item2colunm';
   export default class BaseInfo extends wepy.page {
     config = {
-      navigationBarTitleText: "信息编辑"
+      navigationBarTitleText: "个人信息编辑"
     };
     components = {
       item2colunm: item2colunm

@@ -23,7 +23,6 @@
     .btnBox {
       display: flex;
       flex-wrap: wrap;
-      background: @bgc-card;
       align-content: center;
       align-items: center;
       justify-content: center;
@@ -41,17 +40,12 @@
       font-size: 32rpx;
       padding: auto 10rpx;
       margin: 20rpx auto;
-      background: @btn;
     }
-  }
-  .cube .btnBox {
-    background: @bgc;
   }
   .cube .btn {
     // width:200rpx;
     border-radius: 0;
     margin: 5rpx auto;
-    background: @btn-em;
   }
 </style>
 <script>

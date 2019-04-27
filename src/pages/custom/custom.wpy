@@ -1,37 +1,38 @@
 <template>
   <view class="container">
     <!-- <view wx:if = "{{!userInfo.avatar_url}}">
-        <authorizion />
-      </view> -->
-    <view class="part part1" @tap="navigateToBaseInfoPage" wx:if="{{userInfo.avatar_url}}">
+              <authorizion />
+            </view> -->
+    <view class="part part1" @tap="navigateToBaseInfoPage">
       <view class="item">
         <image class="avatar" src="{{userInfo.avatar_url}}" />
         <view class="nickname">{{userInfo.nick_name}}</view>
       </view>
       <view class="item"></view>
     </view>
-    <view class="part part2" wx:if="{{userInfo.avatar_url}}">
-      <view class="item title">个人数据</view>
-      <cycleProgressBar :value.sync="value" :comment.sync="comment"></cycleProgressBar>
-    </view>
-    <view class="part part3" wx:if="{{userInfo.avatar_url}}">
-      <view class="item title">得分统计</view>
+    <view class="part part3">
+      <view class="item title">战绩数据</view>
       <view class="item content">
-        <view class="subItem">
-          <view class="row1">{{myMatchData.total}}</view>
-          <view class="row2">总场次</view>
+        <view class="content_left">
+          <view class="subItem border-bottom">
+            <view class="type">总场次</view>
+            <view class="num">{{myMatchData.total}}</view>
+          </view>
+          <view class="subItem border-bottom">
+            <view class="type">胜利</view>
+            <view class="num">{{myMatchData.win}}</view>
+          </view>
+          <view class="subItem border-bottom">
+            <view class="type">失败</view>
+            <view class="num">{{myMatchData.failed}}</view>
+          </view>
+          <view class="subItem border-bottom">
+            <view class="type">胜率</view>
+            <view class="num">{{myMatchData.winrate}}%</view>
+          </view>
         </view>
-        <view class="subItem">
-          <view class="row1">{{myMatchData.win}}</view>
-          <view class="row2">胜利</view>
-        </view>
-        <view class="subItem">
-          <view class="row1">{{myMatchData.failed}}</view>
-          <view class="row2">失败</view>
-        </view>
-        <view class="subItem">
-          <view class="row1 raito">{{myMatchData.winrate}}</view>
-          <view class="row2">胜率</view>
+        <view class="content_right">
+          <cycleProgressBar :value.sync="value" :comment.sync="comment"></cycleProgressBar>
         </view>
       </view>
     </view>
@@ -51,7 +52,6 @@
 <style lang="less" scoped>
   @import '../../common/common.less';
   .custom {
-    background: @bgc;
     margin: 0;
     padding: 0;
   }
@@ -60,7 +60,6 @@
     font-size: 16px;
   }
   .part1 {
-    background: @btn-em;
     padding: 20px 30px 10px;
     text-align: center;
     margin-bottom: 0;
@@ -69,17 +68,6 @@
       width: 100px;
       border-radius: 50%;
       background-size: cover;
-    }
-    .edit {
-      height: 0;
-      width: 15px;
-      border-radius: 50%;
-      background: @bgc-card;
-      opacity: 0.5;
-      font-size: 14px;
-      color: red;
-      margin: auto;
-      padding-right: 50px;
     }
     .name {
       text-align: center;
@@ -93,27 +81,16 @@
       font-size: 12px;
     }
   }
-  .part2 {
-    padding: 10px;
-    background: #f9f9f9;
-    .score {
-      font-size: 55px;
-      font-family: 'Arial Narrow';
-      position: relative;
-      z-index: 1;
-    }
-  }
   .part4 {
     .item {
       display: flex;
-      background: @bgc-card;
       padding: 10px;
       margin: 10px 0;
     }
     .right {
       flex: 1;
       text-align: right;
-      color: @font-side;
+      color: @gray-light;
       font-size: 14px;
     }
     .right::after {
@@ -122,46 +99,33 @@
     }
   }
   .part3 {
-    background: @bgc-card;
     padding: 10px;
     .content {
       display: flex;
-      padding: 10px 0;
-      justify-content: space-around;
-      .subItem {
-        width: 25%;
-        padding: 0 10rpx;
-        border-radius: 5rpx;
-        .row1,
-        .row2 {
-          text-align: center;
-          background: @btn;
+      .content_left,
+      .content_right {
+        display: flex;
+        width: 50%;
+      }
+      .content_left {
+        flex-direction: column;
+        justify-content: space-around;
+        .subItem {
+          display: flex;
+          padding: 0 10rpx;
+          font-size: 32rpx;
+          .type {
+            // flex: 0;
+          }
+          .num {
+            flex: 1;
+            text-align: right;
+          }
         }
-        .row1 {
-          line-height: 60rpx;
-          font-size: 48rpx;
-          font-weight: 700;
-          padding-top: 10rpx;
-          border-top-left-radius: 10rpx;
-          border-top-right-radius: 10rpx;
-        }
-        .row2 {
-          line-height: 40rpx;
-          font-size: 24rpx;
-          border-bottom-left-radius: 10rpx;
-          border-bottom-right-radius: 10rpx;
-        }
-        .raito {
-          position: relative;
-        }
-        .raito::after {
-          content: '%';
-          height: 30rpx;
-          font-size: 28rpx;
-          position: absolute;
-          right: 0;
-          bottom: 24rpx;
-        }
+      }
+      .content_right {
+        justify-content: center;
+        align-items: center;
       }
     }
   }
@@ -175,7 +139,9 @@
   import cycleProgressBar from '../../components/cycleProgressBar';
   // import authorizion from '../../components/authorizion'
   export default class Custom extends wepy.page {
-    config = {};
+    config = {
+      navigationBarTitleText: '我的比赛数据'
+    }
     components = {
       itemList: itemList,
       cycleProgressBar: cycleProgressBar,

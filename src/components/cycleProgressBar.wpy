@@ -62,7 +62,6 @@
     text-align: center;
     line-height: 100px;
     font-size: 0;
-    background: @bgc-card;
     border-radius: 50%;
     border-radius: 10rpx solid transparent;
   }
@@ -70,8 +69,8 @@
     height: 100%;
     width: 100%;
     position: absolute;
-    top: 0; // background:@bgc;
-    border-radius: 50%; // opacity: 0.6;
+    top: 0; 
+    border-radius: 50%;
   }
   .less.bg {
     clip: rect(0 100px 50px 0);

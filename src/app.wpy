@@ -36,7 +36,7 @@ export default class extends wepy.app {
         {pagePath: 'pages/custom/custom',
           iconPath: 'image/result.png',
           selectedIconPath: 'image/result2.png',
-          text: '个人中心'},
+          text: '战绩'},
       ]
     }
   };

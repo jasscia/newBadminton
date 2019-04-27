@@ -21,6 +21,9 @@
   import nearMatch from './nearMatch';
   import 'wepy-async-function';
   export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '最近的赛事'
+    }
     components = {
       header: header,
       nearMatch: nearMatch,

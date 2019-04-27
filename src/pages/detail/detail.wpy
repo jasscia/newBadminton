@@ -12,7 +12,6 @@
   @import '../../common/common.less';
   .item,
   .label {
-    background: @bgc-card;
     height: 60rpx;
     line-height: 60rpx;
     vertical-align: middle;
@@ -20,7 +19,7 @@
     margin-bottom: 8rpx;
     font-size: 30rpx;
     .label.title {
-      color: @font-side;
+      color: @gray-light;
       font-weight: lighter;
       text-align: left;
     }
@@ -54,6 +53,9 @@
   import matchResult from '../../components/matchResult'
   import matchActive from '../../components/matchActive'
   export default class BaseData extends wepy.page {
+    config = {
+      navigationBarTitleText: '比赛详情'
+    }
     components = {
       matchActiveInDetail: matchActive,
       matchBaseInfoInDetail: matchBaseInfo,

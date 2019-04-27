@@ -31,14 +31,12 @@
       font-size: 36rpx;
       margin: 5rpx auto;
       padding: 15rpx;
-      background: @bgc-card;
     }
     .content {
       font-size: 28rpx;
       padding: 15rpx 0;
       padding-left: 40rpx;
-      color: @font-side; // font-weight: 400;
-      background: @bgc-card;
+      color: @gray-light; 
       .item {
         padding: 12rpx;
       }
@@ -52,6 +50,9 @@
 <script>
   import wepy from 'wepy'
   export default class Custom extends wepy.page {
+    config = {
+      navigationBarTitleText: '规则说明'
+    }
     onShareAppMessage() {
       return {
         path: '/pages/index/index'

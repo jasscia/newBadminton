@@ -169,9 +169,8 @@
 <script>
   import wepy from 'wepy';
   import {
-    initUserInfo,
-    getMyMatchData
-  } from '../../common/common';
+    api_getPersonalInfo
+  } from '../../common/api';
   import itemList from './itemList';
   import cycleProgressBar from '../../components/cycleProgressBar';
   // import authorizion from '../../components/authorizion'
@@ -218,10 +217,10 @@
     events = {
       async initPage(data) {
         console.log('emit');
-        this.userInfo = await initUserInfo(data);
+        this.userInfo = wx.getStorageSync('userInfo');
         if (this.userInfo && this.userInfo.token) {
           this.userInfoOther = wx.getStorageSync('userOtherInfo');
-          this.myMatchData = await getMyMatchData();
+          this.myMatchData = await api_getPersonalInfo();
           this.myMatchData.winrate = this.myMatchData.winrate.split(/([.%])/)[0];
           this.value = this.myMatchData.winrate;
           this.$apply();

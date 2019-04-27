@@ -23,7 +23,7 @@
     font-size: 30rpx;
     text-align: right;
     padding: 10rpx;
-    color: #999;
+    color: @font-side;
   }
   .playersList {
     display: flex;

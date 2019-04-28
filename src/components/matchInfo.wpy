@@ -1,13 +1,13 @@
 <template>
   <view class="matchInfo card">
     <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
-      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-nagative'}}">{{statusList[matchInfo.status]}}</text>
-      <text class="status {{matchInfo.ifIn?'label-info':'label-warn'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
+      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-negative'}}">{{matchInfo.status}}</text>
+      <text class="status {{matchInfo.ifIn?'text-positive':'text-negative'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
     <view class="statement-group" wx:if="{{mode==='withPanle'}}">
-      <text class="statement wait" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
-      <text class="statement {{matchInfo.contorlAttr.ifDone?'done':''}} {{matchInfo.contorlAttr.ifGoingon?'goingon':''}}" wx:else>{{matchInfo.status}}</text>
+      <text class="label-info" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
+      <text class="{{matchInfo.contorlAttr.ifDone?'label-negative':''}} {{matchInfo.contorlAttr.ifGoingon?'label-warn':''}}" wx:else>{{matchInfo.status}}</text>
     </view>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -49,22 +49,10 @@
   }
   .statement-group {
     font-size: 30rpx;
-    color: @font;
+    color: @gray;
     text-align: right;
     padding: 0;
   }
-  .statement {
-    background: cadetblue;
-  }
-  .statement.wait {
-    background: lightgoldenrodyellow;
-  }
-  .statement.done {
-    background: tomato;
-  }
-  .statement.goingon {
-    background: orange;
-  } // }
   .row2 {
     font-size: 18px;
     white-space: nowrap;
@@ -132,17 +120,7 @@
 </style>
 <script>
   import wepy from 'wepy';
-  import {
-    updateMatchInfo,
-    share,
-    downLoadMatchInfo
-  } from '../common/common'
-  import {
-    statusList
-  } from '../common/config'
-  import {
-    formateDate
-  } from '../common/util'
+  import {formateDate} from '../common/util'
   export default class matchInfo extends wepy.component {
     props = {
       matchInfo: {
@@ -153,17 +131,15 @@
         type: String,
         default: 'withoutPanle'
       },
-      // bgColor: {
-      //   type: String,
-      //   default: '#fff',
-      // }
     }
     onLoad() {
-      // console.log(`bg color ${this.bgColor}`)
+      console.log(this.statusList, this.matchInfo)
     }
     methods = {
       emitGotoLive(e) {
-        this.$emit('goToLive', e)
+        console.log('click---', this.statusList, this.matchInfo)
+        return
+        // this.$emit('goToLive', e)
       }
     }
   }

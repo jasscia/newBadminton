@@ -1,4 +1,5 @@
 import {userInfo} from './login'
+import {statusList} from './config'
 
 const setStorage = function(key, data) {
   wx.setStorage({
@@ -147,10 +148,8 @@ if(matchInfo.status===2){
 
 //修改状态
 
-const _statusList = ['报名中','报名结束','正在比赛','比赛结束']
-
 const _transStatus = function(matchInfo) {
-  matchInfo.status = _statusList[matchInfo.status || 0]
+  matchInfo.status = statusList[matchInfo.status || 0]
 }
 
 const _transTime = function(matchInfo) {

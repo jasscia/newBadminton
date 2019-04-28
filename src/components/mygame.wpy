@@ -10,10 +10,10 @@
       <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSide :index.sync="index">
           <block slot='frontSide'>
-            <matchInfo :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfo>
+            <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
           </block>
           <block slot='backSide'>
-            <matchActive :matchInfo.sync="matchInfo"></matchActive>
+            <matchActive :matchInfo.sync="matchInfo" mode="card"></matchActive>
           </block>
         </twoSide>
       </view>
@@ -52,11 +52,11 @@
       letter-spacing: 5rpx;
     }
     .matchCard {
-      margin: 20px;
-      padding-bottom: 10px;
-      font-size: 12px;
+      margin: 20rpx;
+      padding-bottom: 10rpx;
+      font-size: 28rpx;
       color: #666;
-      border-radius: 10px;
+      border-radius: 30rpx;
       position: relative;
       height: 300rpx;
     }
@@ -74,10 +74,6 @@
         default: []
       },
       activeBar: {
-        type: String,
-        default: '',
-      },
-      mode: {
         type: String,
         default: '',
       },

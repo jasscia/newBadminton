@@ -1,13 +1,15 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <mygame :matchInfoList.sync="matchInfoList" :activeBar.sync="activeBar" :mode="mode"></mygame>
+    <mygame :matchInfoList.sync="matchInfoList" :activeBar.sync="activeBar"></mygame>
     <!-- <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion> -->
   </view>
 </template>
 <style lang="less" scoped>
   @import '../../common/common.less';
- 
+  tab {
+    height: 30rpx;
+  }
 </style>
 <script>
   import wepy from "wepy";
@@ -28,8 +30,8 @@
       userInfo: {},
       matchInfoList: [],
       activeBar: '我创建的',
+      currentTab: 1,
       titleList: ['我创建的', '我参与的'],
-      mode: 'withPanle',
       type: 'mycreate',
     }
     components = {

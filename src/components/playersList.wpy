@@ -16,14 +16,13 @@
 <style lang="less" scoped>
   @import '../common/common.less';
   .wrap {
-    background: @bgc-card;
-    margin: 0rpx auto 10rpx;
+    margin: 0rpx 10rpx;
   }
   .note {
     font-size: 30rpx;
     text-align: right;
     padding: 10rpx;
-    color: @font-side;
+    color: @gray-dark;
   }
   .playersList {
     display: flex;
@@ -43,11 +42,11 @@
         position: relative;
       }
       .me {
-        border: 6rpx solid @btn-em;
+        border: 6rpx solid @orange;
         box-sizing: border-box;
       }
       .owner {
-        border: 6rpx solid @btn;
+        border: 6rpx solid @blue;
         box-sizing: border-box;
       }
       .name {

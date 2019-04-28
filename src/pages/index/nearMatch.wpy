@@ -26,8 +26,7 @@
       letter-spacing: 5rpx;
     }
     .matchCard {
-      margin: 30rpx;
-      padding: 10rpx;
+      margin: 0 30rpx;
       font-size: 12px;
       color: #666;
       border-radius: 10px;

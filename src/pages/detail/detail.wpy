@@ -1,7 +1,7 @@
 
 <template>
   <view class="container">
-    <matchActiveInDetail :matchInfo.sync="matchInfo" :mode.sync="mode"></matchActiveInDetail>
+    <matchActiveInDetail :matchInfo.sync="matchInfo" mode="label"></matchActiveInDetail>
     <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
     <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
     <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}" :matchInfo.sync="matchInfo"></matchResultInDetail>
@@ -64,8 +64,7 @@
     }
     data = {
       gameid: null,
-      matchInfo: {},
-      mode: 'cube'
+      matchInfo: {}
     }
     onLoad(options) {
       this.gameid = options.gameid

@@ -5,9 +5,7 @@
 </template>
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .container {
-    margin-top: -30rpx;
-  }
+  
 </style>
 <script>
   import wepy from 'wepy';

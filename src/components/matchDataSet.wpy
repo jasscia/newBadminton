@@ -12,7 +12,7 @@
 <style lang="less" scoped>
   @import '../common/common.less';
   .label {
-    color: @font-side;
+    color: @gray-light;
     font-weight: lighter;
     padding: 20rpx;
     text-align: left;
@@ -22,7 +22,7 @@
     margin-bottom: 4rpx;
   }
   .roundCount {
-    color: @font;
+    color: @gray;
     text-align: center;
     padding: 20rpx;
     text-align: center;

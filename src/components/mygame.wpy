@@ -53,12 +53,11 @@
     }
     .matchCard {
       margin: 20rpx;
-      padding-bottom: 10rpx;
       font-size: 28rpx;
       color: #666;
       border-radius: 30rpx;
       position: relative;
-      height: 300rpx;
+      height: 380rpx;
     }
   }
 </style>

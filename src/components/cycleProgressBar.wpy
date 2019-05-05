@@ -63,7 +63,7 @@
     line-height: 100px;
     font-size: 0;
     border-radius: 50%;
-    border-radius: 10rpx solid transparent;
+    border: 10rpx solid transparent;
   }
   .bg {
     height: 100%;
@@ -77,7 +77,7 @@
   }
   .bg1,
   .bg2 {
-    border: 8rpx solid orange;
+    border: 8rpx solid @orange;
     border-radius: 50%;
     height: 100%;
     width: 100%;

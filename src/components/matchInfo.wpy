@@ -1,11 +1,11 @@
 <template>
   <view class="matchInfo card">
-    <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
+    <view class="row row1" wx1:if="{{mode==='withoutPanle'}}">
       <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-negative'}}">{{matchInfo.status}}</text>
       <text class="status {{matchInfo.ifIn?'text-positive':'text-negative'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
-    <view class="statement-group" wx:if="{{mode==='withPanle'}}">
+    <view class="row row1 statement-group" wx:if="{{mode==='withPanle'}}">
       <text class="label-info" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
       <text class="{{matchInfo.contorlAttr.ifDone?'label-negative':''}} {{matchInfo.contorlAttr.ifGoingon?'label-warn':''}}" wx:else>{{matchInfo.status}}</text>
     </view>
@@ -31,18 +31,13 @@
   @import '../common/common.less';
   .matchInfo {
     border-radius: 10px;
-    margin: 0;
-    padding: 0;
-  }
-  .row {
-    margin: 20rpx;
   }
   .row1 {
     display: flex;
     justify-content: space-between;
     font-size: 28rpx;
     color: #333;
-    padding: 0 10rpx;
+    padding: 0rpx 30rpx 20rpx;
     .status {
       border-radius: 6rpx;
     }
@@ -51,27 +46,34 @@
     font-size: 30rpx;
     color: @gray;
     text-align: right;
-    padding: 0;
+    padding: 0 20rpx 20rpx;
   }
   .row2 {
     font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 10rpx 20rpx;
     .owner {
       font-size: 12px;
       display: inline;
       font-weight: lighter;
     }
   }
+  .row3 {
+    padding: 20rpx;
+  }
   .row4 {
     overflow: hidden;
     white-space: nowrap;
+    padding: 20rpx;
   }
   .row5 {
     height: 30px;
     display: flex;
     justify-content: space-between;
+    padding: 20rpx;
+    box-sizing: content-box;
     .avatarList {
       // margin-right: 10rpx;
       flex: 1;

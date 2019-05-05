@@ -19,20 +19,17 @@ const urlList={
 };
 
 const htr = function(url , method, data){
-  console.log('htr=', ...arguments)
   wx.showLoading({})
   return new Promise((resolve, reject = () => {
-    console.error(...arguments)
     wx.hideLoading({})
   }) => {
     wx.request({
       url,
       method,
-      data: Object.assign(data || {}, {token: data && data.token || userInfo.token}),
+      data: Object.assign(data || {}, url == urlList.getToken ? {} : {token: data && data.token || userInfo.token}),
       success: (res) => {
         let statusCode = res.statusCode
         let data = res.data
-        console.log(statusCode, data)
         if (statusCode >= 200 && statusCode < 300 || statusCode == 304) {
           if (url == urlList.getToken && data.token) {
             wx.hideLoading({})

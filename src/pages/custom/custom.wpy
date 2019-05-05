@@ -132,9 +132,7 @@
 </style>
 <script>
   import wepy from 'wepy';
-  import {
-    api_getPersonalInfo
-  } from '../../common/api';
+  import { api_getPersonalInfo } from '../../common/api';
   import itemList from './itemList';
   import cycleProgressBar from '../../components/cycleProgressBar';
   // import authorizion from '../../components/authorizion'

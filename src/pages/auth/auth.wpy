@@ -1,66 +1,73 @@
 <template>
-  <div class='wraper'>
+  <div class="container">
     <view class="avatar">
       <open-data type="userAvatarUrl"></open-data>
+      <!-- <image src="{{userInfo.avatar_url}}"> -->
     </view>
     <div class="tip">为继续操作，需提供以下授权：</div>
     <ul class="tip_side">
       <li>获取你的公开信息（昵称，头像等）</li>
     </ul>
-    <button class="btn" open-type="getUserInfo" @tap="auth">确认授权</button>
+    <button class="btn" wx:if="{{canIUse}}"
+      open-type="getUserInfo" bindgetuserinfo="getUserInfo">确认授权</button>
+    <view wx:else >请升级微信版本</view>
   </div>
 </template>
 
 <script>
-  import wepy from 'wepy';
-  import {
-    auth
-  } from '../../common/login';
-  export default class Auth extends wepy.page {
-    methods = {
-      async auth() {
-        let res = await auth();
-        console.log('res', res)
-        if (res) {
-          wx.navigateBack()
-        }
+import wepy from 'wepy';
+import { auth } from '../../common/login';
+export default class Auth extends wepy.page {
+  data = {
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
+  }
+  async onLoad() {  }
+
+  methods = {
+    async getUserInfo(e) {
+      let res = await auth(e.detail.userInfo)
+      if (res) {
+        wx.navigateBack();
       }
     }
   }
+}
 </script>
 <style lang="less" scoped>
-  @import '../../common/common.less';
+@import '../../common/common.less';
+.container {
+  justify-content: center;
+  align-items: center;
   .avatar {
-    display: block;
-    width: 200rpx;
-    height: 200rpx;
+    width: 400rpx;
+    height: 400rpx;
     border-radius: 50%;
     border: 2px solid #fff;
-    margin: 100rpx auto 30rpx;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    open-data {
+      height: 100%;
+      width: 100%;
+      border-width: 50%;
+    }
   }
   .tip {
-    color: @font;
+    color: @gray-dark;
     font-size: 16px;
     margin: auto 60rpx;
     line-height: 60rpx;
   }
   .tip_side {
-    display: block;
     margin: auto 80rpx;
     line-height: 60rpx;
-    color: @font-side;
+    color: @gray-darker;
     font-size: 14px;
   }
   .btn {
-    margin: 60rpx auto;
-    width: 630rpx;
     line-height: 90rpx;
     font-size: 40rpx;
     color: #fff;
-    background: @btn;
+    background: @blue;
   }
+}
 </style>
 
 

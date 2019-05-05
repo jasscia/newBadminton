@@ -16,7 +16,7 @@
     padding-left: 30rpx;
     label {
       width: 150rpx;
-      color: @font-side;
+      color: @gray-lighter;
       font-weight: lighter;
     }
     label,

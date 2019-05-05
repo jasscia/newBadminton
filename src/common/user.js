@@ -1,7 +1,1 @@
-function getUserInfo(){
 
-}
-
-export {
-  getUserInfo
-}

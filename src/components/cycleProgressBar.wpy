@@ -1,18 +1,11 @@
 <template>
   <view class="cycleProgressBar">
-    <view class="cycle">
-      <block wx:if="{{value<=50}}">
-        <view class="less bg">
-          <view class="less bg1" style="transform: rotate({{value/100*360+'deg'}})"></view>
-        </view>
-      </block>
-      <block wx:if="{{value>50}}">
-        <view class="more bg">
-          <view class="more bg1" style="transform: rotate(180deg)"></view>
-          <view class="more bg2" style="transform: rotate({{value/100*360+'deg'}})"></view>
-        </view>
-      </block>
-      <view class="text">
+    <view class="cycle-wrap">
+      <view class="circle">
+        <view class="left" style="transform: rotate({{value > 50  ? '180deg' : value/100*360+'deg'}})"></view>
+        <view class="right {{value <= 50 ? 'right-hide' : ''}}" style="transform: rotate({{value > 50 ? value/100*360+'deg' : '0deg'}})"></view>
+      </view>
+      <view class="text-box">
         <view class="value {{visualvalue.doneNum?'progress':''}}">{{value}}</view>
         <view class="comment">{{comment}}</view>
       </view>
@@ -23,80 +16,107 @@
   @import '../common/common.less';
   .cycleProgressBar {
     text-align: center;
-  }
-  .text {
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    margin: auto;
-    .value,
-    .comment {
-      color: @font;
-      margin: 0;
-      width: 100%;
-      text-align: center;
+    .cycle-wrap {
       position: relative;
+      display: inline-block;
+      height: 100px;
+      width: 100px;
+      text-align: center;
+      line-height: 100px;
+      font-size: 0;
+      border-radius: 50%;
+      border: 10rpx solid transparent;
+      .circle {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border: 2px solid @gray;
+        .left,
+        .right {
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          left: -2px;
+          bottom: -2px;
+          box-sizing: border-box;
+          border-radius: 50%;
+          border: 2px solid @orange;
+          clip: rect(0, 50px, 100px, 0);
+        }
+        .right-hide {
+          border-color: @gray;
+        }
+      }
+      .text-box {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        margin: auto;
+        .value,
+        .comment {
+          color: @gray-darker;
+          margin: 0;
+          width: 100%;
+          text-align: center;
+          position: relative;
+        }
+        .value {
+          height: 60rpx;
+          font-size: 80rpx;
+        }
+        .comment {
+          height: 30rpx;
+          font-size: 24rpx;
+        }
+        .progress::after {
+          content: '%';
+          height: 30rpx;
+          font-size: 30rpx;
+          position: absolute;
+          right: 18rpx;
+          bottom: 20rpx;
+        }
+      }
     }
-    .value {
-      height: 60rpx;
-      font-size: 80rpx;
-    }
-    .comment {
-      height: 30rpx;
-      font-size: 24rpx;
-    }
-    .progress::after {
-      content: '%';
-      height: 30rpx;
-      font-size: 30rpx;
-      position: absolute;
-      right: 18rpx;
-      bottom: 20rpx;
-    }
-  }
-  .cycle {
-    display: inline-block;
-    position: relative;
-    height: 100px;
-    width: 100px;
-    text-align: center;
-    line-height: 100px;
-    font-size: 0;
-    border-radius: 50%;
-    border: 10rpx solid transparent;
-  }
-  .bg {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0; 
-    border-radius: 50%;
-  }
-  .less.bg {
-    clip: rect(0 100px 50px 0);
-  }
-  .bg1,
-  .bg2 {
-    border: 8rpx solid @orange;
-    border-radius: 50%;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-    clip: rect(50px 100px 100px 0);
-    transform: rotate(0deg);
-  }
-  .less.bg1 {
-    transition: transform .5s linear;
-  }
-  .more.bg1 {
-    transition: transform .3s linear;
-  }
-  .more.bg2 {
-    transition: transform .3s linear .3s;
-  }
+  } // .bg {
+  //   height: 100%;
+  //   width: 100%;
+  //   position: absolute;
+  //   top: 0; 
+  //   border-radius: 50%;
+  // }
+  // .less.bg {
+  //   clip: rect(0 100px 50px 0);
+  // }
+  // .bg1,
+  // .bg2 {
+  //   border: 8rpx solid @orange;
+  //   border-radius: 50%;
+  //   height: 100%;
+  //   width: 100%;
+  //   box-sizing: border-box;
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   clip: rect(50px 100px 100px 0);
+  //   transform: rotate(0deg);
+  // }
+  // .less.bg1 {
+  //   transition: transform .5s linear;
+  // }
+  // .more.bg1 {
+  //   transition: transform .3s linear;
+  // }
+  // .more.bg2 {
+  //   transition: transform .3s linear .3s;
+  // }
 </style>
 
 <script>

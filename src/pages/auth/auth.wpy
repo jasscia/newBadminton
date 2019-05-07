@@ -41,7 +41,7 @@
     overflow: hidden;
   }
   .tip {
-    color: @font;
+    color: @gray-darker;
     font-size: 16px;
     margin: auto 60rpx;
     line-height: 60rpx;
@@ -50,7 +50,7 @@
     display: block;
     margin: auto 80rpx;
     line-height: 60rpx;
-    color: @font-side;
+    color: @gray;
     font-size: 14px;
   }
   .btn {
@@ -59,7 +59,7 @@
     line-height: 90rpx;
     font-size: 40rpx;
     color: #fff;
-    background: @btn;
+    background:@blur;
   }
 </style>
 

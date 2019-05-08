@@ -16,7 +16,18 @@
   @import '../common/common.less';
   .cycleProgressBar {
     text-align: center;
-    .cycle-wrap {
+  }
+  .text {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    .value,
+    .comment {
+      color: @gray;
+      margin: 0;
+      width: 100%;
+      text-align: center;
       position: relative;
       display: inline-block;
       height: 100px;
@@ -85,38 +96,7 @@
         }
       }
     }
-  } // .bg {
-  //   height: 100%;
-  //   width: 100%;
-  //   position: absolute;
-  //   top: 0; 
-  //   border-radius: 50%;
-  // }
-  // .less.bg {
-  //   clip: rect(0 100px 50px 0);
-  // }
-  // .bg1,
-  // .bg2 {
-  //   border: 8rpx solid @orange;
-  //   border-radius: 50%;
-  //   height: 100%;
-  //   width: 100%;
-  //   box-sizing: border-box;
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   clip: rect(50px 100px 100px 0);
-  //   transform: rotate(0deg);
-  // }
-  // .less.bg1 {
-  //   transition: transform .5s linear;
-  // }
-  // .more.bg1 {
-  //   transition: transform .3s linear;
-  // }
-  // .more.bg2 {
-  //   transition: transform .3s linear .3s;
-  // }
+  } 
 </style>
 
 <script>

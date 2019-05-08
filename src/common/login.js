@@ -1,13 +1,13 @@
 import { api_getToken } from "./api";
-import { setStorage } from "./util";
 
 let userInfo = wx.getStorageSync('userInfo')
 
 //获取登录凭证code
 const _login = function(){
-  return new Promise((resolve,reject)=>{
+  return new Promise((resolve, reject = () => {console.log('wx.login fail')}) => {
     wx.login({
       success: (res) => {
+        console.log('wx.login success')
         resolve(res.code)
       },
       fail: reject
@@ -16,23 +16,27 @@ const _login = function(){
 }
 
 //获取用户信息（无需登录）
-const _getUserInfo = function(){
-  return new Promise((resolve,reject)=>{
-    wx.getUserInfo({
-      success: (res) => {
-        resolve(res.userInfo)
-      },
-      fail: reject
-    })
-  })
-}
+// const _getUserInfo = function(){
+//   return new Promise((resolve,reject)=>{
+//     wx.getUserInfo({
+//       success: (res) => {
+//         console.log('get user info success')
+//         resolve(res.userInfo)
+//       },
+//       fail: reject
+//     })
+//   })
+// }
 
-const auth = async function() {
+const auth = async function(wxUserInfo) {
   let code = await _login()
-  let userInfoWidthToken = await api_getToken(code, userInfo.nickName, userInfo.avatarUrl) || null
+  let userInfoWidthToken = await api_getToken(code, wxUserInfo.nickName, wxUserInfo.avatarUrl) || null
   if (userInfoWidthToken.token) {
     userInfo = userInfoWidthToken
-    setStorage('userInfo', userInfoWidthToken)
+    wx.setStorage({
+      key: 'userInfo',
+      data: userInfoWidthToken
+    });
     return true
   }
 }

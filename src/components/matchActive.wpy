@@ -26,15 +26,15 @@
     background: @blue;
   }
   .matchActive.label > .btnBox{
-    align-items: flex-start;
+    // align-items: flex-start;
   }
   .matchActive {
     margin: 0;
     padding: 0;
     .btnBox {
       display: flex;
-      align-items: end;
-      align-items: flex-end;
+      align-items: center;
+      // align-items: flex-end;
       justify-content: space-around;
       padding: 20rpx 0;
       border-radius: 10rpx;

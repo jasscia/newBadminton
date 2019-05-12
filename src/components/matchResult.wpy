@@ -42,6 +42,7 @@
     line-height: 80rpx;
     border-radius: 20rpx;
     background: #fff;
+    color: @gray-darker;
   }
 
   .item1 {

@@ -18,7 +18,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-  @import '../common/common.less';
+  @import '../../common/common.less';
   .warp {
     .add {
       margin-top: 40rpx;
@@ -50,15 +50,9 @@
 </style>
 <script>
   import wepy from "wepy";
-  import {
-    api_getMatchInfoList
-  } from '../common/api';
-  import {
-    share
-  } from '../common/util';
-  import matchInfo from '../components/matchInfo';
-  import twoSide from '../components/twoSide';
-  import matchActive from '../components/matchActive';
+  import matchInfo from '../../components/matchInfo';
+  import matchActive from '../../components/matchActive';
+  import twoSide from '../../components/twoSide';
   export default class mycreate extends wepy.page {
     data = {
       userInfo: {},
@@ -69,13 +63,7 @@
       twoSideInMycreate: twoSide,
       matchActiveInMycreate: matchActive,
     }
-    async onLoad() {
-      this.$emit('initPage');
-    }
-    async onShareAppMessage(res) {
-      await initUserInfo();
-      return share('/pages/main/main.wpy')
-    }
+
     methods = {
       createNewAgainst() {
         wx.navigateTo({
@@ -93,15 +81,6 @@
         // console.log('mycreate',this.matchInfoList)
         this.$apply()
       },
-      async initPage(data) {
-        console.log('emit');
-        this.userInfo = await initUserInfo(data);
-        console.log('userInfo', this.userInfo);
-        if (this.userInfo && this.userInfo.token) {
-          this.matchInfoList = await api_getMatchInfoList('mycreate')
-        }
-        this.$apply();
-      }
     }
   }
 </script>

@@ -21,7 +21,7 @@
   </view>
 </template>
 <style lang="less" scoped>
-  @import '../common/common.less';
+  @import '../../common/common.less';
   .warp {
     .add {
       margin-top: 40rpx;
@@ -63,9 +63,9 @@
 </style>
 <script>
   import wepy from "wepy";
-  import matchInfo from '../components/matchInfo';
-  import twoSide from '../components/twoSide';
-  import matchActive from '../components/matchActive';
+  import matchActive from '../../components/matchActive';
+  import matchInfo from '../../components/matchInfo';
+  import twoSide from '../../components/twoSide';
   export default class Mygame extends wepy.component {
     props = {
       matchInfoList: {
@@ -81,9 +81,6 @@
       matchInfo: matchInfo,
       twoSide: twoSide,
       matchActive: matchActive,
-    }
-    onLoad(option) {
-      console.log('my game on load')
     }
     watch = {
       matchInfoList(n, o) {

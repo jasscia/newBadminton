@@ -1,7 +1,6 @@
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import {initUserInfo} from './common/common'
 export default class extends wepy.app {
   config = {
     pages: [
@@ -42,8 +41,6 @@ export default class extends wepy.app {
   };
 
   async onLoad() {
-    console.log('onload')
-    await initUserInfo()
   }
 }
 </script>

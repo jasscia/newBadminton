@@ -35,12 +35,8 @@
 
 <script>
   import wepy from 'wepy';
-  import {
-    formateTime
-  } from '../../common/util';
-  import {
-    api_createGame
-  } from '../../common/api';
+  import {formateTime} from '../../common/util';
+  import {api_createGame} from '../../common/api';
   import item2colunm from '../../components/item2colunm';
   export default class CreateNewAgain extends wepy.page {
     config = {

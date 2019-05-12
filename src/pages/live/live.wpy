@@ -26,12 +26,7 @@
     api_getMatchInfo,
     api_updateMatchInfo
   } from "../../common/api";
-  import {
-    share
-  } from "../../common/util";
-  import {
-    calcprogress
-  } from "../../common/common";
+  import {share, calcprogress} from "../../common/util";
   import header from '../../components/header'
   import matchDataSet from '../../components/matchDataSet'
   import playersList from '../../components/playersList'

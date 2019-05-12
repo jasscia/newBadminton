@@ -44,12 +44,8 @@
 
 <script>
   import wepy from 'wepy'
-  import {
-    share
-  } from '../../common/common'
-  import {
-    api_getMatchInfo
-  } from '../../common/api'
+  import {share} from '../../common/util'
+  import {api_getMatchInfo} from '../../common/api'
   import playersList from '../../components/playersList'
   import matchBaseInfo from '../../components/matchBaseInfo'
   import matchResult from '../../components/matchResult'

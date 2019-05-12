@@ -8,12 +8,7 @@
 </style>
 <script>
   import wepy from 'wepy';
-  import {
-    judgeIfIn
-  } from '../../common/common';
-  import {
-    api_getMatchInfoList
-  } from '../../common/api';
+  import {api_getMatchInfoList} from '../../common/api';
   import header from '../../components/header'
   import nearMatch from './nearMatch';
   import 'wepy-async-function';

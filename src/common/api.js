@@ -110,8 +110,6 @@ const api_deletePlayer=async function(data){
 const api_changeRealname=async function(data){
   let url = urlList.changeRealname;
   let res = await htr(url, 'POST', data);
-//     userInfo.real_name=realName
-//     await setStorage('userInfo',userInfo)
   return res || {}
 }
 

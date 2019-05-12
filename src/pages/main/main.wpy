@@ -13,14 +13,11 @@
 </style>
 <script>
   import wepy from "wepy";
-  import {
-    share
-  } from '../../common/common';
-  import {
-    api_getMatchInfoList
-  } from '../../common/api';
-  import mygame from '../../components/mygame';
+  import {share} from '../../common/util';
+  import {api_getMatchInfoList} from '../../common/api';
   import header from '../../components/header';
+  import mygame from './mygame';
+  import mycreate from './mycreate';
   // import authorizion from '../../components/authorizion'
   export default class Main extends wepy.page {
     config = {
@@ -36,10 +33,6 @@
     components = {
       mygame: mygame,
       header: header,
-      // authorizion:authorizion,
-    }
-    onLoad() {
-      // this.$emit('getMatchInfoList')
     }
     onShow() {
       this.$emit('getMatchInfoList')

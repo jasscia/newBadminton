@@ -64,10 +64,12 @@
   其余的 分别宽 160 70 70 110 */
       .side {
         width: 160rpx;
-        color: @gray-light;
+        color: @gray-lighter;
         .name {
-          width: 100%;
-          margin: 10px 0;
+          height: 60rpx;
+          line-height: 60rpx;
+          margin: 10px 10rpx;
+          box-sizing: border-box;
           text-align: center;
           white-space: nowrap;
           overflow: hidden;

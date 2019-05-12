@@ -26,9 +26,6 @@
 
 <style lang="less" scoped>
   @import '../common/common.less';
-  .baseInfo {
-    
-  }
   .item {
     display: flex;
     height: 80rpx;
@@ -39,6 +36,7 @@
     .content {
       height: 80rpx;
       line-height: 80rpx;
+      color: @gray-darker;
     }
     .title {
       width: 150rpx;

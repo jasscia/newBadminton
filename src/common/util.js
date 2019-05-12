@@ -1,17 +1,21 @@
 import {userInfo} from './login'
 import {statusList} from './config'
 
-const setStorage = function(key, data) {
-  wx.setStorage({
-    key: key,
-    data: data
-  });
+const share = function(path){
+  return {
+      path: path,
+      imageUrl: '/image/share.png',
+      success: function(res) {
+        console.log("转发成功",res,path)
+      },
+      fail: function(res) {
+        console.log("转发失败",res,path)
+      }
+    }
 }
 
-const fmtMatchInfo = function(matchInfo){
-  let status=['报名中','报名结束','正在比赛','比赛结束'];
-                                                                                                                       
-  matchInfo.progressData = _calcprogress(matchInfo)                                                                           
+const fmtMatchInfo = function(matchInfo){                                                              
+  matchInfo.progressData = calcprogress(matchInfo)                                                                           
   matchInfo.ifIn = _judgeIfIn(matchInfo)                                                                                      
   matchInfo.groupWithInfo = _getGroupListWithPlayerInfo(matchInfo)                                                            
   matchInfo.contorlAttr = _calcContorlAttr(matchInfo)                                                                         
@@ -53,15 +57,7 @@ const formatNumber = n => {
 }
 
 
-export {
-  formateDate,
-  formateTime,
-  fmtMatchInfo,
-  formatNumber,
-  setStorage
-}
-
-const _calcprogress=function(matchInfo){                                                                                 
+const calcprogress=function(matchInfo){                                                                                 
   let doneNum=0                                                                                                         
   let totalNum=0                                                                                                        
   let progress=0                                                                                                        
@@ -71,14 +67,23 @@ const _calcprogress=function(matchInfo){
   }                                                                                                                     
   let doneList=groupList.filter(groupInfo => {                                                                          
     return groupInfo.status                                                                                             
-  });                                                                                                                   
+  });                                                                                 
   doneNum=doneList.length                                                                                               
   totalNum=groupList.length                                                                                             
   if(totalNum){                                                                                                         
     progress=Math.round(doneNum/totalNum*100,2)                                                                         
   }                                                                                                                     
-  return {doneNum,totalNum,progress}                                                                                    
+  return {doneNum, totalNum, progress}                                                                             
 }   
+
+export {
+  formateDate,
+  formateTime,
+  fmtMatchInfo,
+  formatNumber,
+  share,
+  calcprogress
+}
 
 const _judgeIfIn=function(matchInfo){                                                                                    
   let players=matchInfo.players                                                                                       
@@ -147,7 +152,6 @@ if(matchInfo.status===2){
 }
 
 //修改状态
-
 const _transStatus = function(matchInfo) {
   matchInfo.status = statusList[matchInfo.status || 0]
 }

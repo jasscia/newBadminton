@@ -57,6 +57,7 @@
         vertical-align: middle;
         white-space: nowrap;
         overflow: hidden;
+        color: @gray-darker;
       }
     }
   }

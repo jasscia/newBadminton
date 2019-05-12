@@ -29,7 +29,8 @@
     }
     input,
     picker,
-    .picker {
+    witch {
+      color: @gray-darker;
       width: 500rpx;
     }
   }

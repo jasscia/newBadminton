@@ -64,6 +64,7 @@
   其余的 分别宽 160 70 70 110 */
       .side {
         width: 160rpx;
+        color: @gray-light;
         .name {
           width: 100%;
           margin: 10px 0;
@@ -74,27 +75,23 @@
       }
       .handleBtnGroup {
         width: 70rpx;
+        button {
+          width: 100%;
+          height: 60rpx;
+          line-height: 60rpx;
+          margin: 10rpx 0;
+          padding: 0;
+          text-align: center;
+          display: inline-block;
+        }
       }
       .score {
         width: 70rpx;
-      }
-      .sub {
-        width: 110rpx;
-      }
-      .handleBtnGroup button {
-        width: 100%;
-        height: 60rpx;
-        line-height: 60rpx;
-        margin: 10rpx 0;
-        text-align: center;
-        display: inline-block;
-      }
-      .score {
         height: 160rpx;
         text-align: center;
         line-height: 160rpx;
         font-size: 60rpx;
-        background: @blur;
+        background: @blue;
       }
       .scoreL {
         border-bottom-left-radius: 50%;
@@ -105,6 +102,7 @@
         border-top-right-radius: 50%;
       }
       .sub {
+        width: 110rpx;
         font-size: 25rpx;
         letter-spacing: -2rpx;
         text-align: center;

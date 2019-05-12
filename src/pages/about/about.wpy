@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container about">
     <view class="title">赛制规制</view>
     <view class="content">
       <view class="item">采用“轮转制”</view>
@@ -25,8 +25,9 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .container {
+  .about {
     // padding:20rpx 40rpx;
+    background: #fff;
     .title {
       font-size: 36rpx;
       margin: 5rpx auto;
@@ -36,7 +37,7 @@
       font-size: 28rpx;
       padding: 15rpx 0;
       padding-left: 40rpx;
-      color: @gray-light; 
+      color: @gray-dark; 
       .item {
         padding: 12rpx;
       }

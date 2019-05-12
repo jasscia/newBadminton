@@ -12,7 +12,7 @@
 <style lang="less" scoped>
   @import '../common/common.less';
   .label {
-    color: @gray-light;
+    color: @gray-dark;
     font-weight: lighter;
     padding: 20rpx;
     text-align: left;
@@ -46,6 +46,8 @@
     line-height: 100rpx;
     vertical-align: middle;
     text-align: center;
+    background: @orange;
+    color: #fff;
   }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container create">
     <view class="search" @tap="gotoIndex">去看看近期的比赛</view>
     <form @submit="submit">
       <repeat for="{{titleList}}" key="index" index="index" item="title">
@@ -11,7 +11,8 @@
 </template>
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .container {
+  .create {
+    background: #fff;
     .search {
       height: 300rpx;
       line-height: 375rpx;
@@ -20,12 +21,14 @@
       border-bottom-left-radius: 50% 10%;
       border-bottom-right-radius: 50% 10%;
       background: @orange;
+      color: #fff;
       margin-bottom: 60rpx;
     }
     button {
       margin: 60rpx auto;
       width: 375rpx;
       background: @orange;
+      color: #fff;
     }
   }
 </style>

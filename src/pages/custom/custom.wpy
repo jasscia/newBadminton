@@ -37,11 +37,11 @@
       </view>
     </view>
     <view class="part part4" wx:if="{{userInfo.avatar_url}}">
-      <view class="item" @tap.stop="navigateToBaseInfoPage">
+      <view class="item  border-bottom" @tap.stop="navigateToBaseInfoPage">
         <view class="side left">我的资料</view>
         <view class="side right">修改</view>
       </view>
-      <view class="item" @tap.stop="gotoAbout">
+      <view class="item  border-bottom" @tap.stop="gotoAbout">
         <text class="side left">关于</text>
         <text class="side right"></text>
       </view>
@@ -88,11 +88,12 @@
       display: flex;
       padding: 10px;
       margin: 10px 0;
+      color: @gray-darker;
     }
     .right {
       flex: 1;
       text-align: right;
-      color: @gray-light;
+      color: @gray-dark;
       font-size: 14px;
     }
     .right::after {
@@ -102,6 +103,10 @@
   }
   .part3 {
     padding: 10px;
+    .item {
+      margin-bottom: 30rpx;
+      color: @gray-darker;
+    }
     .content {
       display: flex;
       .content_left,
@@ -114,7 +119,7 @@
         justify-content: space-around;
         .subItem {
           display: flex;
-          padding: 0 10rpx;
+          padding: 20rpx;
           font-size: 32rpx;
           .type {
             // flex: 0;

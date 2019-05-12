@@ -1,5 +1,5 @@
 <template>
-  <form class="container" @submit="submitBaseInfo">
+  <form class="container edit" @submit="submitBaseInfo">
     <repeat for="{{list}}" key="index" index="index" item="item">
       <item2colunm :item.sync="item"></item2colunm>
     </repeat>
@@ -8,11 +8,13 @@
 </template>
 <style lang="less">
   @import '../../common/common.less';
-  .container {
+  .edit {
+    background: #fff;
     button {
       margin: 20px auto;
       width: 375rpx;
       background: @orange;
+      background: #fff;
     }
   }
 </style>

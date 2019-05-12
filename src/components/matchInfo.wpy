@@ -1,13 +1,13 @@
 <template>
   <view class="matchInfo card">
-    <view class="row row1" wx1:if="{{mode==='withoutPanle'}}">
+    <view class="row row1" wx:if="{{from==='all'}}">
       <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-negative'}}">{{matchInfo.status}}</text>
       <text class="status {{matchInfo.ifIn?'text-positive':'text-negative'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
-    <view class="row row1 statement-group" wx:if="{{mode==='withPanle'}}">
+    <view class="row row1" wx:if="{{from==='my'}}">
       <text class="label-info" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
-      <text class="{{matchInfo.contorlAttr.ifDone?'label-negative':''}} {{matchInfo.contorlAttr.ifGoingon?'label-warn':''}}" wx:else>{{matchInfo.status}}</text>
+      <text class="status {{matchInfo.contorlAttr.ifDone?'label-negative': matchInfo.contorlAttr.ifGoingon?'label-warn':'label-positive'}}" wx:else>{{matchInfo.status}}</text>
     </view>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -37,16 +37,12 @@
     justify-content: space-between;
     font-size: 28rpx;
     color: #333;
-    padding: 0rpx 30rpx 20rpx;
-    .status {
+    .status,
+    .label-info {
+      height: 50rpx;
+      line-height: 50rpx;
       border-radius: 6rpx;
     }
-  }
-  .statement-group {
-    font-size: 30rpx;
-    color: @gray;
-    text-align: right;
-    padding: 0 20rpx 20rpx;
   }
   .row2 {
     font-size: 18px;
@@ -129,13 +125,13 @@
         type: Object,
         default: {},
       },
-      mode: {
+      from: {
         type: String,
-        default: 'withoutPanle'
+        default: 'all'
       },
     }
     onLoad() {
-      console.log(this.statusList, this.matchInfo)
+      // console.log(this.statusList, this.matchInfo)
     }
     methods = {
       emitGotoLive(e) {

@@ -1,7 +1,7 @@
 
 <template>
   <view class="warp">
-    <view class="label">每人场数</view>
+    <view class="label">每人场数:</view>
     <input type="number" name="" class="roundCount" value="{{roundCount}}" placeholder="每人场次与人数的乘积,应被4整除,且不大于12" min="0" max="12" placeholder-style="font-size:28rpx" disabled="{{matchInfo.limitForLive==='readOnly'}}" @input="changeRoundCount" />
     <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
     <button id="btn" @tap="makeGroup" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">

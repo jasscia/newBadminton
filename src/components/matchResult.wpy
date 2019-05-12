@@ -2,7 +2,7 @@
 <template>
   <view class="wrapper">
     <view class="progress">
-      <resultCycleProgressBar :value.sync="progress" :comment.sync="comment" :visualvalue.sync="doneData"></resultCycleProgressBar>
+      <resultCycleProgressBar :value.sync="progress" :comment.sync="comment" from='matchResult'></resultCycleProgressBar>
     </view>
     <view class="itemHead">
       <view class='item1'>姓名</view>
@@ -63,21 +63,13 @@
   .item4 {
     width: 170rpx
   }
-  .NO-1,
-  .NO-2,
-  .NO-3 {
-    position: relative;
-  }
+  
   .NO-1::after,
   .NO-2::after,
   .NO-3::after {
-    font-family: "iconfont";
     content: "\e725";
+    font-family: "iconfont";
     font-size: 40rpx;
-    position: absolute;
-    /* top:0;
-    right:0;
-    z-index: 999; */
   }
   .NO-1::after {
     color: gold;
@@ -124,22 +116,26 @@
       let uKey = ['id_a1', 'id_a2', 'id_b1', 'id_b2']
       for (let groupInfo of groupList) {
         for (let i = 0; i < 4; i++) {
-          let key = uKey[i]
-          let playerId = groupInfo[key].uid //获取userid
-          let playerRealName = groupInfo[key].real_name //获取userid
-          let playerNickName = groupInfo[key].nick_name //获取userid
-          let playerAvatarUrl = groupInfo[key].avatar_url //获取userid
-          result[playerId] = result[playerId] || [0, 0, 0, 0, 0, playerRealName, playerNickName, playerAvatarUrl]; //初始化结果数组【净胜分、胜场、负场、胜负差值、名次、姓名、昵称、头像】
-          if (i < 2) {
-            result[playerId][0] += (groupInfo.score_a - groupInfo.score_b);
-            result[playerId][1] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);
-            result[playerId][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
-          } else {
-            result[playerId][0] += (groupInfo.score_b - groupInfo.score_a); //[0]是净胜分
-            result[playerId][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0); //[1]胜的场次
-            result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0); //[2]负的场次
+          try {
+            let key = uKey[i]
+            let playerId = groupInfo[key].uid //获取userid
+            let playerRealName = groupInfo[key].real_name //获取userid
+            let playerNickName = groupInfo[key].nick_name //获取userid
+            let playerAvatarUrl = groupInfo[key].avatar_url //获取userid
+            result[playerId] = result[playerId] || [0, 0, 0, 0, 0, playerRealName, playerNickName, playerAvatarUrl]; //初始化结果数组【净胜分、胜场、负场、胜负差值、名次、姓名、昵称、头像】
+            if (i < 2) {
+              result[playerId][0] += (groupInfo.score_a - groupInfo.score_b);
+              result[playerId][1] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0);
+              result[playerId][2] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0);
+            } else {
+              result[playerId][0] += (groupInfo.score_b - groupInfo.score_a); //[0]是净胜分
+              result[playerId][1] += (groupInfo.score_a < groupInfo.score_b ? 1 : 0); //[1]胜的场次
+              result[playerId][2] += (groupInfo.score_a > groupInfo.score_b ? 1 : 0); //[2]负的场次
+            }
+            result[playerId][3] = result[playerId][1] - result[playerId][2]; //[3]是胜-败的差值
+          } catch (err) {
+            console.log(err)
           }
-          result[playerId][3] = result[playerId][1] - result[playerId][2]; //[3]是胜-败的差值
         }
       }
       return result;

@@ -7,7 +7,7 @@
       <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSideInMycreate :index.sync="index">
           <block slot='frontSide'>
-            <matchInfoInMycreate :matchInfo.sync="matchInfo" :mode.sync="mode"></matchInfoInMycreate>
+            <matchInfoInMycreate :matchInfo.sync="matchInfo" from="my"></matchInfoInMycreate>
           </block>
           <block slot='backSide'>
             <matchActiveInMycreate :matchInfo.sync="matchInfo"></matchActiveInMycreate>
@@ -62,8 +62,7 @@
   export default class mycreate extends wepy.page {
     data = {
       userInfo: {},
-      matchInfoList: [],
-      mode: 'withPanle'
+      matchInfoList: []
     }
     components = {
       matchInfoInMycreate: matchInfo,

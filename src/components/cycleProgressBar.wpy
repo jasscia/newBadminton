@@ -6,7 +6,7 @@
         <view class="right {{value <= 50 ? 'right-hide' : ''}}" style="transform: rotate({{value > 50 ? value/100*360+'deg' : '0deg'}})"></view>
       </view>
       <view class="text-box">
-        <view class="value {{visualvalue.doneNum?'progress':''}}">{{value}}</view>
+        <view class="value {{from==='matchResult' ?'showpercent':''}}">{{value}}</view>
         <view class="comment">{{comment}}</view>
       </view>
     </view>
@@ -67,18 +67,17 @@
         .value {
           height: 60rpx;
           font-size: 80rpx;
+          color: @orange;
         }
         .comment {
           height: 30rpx;
           font-size: 24rpx;
         }
-        .progress::after {
+        .showpercent::after {
           content: '%';
-          height: 30rpx;
+          display: inline;
           font-size: 30rpx;
-          position: absolute;
-          right: 18rpx;
-          bottom: 20rpx;
+          color: @gray;
         }
       }
     // }
@@ -97,10 +96,13 @@
         type: String,
         default: ''
       },
-      visualvalue: {
-        type: Object,
-        default: {}
+      from: {
+        type: String,
+        default: ''
       }
+    }
+    onLoad() {
+      console.log('from', this.from)
     }
   }
 </script>

@@ -5,7 +5,7 @@
     </view>
     <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
       <view class="matchCard" @tap="gotodetail" data-gameid="{{matchInfo.id}}">
-        <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
+        <matchInfo :matchInfo.sync="matchInfo"  from="all"></matchInfo>
       </view>
     </repeat>
   </view>

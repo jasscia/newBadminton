@@ -10,7 +10,7 @@
       <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
         <twoSide :index.sync="index">
           <block slot='frontSide'>
-            <matchInfo :matchInfo.sync="matchInfo"></matchInfo>
+            <matchInfo :matchInfo.sync="matchInfo" from="my"></matchInfo>
           </block>
           <block slot='backSide'>
             <matchActive :matchInfo.sync="matchInfo" mode="card"></matchActive>

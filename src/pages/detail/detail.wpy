@@ -1,6 +1,6 @@
 
 <template>
-  <view class="container">
+  <view class="container detail">
     <matchActiveInDetail :matchInfo.sync="matchInfo" mode="label"></matchActiveInDetail>
     <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
     <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
@@ -10,6 +10,9 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
+  .detail {
+      background: #fff;
+  }
   .item,
   .label {
     height: 60rpx;
@@ -38,7 +41,6 @@
     }
   }
 </style>
-
 
 <script>
   import wepy from 'wepy'

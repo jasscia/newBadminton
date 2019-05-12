@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container auth">
     <view class="avatar">
       <open-data type="userAvatarUrl"></open-data>
       <!-- <image src="{{userInfo.avatar_url}}"> -->
@@ -38,6 +38,7 @@ export default class Auth extends wepy.page {
 .container {
   justify-content: center;
   align-items: center;
+  background: #fff;
   .avatar {
     width: 400rpx;
     height: 400rpx;

@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container custom">
     <!-- <view wx:if = "{{!userInfo.avatar_url}}">
               <authorizion />
             </view> -->
@@ -51,9 +51,11 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
+  
   .custom {
     margin: 0;
     padding: 0;
+    background:#fff;
   }
   .part {
     margin-bottom: 10px;
@@ -152,10 +154,10 @@
       },
       userInfoOther: {},
       myMatchData: {
-        total: '###',
-        failed: '###',
-        win: '###',
-        winrate: '###'
+        total: '',
+        failed: '',
+        win: '',
+        winrate: ''
       },
       comment: '综合实力',
       value: 100

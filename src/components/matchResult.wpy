@@ -33,6 +33,7 @@
     line-height: 80rpx;
     background: @orange; // margin-top: 40rpx;
     margin-bottom: -10rpx; // border-bottom: 10rpx solid cadetblue;
+    color: #fff;
   }
   .item {
     display: flex; // width:700rpx;
@@ -42,6 +43,7 @@
     border-radius: 20rpx;
     background: #fff;
   }
+
   .item1 {
     white-space: nowrap;
     overflow: hidden;
@@ -96,7 +98,7 @@
     }
     props = {
       matchInfo: {
-        type: String,
+        type: Object,
         default: null,
       }
     }

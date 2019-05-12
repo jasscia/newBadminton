@@ -22,13 +22,14 @@
     margin-bottom: 4rpx;
   }
   .roundCount {
+    margin:auto;
+    margin-bottom: 40rpx;
+    background: #fff;
+    border:1rpx solid @gray;
+    width:100rpx;
     color: @gray;
     text-align: center;
-    padding: 20rpx;
-    text-align: center;
     font-size: 36rpx;
-    background: #fff;
-    margin-bottom: 40rpx;
   }
   .input-placeholder {
     font-size: 30rpx;

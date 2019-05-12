@@ -1,6 +1,6 @@
 
 <template>
-  <view class="container">
+  <view class="container live">
     <LiveHeader :titleList.sync="titleList" :selectedItem.sync="activeBar"></LiveHeader>
     <block wx:if="{{activeBar===titleList[0]}}">
       <matchBaseInfoInlive :matchInfo.sync="matchInfo"></matchBaseInfoInlive>
@@ -14,8 +14,10 @@
 
 <style lang="less" scoped>
   @import '../../common/common.less';
+.live{
+    background:#fff;
+  }
 </style>
-
 
 <script>
   import wepy from 'wepy'

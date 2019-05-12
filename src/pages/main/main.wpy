@@ -30,7 +30,6 @@
       userInfo: {},
       matchInfoList: [],
       activeBar: '我创建的',
-      currentTab: 1,
       titleList: ['我创建的', '我参与的'],
       type: 'mycreate',
     }

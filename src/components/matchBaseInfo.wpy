@@ -59,10 +59,5 @@
         default: {}
       }
     }
-    watch = {
-      matchInfo(n, o) {
-        console.log(n, o)
-      }
-    }
   }
 </script>

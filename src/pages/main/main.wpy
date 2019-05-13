@@ -2,7 +2,6 @@
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
     <mygame :matchInfoList.sync="matchInfoList" :activeBar.sync="activeBar"></mygame>
-    <!-- <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion> -->
   </view>
 </template>
 <style lang="less" scoped>
@@ -17,8 +16,6 @@
   import {api_getMatchInfoList} from '../../common/api';
   import header from '../../components/header';
   import mygame from './mygame';
-  import mycreate from './mycreate';
-  // import authorizion from '../../components/authorizion'
   export default class Main extends wepy.page {
     config = {
       navigationBarTitleText: '我的赛事'

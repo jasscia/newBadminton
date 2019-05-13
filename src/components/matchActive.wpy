@@ -4,11 +4,11 @@
       <!-- <button class="btn" @tap.stop="mocksignup">mock报名</button> -->
       <button class="btn text-info" open-type="share" data-gameid="{{matchInfo.id}}" wx:if="{{matchInfo.contorlAttr.ifOktoShare}}">分享赛事</button>
       <button class="btn text-warn" open-type="share" data-gameid="{{matchInfo.id}}" wx:if="{{matchInfo.contorlAttr.ifOktoInviate}}">邀请好友</button>
-      <button class="btn text-positive" @tap.stop="signup" wx:if="{{matchInfo.contorlAttr.ifOktoSignup}}">报名</button>
+      <button class="btn text-positive" @tap.stop="signup" wx:if="{{matchInfo.contorlAttr.ifOktoSignup}}">我要报名</button>
       <button class="btn text-negative" @tap.stop="signout" wx:if="{{matchInfo.contorlAttr.ifOktoSignout}}">取消报名</button>
-      <button class="btn text-positive" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifOkToStart}}">开赛</button>
-      <button class="btn text-info" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifStarted}}">查看赛事详情</button>
-      <button class="btn text-info" @tap.stop="goToIndex">查看近期赛事</button>
+      <button class="btn text-positive" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifOkToStart}}">立即开赛</button>
+      <button class="btn text-info" @tap.stop="goToLive" wx:if="{{matchInfo.contorlAttr.ifStarted}}">查看详情</button>
+      <button class="btn text-info" @tap.stop="goToIndex">近期赛事</button>
     </view>
   </view>
 </template>
@@ -25,9 +25,6 @@
     border-radius: 0rpx;
     background: @blue;
   }
-  .matchActive.label > .btnBox{
-    // align-items: flex-start;
-  }
   .matchActive {
     margin: 0;
     padding: 0;
@@ -42,11 +39,12 @@
       box-sizing: border-box;
     }
     .btn {
-      font-size: 28rpx;
+      font-size: 32rpx;
       padding: 0.8em;
       width: 3em;
-      line-height: 1.4em;
+      line-height: 1.6em;
       text-align: center;
+      background: rgba(0, 0, 0, 0.05);
     }
   }
 </style>
@@ -64,49 +62,29 @@
         default: {},
         twoWay: true,
       },
+
+      matchIndex: {
+        type: Number,
+        default: -1,
+      },
       mode: {
         type: String,
         default: null
       }
     }
-    onLoad() {}
     methods = {
-      mocksignup() {
-        let gameid = this.matchInfo.id
-        let mockPlayer = [
-          'oqYfD5AUZpHMgDJIQmLBVvpuRrcI',
-          'oqYfD5Pc2w6JZ8LAjn_q0v0LlsnM',
-          'oqYfD5MWtf7h6PPuiAHwHLsIM4xg',
-          'oqYfD5EjWKLCHFyudaDd0BXmbuGs',
-          'oqYfD5ONxBHn6MwLqGpjR_-D-mo0',
-          'oqYfD5AxKyd5BGjbwCvaCTiQBxS8',
-          'oqYfD5FZ--9vRWdr5HOeUyBd40Rg',
-          'oqYfD5NddYaRRUIbPSxsokW8_5so',
-          'oqYfD5HTASKhU6I1N9is56Rt5l7U',
-          'oqYfD5LCSKgBcC6194TKZ8a1J4o0',
-          'oqYfD5NGl-SR2Eh9pjuCLY0r_P9I',
-          'oqYfD5OW_Nv5U70uu14s9GRECnHs',
-          'oqYfD5Ewm_D9VSXEe3w_bcAKUnUI',
-          'oqYfD5CCDrI6WevDeabpr7Cl8kwY',
-          'oqYfD5FpMU0IoVxWvXf5tBFYrseQ',
-          'oqYfD5OHYg4WtUFQDyTci0XYY-L0',
-          'oqYfD5EEMijsLzC46aU1f5tQ6vmc',
-        ]
-        mockPlayer.forEach((token) => {
-          api_addPlayer({
-            gameid: gameid,
-            token: token,
-          })
-        })
-      },
       async signup(token) {
         let gameid = this.matchInfo.id
         let res = await api_addPlayer({
           gameid: gameid,
-          // token: token,
         })
         if (res) {
-          this.matchInfo = await api_getMatchInfo(gameid)
+          let matchInfo = await api_getMatchInfo(gameid)
+          if (this.matchIndex >= 0) {
+            this.$emit('matchInfoChange', {index: this.matchIndex, matchInfo})
+          } else {
+            this.matchInfo = matchInfo
+          }
           this.$apply()
           wx.showToast({
             title: '报名成功',
@@ -126,7 +104,12 @@
           gameid: gameid
         })
         if (res) {
-          this.matchInfo = await api_getMatchInfo(gameid)
+          let matchInfo = await api_getMatchInfo(gameid)
+          if (this.matchIndex >= 0) {
+            this.$emit('matchInfoChange', {index: this.matchIndex, matchInfo})
+          } else {
+            this.matchInfo = matchInfo
+          }
           this.$apply()
           wx.showToast({
             title: '取消报名成功',

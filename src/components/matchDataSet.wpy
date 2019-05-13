@@ -87,7 +87,6 @@
         this.playersList = matchInfo.players
         this.gameid = matchInfo.id
         this.$apply()
-        //  console.log('matchInfo changed in baseData',matchInfo)
       }
     }
     async onLoad(options) {

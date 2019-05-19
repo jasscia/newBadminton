@@ -15,11 +15,11 @@
       <view class="item">进入赛事界面，根据依次布阵方案，完成比赛，并将对阵双方得分计入程序</view>
       <view class="item">完成所有比赛后，可以查看比赛结果排名榜</view>
     </view>
-    <view class="title">注意事项</view>
+    <!-- <view class="title">注意事项</view>
     <view class="content">
       <view class="item">队员数量应在4人以上（包含4人）16人以下（包含16人）</view>
       <view class="item">场次与队员数量的成积，应能被4整除，且不得大于12</view>
-    </view>
+    </view> -->
   </view>
 </template>
 

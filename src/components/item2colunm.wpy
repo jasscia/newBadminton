@@ -5,7 +5,7 @@
       <view class="picker">{{item.value}}</view>
     </picker>
     <switch wx:if="{{item.name==='auto_signup'}}" checked="{{item.value}}" @change="inputValue" name="{{item.name}}"></switch>
-    <input wx:if="{{(item.name!=='date')&&(item.name!=='time') &&(item.name!=='auto_signup')}}" type="{{item.type}}" value="{{item.value}}" @change="inputValue" name="{{item.name}}" />
+    <input wx:if="{{(item.name!=='date')&&(item.name!=='time') &&(item.name!=='auto_signup')}}" type="{{item.type}}" value="{{item.value}}" @change="inputValue" name="{{item.name}}" placeholder="请输入{{item.title}}"/>
   </view>
 </template>
 <style lang="less" scoped>

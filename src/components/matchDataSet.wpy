@@ -1,44 +1,54 @@
 
 <template>
   <view class="warp">
-    <view class="label">每人场数:</view>
-    <input type="number" name="" class="roundCount" value="{{roundCount}}" placeholder="每人场次与人数的乘积,应被4整除,且不大于12" min="0" max="12" placeholder-style="font-size:28rpx" disabled="{{matchInfo.limitForLive==='readOnly'}}" @input="changeRoundCount" />
+    <view class="round-count" wx:if="{{matchInfo.limitForLive=='readOnly'}}">
+      <label>每人场数: </label>
+      <view class="right">{{array[index]}}</view>
+    </view>
+
+    <view class="round-count" wx:else>
+      <label>设置每人场数: </label>
+      <picker class="right" value="{{index}}" range="{{array}}" @change="roundCountChange">
+        <view>{{array[index]}}</view>
+      </picker>
+      <label>></label>
+    </view>
+   
     <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
+
     <button id="btn" @tap="makeGroup" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
-            {{matchInfo.limitForLive==='writableOnlyScore'?'重新':''}}生成对阵表</button>
+            {{matchInfo.limitForLive==='writableOnlyScore' ? '重新' : ''}}生成对阵表</button>
   </view>
 </template>
 
 <style lang="less" scoped>
   @import '../common/common.less';
-  .label {
-    color: @gray-dark;
-    font-weight: lighter;
+  .round-count {
+    display: flex;
     padding: 20rpx;
-    text-align: left;
     font-size: 30rpx;
     background: #fff;
     margin-top: 40rpx;
     margin-bottom: 4rpx;
+    label {
+      color: @gray-dark;
+    }
+    .right {
+      flex: 1;
+      text-align: center;
+      color: @gray-darker;
+      // view::after {
+      //   content: '>';
+      // }
+    }
   }
-  .roundCount {
-    margin:auto;
-    margin-bottom: 40rpx;
-    background: #fff;
-    border:1rpx solid @gray;
-    width:100rpx;
-    color: @gray;
-    text-align: center;
-    font-size: 36rpx;
-  }
-  .input-placeholder {
-    font-size: 30rpx;
-  }
+
   .label.errTip {
     margin-bottom: 40rpx;
     color: tomato;
     text-align: center;
   }
+
   #btn {
     margin: 40rpx auto;
     width: 450rpx;
@@ -78,28 +88,42 @@
       groupList: [],
       playersList: [],
       gameid: null,
-      roundCount: 4,
       msg: '努力试配ing，请稍后',
-      state: 1
+      state: 1,
+      index: -1,
+      array: [],
     }
     watch = {
       matchInfo(matchInfo) {
-        this.playersList = matchInfo.players
-        this.gameid = matchInfo.id
+        let {players, group, id} = matchInfo
+        let availableArray = this.availableArray(players.length)
+        this.playersList = players
+        this.gameid = id
+        this.array = availableArray
+        this.index = group && group.length > 0 ? availableArray.indexOf(group.length * 4 / players.length) : -1
         this.$apply()
       }
     }
-    async onLoad(options) {
+    availableArray(num) {
+      return [1,2,3,4,5,6,7,8,9,10,11,12].filter((value) => {
+        return !(value * num % 4)
+      })
     }
     methods = {
+      roundCountChange(e) {
+        this.index = e.detail.value
+      },
       async makeGroup() {
         this.state = 0;
         this.msg = '努力试配ing，请稍后'
         let playersNum = this.playersList.length;
-        let roundCount = this.roundCount;
+        let roundCount = this.array[this.index];
+        if (playersNum < 4) {
+          this.msg = '参与人数不能少于4人'
+        }
         if (!roundCount || playersNum < 4 || !roundCount || (playersNum * roundCount % 4)) {
-          this.state = 2;
-          this.msg = '人数与场次 输入值不合法';
+          // this.state = 2;
+          this.msg = '场次 与 参与人数的乘积, 应被4整除, 且不大于12';
           return
         }
         //方案1：计算能力稍弱
@@ -132,14 +156,6 @@
           this.$emit('changeActiveBar', 'from baseData')
         }
       },
-      changeRoundCount(e) {
-        let value = e.detail.value
-        if (value < 1 || value > 12) {
-          this.roundCount = ''
-          return
-        }
-        this.roundCount = e.detail.value
-      }
     }
     // posttGroupList()
     transOrderWithPLayerId(groupListJustWithOrder, playersList) {

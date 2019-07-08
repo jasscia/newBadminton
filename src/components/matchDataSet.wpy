@@ -9,7 +9,7 @@
     <view class="round-count" wx:else>
       <label>设置每人场数: </label>
       <picker class="right" value="{{index}}" range="{{array}}" @change="roundCountChange">
-        <view>{{array[index]}}</view>
+        <view>{{array[index] || '请选择'}}</view>
       </picker>
       <label>></label>
     </view>

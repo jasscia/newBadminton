@@ -1,7 +1,6 @@
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import {initUserInfo} from './common/common'
 export default class extends wepy.app {
   config = {
     pages: [
@@ -12,6 +11,7 @@ export default class extends wepy.app {
       'pages/about/about',
       'pages/live/live',
       'pages/custom/baseInfo',
+      'pages/auth/auth',
       'pages/main/createNewAgainst'
     ],
     window: {
@@ -35,19 +35,12 @@ export default class extends wepy.app {
         {pagePath: 'pages/custom/custom',
           iconPath: 'image/result.png',
           selectedIconPath: 'image/result2.png',
-          text: '个人中心'},
+          text: '战绩'},
       ]
     }
   };
 
   async onLoad() {
-    await initUserInfo()
-    this.setKeepScreenOn();
-  }
-  setKeepScreenOn(){
-    wx.setKeepScreenOn({
-      keepScreenOn:true
-    })
   }
 }
 </script>

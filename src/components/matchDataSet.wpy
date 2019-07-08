@@ -1,166 +1,188 @@
 
 <template>
   <view class="warp">
-  <view class="label">每人场数</view>
-  <input type="number" name="" 
-        class="roundCount" value="{{roundCount}}"
-        placeholder="每人场次与人数的乘积,应被4整除,且不大于12" min="0" max="12"
-        placeholder-style="font-size:28rpx"
-        disabled="{{matchInfo.limitForLive==='readOnly'}}"
-        @input="changeRoundCount"/>
-  <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
-  <button id="btn" @tap="makeGroup" 
-          wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
-          {{matchInfo.limitForLive==='writableOnlyScore'?'重新':''}}生成对阵表</button>
+    <view class="round-count" wx:if="{{matchInfo.limitForLive=='readOnly'}}">
+      <label>每人场数: </label>
+      <view class="right">{{array[index]}}</view>
+    </view>
+
+    <view class="round-count" wx:else>
+      <label>设置每人场数: </label>
+      <picker class="right" value="{{index}}" range="{{array}}" @change="roundCountChange">
+        <view>{{array[index] || '请选择'}}</view>
+      </picker>
+      <label>></label>
+    </view>
+
+    <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
+
+    <button id="btn" @tap="makeGroup" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
+            {{matchInfo.limitForLive==='writableOnlyScore' ? '重新' : ''}}生成对阵表</button>
   </view>
 </template>
 
 <style lang="less" scoped>
   @import '../common/common.less';
-  .label{
-    color: @font-side;
-    font-weight: lighter;
-    padding:20rpx;
-    text-align:left;
-    font-size:30rpx;
-    background:#fff;
-    margin-top:40rpx;
-    margin-bottom:4rpx;
-  }
-  .roundCount{
-    color: @font;
-    text-align: center;
-    padding:20rpx;
-    text-align:center;
-    font-size:36rpx;
-    background:#fff;
-    margin-bottom:40rpx;
-  }
-  .input-placeholder{
+  .round-count {
+    display: flex;
+    padding: 20rpx;
     font-size: 30rpx;
+    background: #fff;
+    margin-top: 40rpx;
+    margin-bottom: 4rpx;
+    label {
+      color: @gray-dark;
+    }
+    .right {
+      flex: 1;
+      text-align: center;
+      color: @gray-darker;
+      // view::after {
+      //   content: '>';
+      // }
+    }
   }
-  .label.errTip{
+
+  .label.errTip {
     margin-bottom: 40rpx;
-    color:tomato;
+    color: tomato;
     text-align: center;
   }
- 
-  #btn{
-    margin:40rpx auto;
-    width:450rpx;
-    height:100rpx;
+
+  #btn {
+    margin: 40rpx auto;
+    width: 450rpx;
+    height: 100rpx;
     line-height: 100rpx;
     vertical-align: middle;
     text-align: center;
+    background: @orange;
+    color: #fff;
   }
 </style>
 
 
 <script>
-import wepy from 'wepy'
-import { initUserInfo,postGroupList,updateMatchInfo,downLoadMatchInfo} from "../common/common"
-import {Badmin,badmin,requestTableList} from '../common/makeGroup'
-// import playersList from './playersList'
-
-export default class MatchDataSet extends wepy.component{
-  components={
-    // playersListMatchDataSet:playersList,
-  }
-  props={
-    matchInfo:{
-      type:Object,
-      default:{}
+  import wepy from 'wepy'
+  import {
+    api_postGroupList,
+    api_updateMatchInfo
+  } from "../common/api"
+  import {
+    Badmin,
+    badmin,
+    requestTableList
+  } from '../common/makeGroup'
+  // import playersList from './playersList'
+  export default class MatchDataSet extends wepy.component {
+    components = {
+      // playersListMatchDataSet:playersList,
     }
-  }
-  data={
-      groupList:[],
-      playersList:[],
-      gameid:null,
-      roundCount:4,
-      msg:'努力试配ing，请稍后',
-      state:1
-    }
- watch={
-   matchInfo(matchInfo){
-     this.playersList=matchInfo.players
-     this.gameid=matchInfo.id
-     this.$apply()
-    //  console.log('matchInfo changed in baseData',matchInfo)
-   }
- }
-  async onLoad(options){
-    
-  }
-  methods={
-    async makeGroup(){
-      this.state=0;
-      this.msg='努力试配ing，请稍后'
-      let playersNum=this.playersList.length;
-      let roundCount=this.roundCount;
-      if(!roundCount || playersNum<4 || !roundCount || (playersNum*roundCount%4)){
-        this.state=2;
-        this.msg='人数与场次 输入值不合法';
-        return
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {}
       }
-      //方案1：计算能力稍弱
-      let groupListJustWithOrder=(new Badmin(playersNum,roundCount)).result;//拿到的结果只是用数字序号标示的
-      if(typeof groupListJustWithOrder === 'string'){
-        groupListJustWithOrder=(new badmin(playersNum,roundCount)).result;
+    }
+    data = {
+      groupList: [],
+      playersList: [],
+      gameid: null,
+      msg: '努力试配ing，请稍后',
+      state: 1,
+      index: -1,
+      array: [],
+    }
+    watch = {
+      matchInfo(matchInfo) {
+        let {players, group, id} = matchInfo
+        let availableArray = this.availableArray(players.length)
+        this.playersList = players
+        this.gameid = id
+        this.array = availableArray
+        this.index = group && group.length > 0 ? availableArray.indexOf(group.length * 4 / players.length) : -1
+        this.$apply()
       }
-      //方案2：计算能力较强
-      // let groupListJustWithOrder=await requestTableList(playersNum,roundCount);
-      // console.log(groupListJustWithOrder);
-      if(typeof groupListJustWithOrder ==='string'){//如果成功的话，需要将数字序号改写为对应的人的信息
-        this.state=2;
-        this.msg=groupListJustWithOrder;
-        return
-      }else{
-        this.state=1;//计算成功的时候，
-        this.groupList=this.transOrderWithPLayerId(groupListJustWithOrder,this.playersList)
-        //得到用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
-        //一旦生成对阵表 说明比赛开始了，也要去改变比赛的状态
-        await postGroupList(this.gameid,this.groupList)
-        await updateMatchInfo(this.gameid,{status:2})
-        //通知 父页面去获取更新
-        this.$emit('updataMatchInfo')
-        //这个改变 是为了页面跳转
-        this.$emit('changeActiveBar','from baseData')
+    }
+    availableArray(num) {
+      return [1,2,3,4,5,6,7,8,9,10,11,12].filter((value) => {
+        return !(value * num % 4)
+      })
+    }
+    methods = {
+      roundCountChange(e) {
+        this.index = e.detail.value
+      },
+      async makeGroup() {
+        this.state = 0;
+        this.msg = '努力试配ing，请稍后'
+        let playersNum = this.playersList.length;
+        let roundCount = this.array[this.index];
+        if (playersNum < 4) {
+          this.msg = '参与人数不能少于4人'
         }
-    },
-    changeRoundCount(e){
-      let value=e.detail.value
-      if(value<1 || value>12){
-        this.roundCount=''
-        return}
-      this.roundCount=e.detail.value
+        if (!roundCount || playersNum < 4 || !roundCount || (playersNum * roundCount % 4)) {
+          // this.state = 2;
+          this.msg = '场次 与 参与人数的乘积, 应被4整除, 且不大于12';
+          return
+        }
+        //方案1：计算能力稍弱
+        let groupListJustWithOrder = (new Badmin(playersNum, roundCount)).result; //拿到的结果只是用数字序号标示的
+        if (typeof groupListJustWithOrder === 'string') {
+          groupListJustWithOrder = (new badmin(playersNum, roundCount)).result;
+        }
+        //方案2：计算能力较强
+        // let groupListJustWithOrder=await requestTableList(playersNum,roundCount);
+        // console.log(groupListJustWithOrder);
+        if (typeof groupListJustWithOrder === 'string') { //如果成功的话，需要将数字序号改写为对应的人的信息
+          this.state = 2;
+          this.msg = groupListJustWithOrder;
+          return
+        } else {
+          this.state = 1; //计算成功的时候，
+          this.groupList = this.transOrderWithPLayerId(groupListJustWithOrder, this.playersList)
+          //得到用uid标示的对阵表后 将其提交到服务器  //此时服务器会将group信息存储在 matchInfo中
+          //一旦生成对阵表 说明比赛开始了，也要去改变比赛的状态
+          await api_postGroupList({
+            gameid: this.gameid,
+            list: this.groupList
+          })
+          await api_updateMatchInfo(this.gameid, {
+            status: 2
+          })
+          //通知 父页面去获取更新
+          this.$emit('updataMatchInfo')
+          //这个改变 是为了页面跳转
+          this.$emit('changeActiveBar', 'from baseData')
+        }
+      },
+    }
+    // posttGroupList()
+    transOrderWithPLayerId(groupListJustWithOrder, playersList) {
+      let groupListWithUid = []
+      let playersUidList = [] //先获取人员依次获取人员UID 按顺序排好
+      this.playersList.forEach(playerInfo => {
+        playersUidList.push(playerInfo.userid)
+      })
+      //方案1对应的转化方案
+      for (let i = 0, len = groupListJustWithOrder[1].length; i < len; i++) {
+        let p1 = playersUidList[groupListJustWithOrder[1][i] - 1]; //这是因为groupListJustWithOrder的存储方式是【【---n】，【---n】，【---n】，【---n】】
+        let p2 = playersUidList[groupListJustWithOrder[2][i] - 1]; //相同index上的 是要对阵的四个人员
+        let p3 = playersUidList[groupListJustWithOrder[3][i] - 1];
+        let p4 = playersUidList[groupListJustWithOrder[4][i] - 1];
+        groupListWithUid.push([p1, p2, p3, p4])
+      }
+      //方案1结束
+      //方案2对应的转化方案 不用转化可以直接用
+      // for(let i=0,len=groupListJustWithOrder.length;i<len;i++){
+      //   let p1=playersUidList[groupListJustWithOrder[i][0]-1];//这是因为groupListJustWithOrder的存储方式是【【---4】，【---4】，【---4】，【---4】......n】
+      //   let p2=playersUidList[groupListJustWithOrder[i][1]-1];//相同index上的 是要对阵的四个人员
+      //   let p3=playersUidList[groupListJustWithOrder[i][2]-1];
+      //   let p4=playersUidList[groupListJustWithOrder[i][3]-1];
+      //   groupListWithUid.push([p1,p2,p3,p4])
+      // }
+      //方案2结束
+      return groupListWithUid
     }
   }
-  // posttGroupList()
-transOrderWithPLayerId(groupListJustWithOrder,playersList){
-    let groupListWithUid=[]
-    let playersUidList=[]//先获取人员依次获取人员UID 按顺序排好
-    this.playersList.forEach(playerInfo=>{
-      playersUidList.push(playerInfo.userid)
-    })
-        //方案1对应的转化方案 
-        for(let i=0,len=groupListJustWithOrder[1].length;i<len;i++){
-          let p1=playersUidList[groupListJustWithOrder[1][i]-1];//这是因为groupListJustWithOrder的存储方式是【【---n】，【---n】，【---n】，【---n】】
-          let p2=playersUidList[groupListJustWithOrder[2][i]-1];//相同index上的 是要对阵的四个人员
-          let p3=playersUidList[groupListJustWithOrder[3][i]-1];
-          let p4=playersUidList[groupListJustWithOrder[4][i]-1];
-          groupListWithUid.push([p1,p2,p3,p4])
-        }
-        //方案1结束
-        //方案2对应的转化方案 不用转化可以直接用
-        // for(let i=0,len=groupListJustWithOrder.length;i<len;i++){
-        //   let p1=playersUidList[groupListJustWithOrder[i][0]-1];//这是因为groupListJustWithOrder的存储方式是【【---4】，【---4】，【---4】，【---4】......n】
-        //   let p2=playersUidList[groupListJustWithOrder[i][1]-1];//相同index上的 是要对阵的四个人员
-        //   let p3=playersUidList[groupListJustWithOrder[i][2]-1];
-        //   let p4=playersUidList[groupListJustWithOrder[i][3]-1];
-        //   groupListWithUid.push([p1,p2,p3,p4])
-        // }
-        //方案2结束
-    return groupListWithUid
-    }
-}
 </script>

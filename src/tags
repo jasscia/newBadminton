@@ -1,0 +1,413 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+0	common/makeGroup.js	/^              swip(item,0,1)$/;"	v
+2	common/makeGroup.js	/^              swip(item,2,3)$/;"	v
+Array	util/util.js	/^Array.prototype.remove = function (val) {$/;"	c
+Array.Array	util/util.js	/^    if(Array.isArray(num)){$/;"	c
+Array.change	util/util.js	/^Array.prototype.change = function (oldval, val) {$/;"	m
+Array.numToString	util/util.js	/^Array.prototype.numToString = function(stringArr){$/;"	m
+Array.remove	util/util.js	/^Array.prototype.remove = function (val) {$/;"	m
+Badmin	common/makeGroup.js	/^  function Badmin(personNum,roundPer){$/;"	c
+Badmin	common/makeGroup.js	/^  function Badmin(personNum,roundPer){$/;"	f
+Badmin.init	common/makeGroup.js	/^    Badmin.prototype.init = function () {$/;"	m
+Badmin.start	common/makeGroup.js	/^  Badmin.prototype.start = function () {\/\/从这里开始$/;"	m
+Badmin.this.result.1	common/makeGroup.js	/^      this.result = {1:[],2:[],3:[],4:[]};\/\/初始化结果数组$/;"	p
+a1	common/makeGroup.js	/^          let a1=optPerson[0],a2=optPerson[i],b1=optPerson[j],b2=optPerson[k];$/;"	v
+a2	common/makeGroup.js	/^            this.nextItem=[a1,a2,b1,b2]$/;"	v
+addPlayer	common/common.js	/^        addPlayer,$/;"	v
+addplayerURL	common/api.js	/^  addplayerURL:"https:\/\/kkiqq.cn\/api\/badminton\/game\/addplayer",$/;"	v
+addplayerURL	common/util.js	/^  addplayerURL:"https:\/\/kkiqq.cn\/api\/badminton\/game\/addplayer",$/;"	v
+address	common/common.js	/^        address:formData.address,$/;"	v
+auto_signup	common/common.js	/^        auto_signup:formData.auto_signup$/;"	v
+avatarUrl	common/common.js	/^    let avatarUrl=resOfuserInfo.userInfo.avatarUrl$/;"	v
+avatar_url	common/api.js	/^              avatar_url:avatarUrl}$/;"	v
+avatar_url	common/util.js	/^              avatar_url:avatarUrl}$/;"	v
+badmin	common/makeGroup.js	/^    function badmin(personNum, roundPer) {$/;"	f
+badmin	common/makeGroup.js	/^    }$/;"	c
+badmin	common/makeGroup.js	/^  export { Badmin,badmin,requestTableList}$/;"	v
+badmin.getRes	common/makeGroup.js	/^    badmin.prototype.getRes = function () {$/;"	m
+badmin.init	common/makeGroup.js	/^    badmin.prototype.init = function () {$/;"	m
+badmin.start	common/makeGroup.js	/^    badmin.prototype.start = function () {\/\/从这里开始$/;"	m
+badmin.this.result.1	common/makeGroup.js	/^      this.result = { 1: [], 2: [], 3: [], 4: [] };\/\/初始化结果数组$/;"	p
+begintime	common/api.js	/^    matchInfo.begintime=formateDate(new Date(matchInfo.begintime));$/;"	v
+begintime	common/common.js	/^        begintime:formData.begintime,$/;"	v
+begintime	common/util.js	/^    matchInfo.begintime=formateDate(new Date(matchInfo.begintime));$/;"	v
+biger	common/makeGroup.js	/^                  let biger=Math.max(item[i-1],this.personList[index_person]);$/;"	v
+change	util/util.js	/^Array.prototype.change = function (oldval, val) {$/;"	f
+change	util/util.js	/^Array.prototype.change = function (oldval, val) {$/;"	v
+changeRealname	common/common.js	/^        changeRealname,$/;"	v
+changeRealnameURl	common/api.js	/^  changeRealnameURl:'https:\/\/kkiqq.cn\/api\/badminton\/userrename',$/;"	v
+changeRealnameURl	common/util.js	/^  changeRealnameURl:'https:\/\/kkiqq.cn\/api\/badminton\/userrename',$/;"	v
+code	common/common.js	/^    let code=resOfcode.code;$/;"	v
+const	common/api.js	/^$/;"	f
+const	common/common.js	/^}$/;"	f
+const	common/util.js	/^$/;"	f
+const.addplayerURL	common/api.js	/^  getGameListAllURL:"https:\/\/kkiqq.cn\/api\/badminton\/gamelist",$/;"	p
+const.addplayerURL	common/util.js	/^  getGameListAllURL:"https:\/\/kkiqq.cn\/api\/badminton\/gamelist",$/;"	p
+const.changeRealnameURl	common/api.js	/^  getTokenURl:'https:\/\/kkiqq.cn\/api\/badminton\/qlogin',$/;"	p
+const.changeRealnameURl	common/util.js	/^  getTokenURl:'https:\/\/kkiqq.cn\/api\/badminton\/qlogin',$/;"	p
+const.getGameInfoURL	common/api.js	/^const URLList={$/;"	p
+const.getGameInfoURL	common/util.js	/^const URLList={$/;"	p
+const.getGameListAllURL	common/api.js	/^  getGameListMyjoinURL:"https:\/\/kkiqq.cn\/api\/badminton\/signuplist",$/;"	p
+const.getGameListAllURL	common/util.js	/^  getGameListMyjoinURL:"https:\/\/kkiqq.cn\/api\/badminton\/signuplist",$/;"	p
+const.getGameListMyURL	common/api.js	/^  postGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.getGameListMyURL	common/util.js	/^  postGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.getGameListMyjoinURL	common/api.js	/^  getGameListMyURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.getGameListMyjoinURL	common/util.js	/^  getGameListMyURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.getGroupInfoURl	common/api.js	/^  postGroupListURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+const.getGroupInfoURl	common/util.js	/^  postGroupListURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+const.getMyMatchDataURL	common/api.js	/^  putGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+const.getMyMatchDataURL	common/util.js	/^  putGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+const.getTokenURl	common/api.js	/^  addplayerURL:"https:\/\/kkiqq.cn\/api\/badminton\/game\/addplayer",$/;"	p
+const.getTokenURl	common/util.js	/^  addplayerURL:"https:\/\/kkiqq.cn\/api\/badminton\/game\/addplayer",$/;"	p
+const.postGameInfoURL	common/api.js	/^  putGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.postGameInfoURL	common/util.js	/^  putGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.postGroupListURl	common/api.js	/^  changeRealnameURl:'https:\/\/kkiqq.cn\/api\/badminton\/userrename',$/;"	p
+const.postGroupListURl	common/util.js	/^  changeRealnameURl:'https:\/\/kkiqq.cn\/api\/badminton\/userrename',$/;"	p
+const.putGameInfoURL	common/api.js	/^  getGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.putGameInfoURL	common/util.js	/^  getGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	p
+const.putGroupInfoURl	common/api.js	/^  getGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+const.putGroupInfoURl	common/util.js	/^  getGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	p
+contorlAttr	common/common.js	/^      matchInfo.contorlAttr=calcContorlAttr(matchInfo)$/;"	v
+contorlAttr	common/common.js	/^    matchInfo.contorlAttr=calcContorlAttr(matchInfo)$/;"	v
+contorlAttr	common/common.js	/^  let contorlAttr={}$/;"	v
+createGame	common/common.js	/^        createGame,$/;"	v
+created_at	common/api.js	/^    matchInfo.created_at=formateDate(new Date(matchInfo.created_at));$/;"	v
+created_at	common/util.js	/^    matchInfo.created_at=formateDate(new Date(matchInfo.created_at));$/;"	v
+currentItem	common/makeGroup.js	/^      this.currentItem,$/;"	v
+currentItem	common/makeGroup.js	/^      this.currentItem=item$/;"	v
+data	common/api.js	/^        data={code:code,$/;"	v
+data	common/api.js	/^      data,$/;"	v
+data	common/api.js	/^      data: data$/;"	v
+data	common/common.js	/^      data=options;$/;"	v
+data	common/common.js	/^      data={$/;"	v
+data	common/common.js	/^      data={token:token,$/;"	v
+data	common/common.js	/^      data={};$/;"	v
+data	common/common.js	/^  let data={token}$/;"	v
+data	common/common.js	/^  let data={};$/;"	v
+data	common/makeGroup.js	/^    let data={};$/;"	v
+data	common/util.js	/^        data={code:code,$/;"	v
+data	common/util.js	/^      data,$/;"	v
+data	common/util.js	/^      data: data$/;"	v
+doneList	common/common.js	/^  let doneList=groupList.filter(groupInfo => {$/;"	v
+doneNum	common/common.js	/^  doneNum=doneList.length$/;"	v
+doneNum	common/common.js	/^  let doneNum=0$/;"	v
+downLoadMatchInfo	common/common.js	/^        downLoadMatchInfo,$/;"	v
+fail	common/api.js	/^        fail:reject$/;"	v
+fail	common/api.js	/^      fail:reject$/;"	v
+fail	common/common.js	/^      fail: function(res) {$/;"	f
+fail	common/common.js	/^      fail: function(res) {$/;"	v
+fail	common/login.js	/^      fail:reject$/;"	v
+fail	common/util.js	/^        fail:reject$/;"	v
+fail	common/util.js	/^      fail:reject$/;"	v
+flag	common/makeGroup.js	/^                      flag=this.judge(item)$/;"	v
+flag	common/makeGroup.js	/^                      flag=this.judge(item);$/;"	v
+flag	common/makeGroup.js	/^        flag=false;$/;"	v
+flag	common/makeGroup.js	/^      let flag;$/;"	v
+formatNumber	common/api.js	/^        formatNumber,$/;"	v
+formatNumber	common/util.js	/^        formatNumber,$/;"	v
+formatTime	common/common.js	/^        formatTime,$/;"	v
+formateDate	common/api.js	/^        formateDate,$/;"	v
+formateDate	common/util.js	/^        formateDate,$/;"	v
+function.badmin	common/makeGroup.js	/^    function badmin(personNum, roundPer) {$/;"	c
+function.random	common/makeGroup.js	/^    function random(L, R) {$/;"	f
+function.swip	common/makeGroup.js	/^    function swip(arr,i,j){$/;"	f
+gameid	common/common.js	/^        gameid:gameid$/;"	v
+gameid	common/common.js	/^        gameid:gameid,$/;"	v
+gamename	common/common.js	/^        gamename:formData.theme,$/;"	v
+getGameInfoURL	common/api.js	/^  getGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+getGameInfoURL	common/util.js	/^  getGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+getGameListAllURL	common/api.js	/^  getGameListAllURL:"https:\/\/kkiqq.cn\/api\/badminton\/gamelist",$/;"	v
+getGameListAllURL	common/util.js	/^  getGameListAllURL:"https:\/\/kkiqq.cn\/api\/badminton\/gamelist",$/;"	v
+getGameListMyURL	common/api.js	/^  getGameListMyURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+getGameListMyURL	common/util.js	/^  getGameListMyURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+getGameListMyjoinURL	common/api.js	/^  getGameListMyjoinURL:"https:\/\/kkiqq.cn\/api\/badminton\/signuplist",$/;"	v
+getGameListMyjoinURL	common/util.js	/^  getGameListMyjoinURL:"https:\/\/kkiqq.cn\/api\/badminton\/signuplist",$/;"	v
+getGroupInfo	common/common.js	/^        getGroupInfo,$/;"	v
+getGroupInfoURl	common/api.js	/^  getGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+getGroupInfoURl	common/util.js	/^  getGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+getMyMatchData	common/common.js	/^        getMyMatchData,$/;"	v
+getMyMatchDataURL	common/api.js	/^  getMyMatchDataURL:'https:\/\/kkiqq.cn\/api\/badminton\/personalinfo'$/;"	v
+getMyMatchDataURL	common/util.js	/^  getMyMatchDataURL:'https:\/\/kkiqq.cn\/api\/badminton\/personalinfo'$/;"	v
+getPlayersUidList	common/common.js	/^        getPlayersUidList,$/;"	v
+getRes	common/makeGroup.js	/^    Badmin.prototype.getRes=function(){$/;"	f
+getRes	common/makeGroup.js	/^    Badmin.prototype.getRes=function(){$/;"	v
+getRes	common/makeGroup.js	/^    badmin.prototype.getRes = function () {$/;"	f
+getRes	common/makeGroup.js	/^    badmin.prototype.getRes = function () {$/;"	v
+getTokenURl	common/api.js	/^  getTokenURl:'https:\/\/kkiqq.cn\/api\/badminton\/qlogin',$/;"	v
+getTokenURl	common/util.js	/^  getTokenURl:'https:\/\/kkiqq.cn\/api\/badminton\/qlogin',$/;"	v
+getUserInfo	common/user.js	/^  getUserInfo$/;"	v
+getUserInfo	common/user.js	/^function getUserInfo(){$/;"	f
+getUserInfoWithToken	common/api.js	/^        getUserInfoWithToken,$/;"	v
+getUserInfoWithToken	common/common.js	/^        getUserInfoWithToken,getUserInfoWithoutToken,login,formatNumber,setStorage} from '.\/util';$/;"	v
+getUserInfoWithToken	common/util.js	/^        getUserInfoWithToken,$/;"	v
+getUserInfoWithoutToken	common/api.js	/^        getUserInfoWithoutToken,$/;"	v
+getUserInfoWithoutToken	common/util.js	/^        getUserInfoWithoutToken,$/;"	v
+groupList	common/common.js	/^  let groupList=matchInfo.group$/;"	v
+groupListOnlyPlayerUid	common/common.js	/^     groupListOnlyPlayerUid=matchInfo.group$/;"	v
+groupListOnlyPlayerUid	common/common.js	/^  let groupListOnlyPlayerUid=[]$/;"	v
+groupListWithPlayerInfo	common/common.js	/^  let groupListWithPlayerInfo=[]$/;"	v
+groupWithInfo	common/common.js	/^    matchInfo.groupWithInfo=getGroupListWithPlayerInfo(matchInfo)$/;"	v
+htr	common/api.js	/^        htr,$/;"	v
+htr	common/common.js	/^import {URLList,htr,formateDate,transformStatusAndTimeOfMatchInfo,$/;"	v
+htr	common/util.js	/^        htr,$/;"	v
+i	common/makeGroup.js	/^            i=4$/;"	v
+i	common/makeGroup.js	/^    function swip(arr,i,j){$/;"	v
+ifDone	common/common.js	/^  contorlAttr.ifDone=matchInfo.status===3$/;"	v
+ifGoingon	common/common.js	/^  contorlAttr.ifGoingon=(matchInfo.status===2)$/;"	v
+ifIn	common/common.js	/^      ifIn=players.some((player)=>{return player.user.uid===uid})$/;"	v
+ifIn	common/common.js	/^      matchInfo.ifIn=judgeIfIn(matchInfo)$/;"	v
+ifIn	common/common.js	/^    let ifIn=false;$/;"	v
+ifIn	common/common.js	/^    matchInfo.ifIn=judgeIfIn(matchInfo)$/;"	v
+ifOk	common/makeGroup.js	/^                    ifOk=true$/;"	v
+ifOk	common/makeGroup.js	/^                  ifOk=true$/;"	v
+ifOk	common/makeGroup.js	/^              ifOk=false$/;"	v
+ifOk	common/makeGroup.js	/^          let ifOk=true$/;"	v
+ifOkToStart	common/common.js	/^  contorlAttr.ifOkToStart=(matchInfo.players.length>=4 && contorlAttr.ifOwner && matchInfo.status<2)$/;"	v
+ifOktoInviate	common/common.js	/^  contorlAttr.ifOktoInviate=!contorlAttr.ifStopSingup$/;"	v
+ifOktoShare	common/common.js	/^  contorlAttr.ifOktoShare=contorlAttr.ifStarted$/;"	v
+ifOktoSignup	common/common.js	/^  contorlAttr.ifOktoSignup=(!matchInfo.ifIn&&!contorlAttr.ifStopSingup)$/;"	v
+ifOwner	common/common.js	/^  contorlAttr.ifOwner= matchInfo.owner.uid===userInfo.uid$/;"	v
+ifStarted	common/common.js	/^  contorlAttr.ifStarted=(matchInfo.status>1)$/;"	v
+ifStopSingup	common/common.js	/^  contorlAttr.ifStopSingup=(matchInfo.status>=1)$/;"	v
+imageUrl	common/common.js	/^      imageUrl:'\/image\/share.png',$/;"	v
+index	common/makeGroup.js	/^          let index=this.restPerson.indexOf(this.currentItem[i]);$/;"	v
+index	util/util.js	/^  var index = this.indexOf(oldval);$/;"	v
+index	util/util.js	/^  var index = this.indexOf(val);$/;"	v
+index_person	common/makeGroup.js	/^              let index_person=random(0,this.personNum-1)$/;"	v
+index_teamMate	common/makeGroup.js	/^                  let index_teamMate=this.teamMateList.indexOf(team);$/;"	v
+init	common/makeGroup.js	/^    Badmin.prototype.init = function () {$/;"	f
+init	common/makeGroup.js	/^    Badmin.prototype.init = function () {$/;"	v
+init	common/makeGroup.js	/^    badmin.prototype.init = function () {$/;"	f
+init	common/makeGroup.js	/^    badmin.prototype.init = function () {$/;"	v
+initUserInfo	common/common.js	/^        initUserInfo,$/;"	v
+item	common/makeGroup.js	/^                      item=[this.restPerson[i],this.restPerson[j],this.restPerson[k],this.restPerson[l]]$/;"	v
+item	common/makeGroup.js	/^                      item=this.nextItem;$/;"	v
+item	common/makeGroup.js	/^                    let item;$/;"	v
+item	common/makeGroup.js	/^          let item=[];$/;"	v
+j	common/makeGroup.js	/^                j=m$/;"	v
+j	common/makeGroup.js	/^          let j,k;$/;"	v
+judge	common/makeGroup.js	/^    badmin.prototype.judge = function (item) {$/;"	f
+judge	common/makeGroup.js	/^    badmin.prototype.judge = function (item) {$/;"	v
+judgeIfIn	common/common.js	/^        judgeIfIn,$/;"	v
+k	common/makeGroup.js	/^                k=m$/;"	v
+key	common/api.js	/^      key: key,$/;"	v
+key	common/util.js	/^      key: key,$/;"	v
+len	common/makeGroup.js	/^        let len=this.restPerson.length;$/;"	v
+length	common/makeGroup.js	/^    this.personFlag.length=this.personList.length;$/;"	v
+length	common/makeGroup.js	/^    this.teamMateFlag.length=this.teamMateList.length;$/;"	v
+limit	common/makeGroup.js	/^                    limit=this.minTime;$/;"	v
+limit	common/makeGroup.js	/^                  let limit=this.maxTime$/;"	v
+limitForLive	common/common.js	/^    matchInfo.limitForLive=calcLimitForLive(matchInfo)$/;"	v
+list	common/common.js	/^        list:list$/;"	v
+login	common/api.js	/^        login,$/;"	v
+login	common/util.js	/^        login,$/;"	v
+loginResult	common/login.js	/^    let loginResult = wxLogin()$/;"	v
+mark	common/common.js	/^const formatTime =(date,mark='\/') => {$/;"	v
+matchInfo	common/common.js	/^  let matchInfo=await downLoadMatchInfo(gameid)$/;"	v
+matchInfo	common/common.js	/^  let matchInfo=res.data.data;$/;"	v
+matchInfoList	common/common.js	/^    let matchInfoList=res.data.data;$/;"	v
+max	common/makeGroup.js	/^      let max=Math.max(...verTeamMateFlag_arr);$/;"	v
+maxRepeatTeam	common/makeGroup.js	/^    this.maxRepeatTeam = 0;$/;"	v
+maxRepeatTeam	common/makeGroup.js	/^    this.maxRepeatTeam=this.round*2-this.minTime*this.teamMateList.length;$/;"	v
+maxTime	common/makeGroup.js	/^      this.maxTime = Math.ceil(roundPer \/ (personNum - 1), 0);\/\/为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最多次数$/;"	v
+maxTime	common/makeGroup.js	/^    this.maxTime = Math.ceil(roundPer \/ (personNum - 1), 0);\/\/为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最多次数$/;"	v
+method	common/api.js	/^        method="GET",$/;"	v
+method	common/api.js	/^      method,$/;"	v
+method	common/api.js	/^    let res=await htr(url,method,data);$/;"	v
+method	common/api.js	/^const htr=function(url,method,data){$/;"	v
+method	common/common.js	/^      method="GET",$/;"	v
+method	common/common.js	/^      method="POST",$/;"	v
+method	common/common.js	/^      method="PUT",$/;"	v
+method	common/common.js	/^      method='POST',$/;"	v
+method	common/common.js	/^   let res=await htr(url,method,data)$/;"	v
+method	common/common.js	/^  let  method="GET";$/;"	v
+method	common/common.js	/^  let method='GET'$/;"	v
+method	common/common.js	/^  let res= await htr(url,method,data)$/;"	v
+method	common/common.js	/^  let res= await htr(url,method,data);$/;"	v
+method	common/common.js	/^  let res=await htr(url,method,data)$/;"	v
+method	common/common.js	/^  let res=await htr(url,method,data);$/;"	v
+method	common/makeGroup.js	/^    let method = "GET";$/;"	v
+method	common/makeGroup.js	/^    let res=await htr(url,method,data);$/;"	v
+method	common/util.js	/^        method="GET",$/;"	v
+method	common/util.js	/^      method,$/;"	v
+method	common/util.js	/^    let res=await htr(url,method,data);$/;"	v
+method	common/util.js	/^const htr=function(url,method,data){$/;"	v
+min	common/makeGroup.js	/^      let min=Math.min(...verTeamMateFlag_arr)$/;"	v
+minFlag	common/makeGroup.js	/^      let minFlag=Math.min(...Object.values(verPersonFlag))$/;"	v
+minTime	common/makeGroup.js	/^    this.minTime = Math.floor(roundPer \/ (personNum - 1),0);\/\/为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最少次数$/;"	v
+month	common/api.js	/^  return [day,month,date,hour,minute].reduce((string,curValue,curKey)=>{$/;"	v
+month	common/common.js	/^  return [year, month, day].map(formatNumber).join(mark) + ' ' + [hour, minute, second].map(formatNumber).join(':')$/;"	v
+month	common/util.js	/^  return [day,month,date,hour,minute].reduce((string,curValue,curKey)=>{$/;"	v
+my_uid	common/common.js	/^let my_uid=wx.getStorageSync('userInfo').uid$/;"	v
+n	common/api.js	/^    n = n.toString()$/;"	v
+n	common/util.js	/^    n = n.toString()$/;"	v
+nextItem	common/makeGroup.js	/^            this.nextItem=[a1,a2,b1,b2]$/;"	v
+nextItem	common/makeGroup.js	/^        this.nextItem=null;$/;"	v
+nextItem	common/makeGroup.js	/^      this.nextItem,$/;"	v
+nickName	common/api.js	/^  const getUserInfoWithToken=async function(code,nickName,avatarUrl){$/;"	v
+nickName	common/common.js	/^    let nickName=resOfuserInfo.userInfo.nickName;$/;"	v
+nickName	common/common.js	/^    userInfo=await getUserInfoWithToken(code,nickName,avatarUrl)$/;"	v
+nickName	common/util.js	/^  const getUserInfoWithToken=async function(code,nickName,avatarUrl){$/;"	v
+nick_name	common/api.js	/^              nick_name:nickName,$/;"	v
+nick_name	common/util.js	/^              nick_name:nickName,$/;"	v
+note	common/common.js	/^        note:null,$/;"	v
+numToString	util/util.js	/^Array.prototype.numToString = function(stringArr){$/;"	f
+numToString	util/util.js	/^Array.prototype.numToString = function(stringArr){$/;"	v
+optPerson	common/makeGroup.js	/^      let optPerson=[];$/;"	v
+path	common/common.js	/^      path: path,$/;"	v
+personFlag	common/makeGroup.js	/^      this.personFlag = {};\/\/数组用于存放 每个人在全过程中出现的次数$/;"	v
+personFlag	common/makeGroup.js	/^      this.personFlag={};$/;"	v
+personFlag	common/makeGroup.js	/^    this.personFlag = [];\/\/数组用于存放 每个人在全过程中出现的次数$/;"	v
+personList	common/makeGroup.js	/^    this.personList=[];$/;"	v
+personNum	common/makeGroup.js	/^      this.personNum = personNum;\/\/参赛人数$/;"	v
+personNum	common/makeGroup.js	/^    this.personNum = personNum;\/\/参赛人数$/;"	v
+players	common/common.js	/^    let players=matchInfo.players$/;"	v
+playersList	common/common.js	/^     playersList=matchInfo.players$/;"	v
+playersList	common/common.js	/^  let playersList=[]$/;"	v
+playersList	common/common.js	/^  let playersList=matchInfo.players$/;"	v
+playersUidList	common/common.js	/^  let playersUidList=[]$/;"	v
+postGameInfoURL	common/api.js	/^  postGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+postGameInfoURL	common/util.js	/^  postGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+postGroupList	common/common.js	/^        postGroupList,$/;"	v
+postGroupListURl	common/api.js	/^  postGroupListURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+postGroupListURl	common/util.js	/^  postGroupListURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+progress	common/common.js	/^    progress=Math.round(doneNum\/totalNum*100,2)$/;"	v
+progress	common/common.js	/^  let progress=0$/;"	v
+progressData	common/common.js	/^    matchInfo.progressData=calcprogress(matchInfo)$/;"	v
+putGameInfoURL	common/api.js	/^  putGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+putGameInfoURL	common/util.js	/^  putGameInfoURL:"https:\/\/kkiqq.cn\/api\/badminton\/game",$/;"	v
+putGroupInfo	common/common.js	/^        putGroupInfo,$/;"	v
+putGroupInfoURl	common/api.js	/^  putGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+putGroupInfoURl	common/util.js	/^  putGroupInfoURl:'https:\/\/kkiqq.cn\/api\/badminton\/group',$/;"	v
+random	common/makeGroup.js	/^    function random(L, R) {$/;"	f
+real_name	common/common.js	/^            real_name:realName};$/;"	v
+real_name	common/common.js	/^    userInfo.real_name=realName$/;"	v
+remove	util/util.js	/^Array.prototype.remove = function (val) {$/;"	f
+remove	util/util.js	/^Array.prototype.remove = function (val) {$/;"	v
+res	common/api.js	/^    let res=await htr(url,method,data);$/;"	v
+res	common/common.js	/^        console.log("转发失败",res,path)$/;"	v
+res	common/common.js	/^        console.log("转发成功",res,path)$/;"	v
+res	common/common.js	/^   let res=await htr(url,method,data)$/;"	v
+res	common/common.js	/^  let res= await htr(url,method,data)$/;"	v
+res	common/common.js	/^  let res= await htr(url,method,data);$/;"	v
+res	common/common.js	/^  let res=await htr(url,method,data)$/;"	v
+res	common/common.js	/^  let res=await htr(url,method,data);$/;"	v
+res	common/makeGroup.js	/^    let res=await htr(url,method,data);$/;"	v
+res	common/util.js	/^    let res=await htr(url,method,data);$/;"	v
+resOfcode	common/common.js	/^    let resOfcode=await login();\/\/先登录获取 临时code$/;"	v
+resOfuserInfo	common/common.js	/^        resOfuserInfo = e.detail$/;"	v
+resOfuserInfo	common/common.js	/^        resOfuserInfo=await getUserInfoWithoutToken();\/\/获取登录后授权使用的 头像 昵称信息$/;"	v
+resOfuserInfo	common/common.js	/^    let resOfuserInfo;$/;"	v
+restPerson	common/makeGroup.js	/^      this.restPerson = [];\/\/计算过程中，每次随机取值，都从这个数组中取值，当某个人打满预设场次的时候，就会从这个数组总剔除$/;"	v
+restPerson	common/makeGroup.js	/^      this.restPerson=[];$/;"	v
+result	common/makeGroup.js	/^        this.result = "排阵失败 Try one more time!";$/;"	v
+result	common/makeGroup.js	/^        this.result = '数据不符合要求，人数不能少于4人';$/;"	v
+result	common/makeGroup.js	/^        this.result = '数据不符合要求，应该能被4整除';$/;"	v
+result	common/makeGroup.js	/^      this.result = { 1: [], 2: [], 3: [], 4: [] };\/\/初始化结果数组$/;"	v
+result	common/makeGroup.js	/^      this.result = {1:[],2:[],3:[],4:[]};\/\/初始化结果数组$/;"	v
+result	common/makeGroup.js	/^      this.result = {};\/\/数组用于存放 最终结果$/;"	v
+result	common/makeGroup.js	/^    this.result = {};\/\/数组用于存放 最终结果$/;"	v
+results	common/common.js	/^  let results=playersList.filter(playerInfo=>{$/;"	v
+return	common/common.js	/^    return ;$/;"	v
+return	common/makeGroup.js	/^        return$/;"	v
+round	common/makeGroup.js	/^      this.round = personNum * roundPer \/ 4;\/\/总共的场数  四个人算一场$/;"	v
+round	common/makeGroup.js	/^    this.round = personNum * roundPer \/ 4;\/\/总共的场数  四个人算一场$/;"	v
+roundPer	common/makeGroup.js	/^      this.roundPer = roundPer;\/\/预设的 每人参赛场数$/;"	v
+roundPer	common/makeGroup.js	/^    this.roundPer = roundPer;\/\/预设的 每人参赛场数$/;"	v
+serverLogin	common/login.js	/^async function serverLogin(){$/;"	f
+share	common/common.js	/^        share,$/;"	v
+smaller	common/makeGroup.js	/^                  let smaller=Math.min(item[i-1],this.personList[index_person]);$/;"	v
+start	common/makeGroup.js	/^    badmin.prototype.start = function () {\/\/从这里开始$/;"	f
+start	common/makeGroup.js	/^    badmin.prototype.start = function () {\/\/从这里开始$/;"	v
+start	common/makeGroup.js	/^  Badmin.prototype.start = function () {\/\/从这里开始$/;"	f
+start	common/makeGroup.js	/^  Badmin.prototype.start = function () {\/\/从这里开始$/;"	v
+status	common/api.js	/^      matchInfo.status=status[matchInfo.status]$/;"	v
+status	common/api.js	/^  let status=['报名中','报名结束','正在比赛','比赛结束']; $/;"	v
+status	common/common.js	/^        matchInfo.status=1$/;"	v
+status	common/common.js	/^        status:0,$/;"	v
+status	common/common.js	/^      matchInfo.status=1$/;"	v
+status	common/util.js	/^      matchInfo.status=status[matchInfo.status]$/;"	v
+status	common/util.js	/^  let status=['报名中','报名结束','正在比赛','比赛结束']; $/;"	v
+success	common/api.js	/^        success:resolve,$/;"	v
+success	common/api.js	/^      success:resolve,$/;"	v
+success	common/common.js	/^      success: function(res) {$/;"	f
+success	common/common.js	/^      success: function(res) {$/;"	v
+success	common/login.js	/^      success:resolve,$/;"	v
+success	common/util.js	/^        success:resolve,$/;"	v
+success	common/util.js	/^      success:resolve,$/;"	v
+swip	common/makeGroup.js	/^    function swip(arr,i,j){$/;"	f
+team	common/makeGroup.js	/^                  let team=[smaller,biger].join(' ');$/;"	v
+teamA	common/makeGroup.js	/^      let teamA = item.slice(0, 2).join(' ');$/;"	v
+teamA	common/makeGroup.js	/^      let teamA = this.currentItem.slice(0, 2).join(' ');$/;"	v
+teamA	common/makeGroup.js	/^      let teamA=[item[0],item[1]].join(' ');$/;"	v
+teamB	common/makeGroup.js	/^      let teamB = item.slice(2, 4).join(' ');$/;"	v
+teamB	common/makeGroup.js	/^      let teamB = this.currentItem.slice(2, 4).join(' ');$/;"	v
+teamB	common/makeGroup.js	/^      let teamB=[item[2],item[3]].join(' ');$/;"	v
+teamMate	common/makeGroup.js	/^          teamMate = [i + 1, j + 1].join(' ');$/;"	v
+teamMate	common/makeGroup.js	/^        let teamMate = [i + 1, j + 1].join(' ');$/;"	v
+teamMateFlag	common/makeGroup.js	/^      this.teamMateFlag = {};\/\/数组用于存放 每两个人组队teamMeat 在全过程中出现的次数$/;"	v
+teamMateFlag	common/makeGroup.js	/^      this.teamMateFlag={};$/;"	v
+teamMateFlag	common/makeGroup.js	/^    this.teamMateFlag = [];\/\/数组用于存放 每两个人组队teamMeat 在全过程中出现的次数$/;"	v
+teamMateList	common/makeGroup.js	/^    this.teamMateList=[];$/;"	v
+temp	common/makeGroup.js	/^      let temp=arr[i];$/;"	v
+token	common/common.js	/^        token:token,$/;"	v
+token	common/common.js	/^    data.token=token$/;"	v
+token	common/common.js	/^    token=await getToken();$/;"	v
+token	common/common.js	/^  data.token=token;$/;"	v
+token	common/common.js	/^  let token;$/;"	v
+token	common/common.js	/^  let token=await getToken();$/;"	v
+token	common/common.js	/^  let token=userInfo.token;$/;"	v
+totalNum	common/common.js	/^    return{doneNum,totalNum,progress}$/;"	v
+totalNum	common/common.js	/^  let totalNum=0$/;"	v
+totalNum	common/common.js	/^  return {doneNum,totalNum,progress}$/;"	v
+totalNum	common/common.js	/^  totalNum=groupList.length$/;"	v
+transformStatusAndTimeOfMatchInfo	common/api.js	/^        transformStatusAndTimeOfMatchInfo,$/;"	v
+transformStatusAndTimeOfMatchInfo	common/util.js	/^        transformStatusAndTimeOfMatchInfo,$/;"	v
+tryTimes_1	common/makeGroup.js	/^      \/\/ console.log('第',tryTimes_1,'次 计算出结果');$/;"	v
+tryTimes_1	common/makeGroup.js	/^      let tryTimes_1 = 0;\/\/标示整体的尝试次数$/;"	v
+tryTimes_2	common/makeGroup.js	/^            let tryTimes_2=0;\/\/标示某一个位置的尝试次数$/;"	v
+uKey	common/common.js	/^   let uKey=['id_a1','id_a2','id_b1','id_b2']$/;"	v
+uid	common/common.js	/^       let uid=groupInfo[key]$/;"	v
+uid	common/common.js	/^    let uid=wx.getStorageSync('userInfo').uid$/;"	v
+uid	common/common.js	/^    userInfo.uid=results[0].userid;$/;"	v
+upToLimit	common/makeGroup.js	/^                  let upToLimit=verTeamMateFlag.filter(value=>{$/;"	v
+update	common/makeGroup.js	/^    Badmin.prototype.update=function(item){$/;"	f
+update	common/makeGroup.js	/^    Badmin.prototype.update=function(item){$/;"	v
+update	common/makeGroup.js	/^    badmin.prototype.update=function(){$/;"	f
+update	common/makeGroup.js	/^    badmin.prototype.update=function(){$/;"	v
+updateMatchInfo	common/common.js	/^        updateMatchInfo,$/;"	v
+updated_at	common/api.js	/^    matchInfo.updated_at=formateDate(new Date(matchInfo.updated_at));$/;"	v
+updated_at	common/util.js	/^    matchInfo.updated_at=formateDate(new Date(matchInfo.updated_at));$/;"	v
+url	common/api.js	/^      url,$/;"	v
+url	common/api.js	/^    let url=URLList.getTokenURl,$/;"	v
+url	common/common.js	/^  let url;$/;"	v
+url	common/common.js	/^  let url=URLList.addplayerURL,$/;"	v
+url	common/common.js	/^  let url=URLList.changeRealnameURl,$/;"	v
+url	common/common.js	/^  let url=URLList.getGameInfoURL+'\\\/'+gameid,$/;"	v
+url	common/common.js	/^  let url=URLList.getGroupInfoURl,$/;"	v
+url	common/common.js	/^  let url=URLList.getMyMatchDataURL$/;"	v
+url	common/common.js	/^  let url=URLList.postGameInfoURL,$/;"	v
+url	common/common.js	/^  let url=URLList.postGroupListURl+'\\\/'+groupid,$/;"	v
+url	common/common.js	/^  let url=URLList.postGroupListURl,$/;"	v
+url	common/common.js	/^  let url=URLList.putGameInfoURL+'\\\/'+gameid,$/;"	v
+url	common/makeGroup.js	/^    let url = `https:\/\/gzbtestsystem.cn\/badminton\/againsttable?NumberOfPeople=${personCount}&RoundsOfPerson=${roundCount}&format=json`;$/;"	v
+url	common/util.js	/^      url,$/;"	v
+url	common/util.js	/^    let url=URLList.getTokenURl,$/;"	v
+userInfo	common/common.js	/^    let userInfo={...results[0].user}$/;"	v
+userInfo	common/common.js	/^    userInfo=await getUserInfoWithToken(code,nickName,avatarUrl)$/;"	v
+userInfo	common/common.js	/^  let userInfo=await initUserInfo()$/;"	v
+userInfo	common/common.js	/^  let userInfo=wx.getStorageSync('userInfo')$/;"	v
+userInfo	common/common.js	/^  let userInfo=wx.getStorageSync('userInfo')\/\/先看是否已经缓存了 用户信息$/;"	v
+verPersonFlag	common/makeGroup.js	/^      let verPersonFlag=Object.assign({},this.personFlag)$/;"	v
+verPersonFlag_arr	common/makeGroup.js	/^      let verPersonFlag_arr=Object.values(verPersonFlag)$/;"	v
+verTeamA	common/makeGroup.js	/^          let verTeamA=[a1,a2].join(' ');$/;"	v
+verTeamB	common/makeGroup.js	/^          let verTeamB=[b1,b2].join(' ');$/;"	v
+verTeamMateFlag	common/makeGroup.js	/^                  let verTeamMateFlag=this.teamMateFlag.slice()$/;"	v
+verTeamMateFlag	common/makeGroup.js	/^      let verTeamMateFlag=Object.assign({},this.teamMateFlag)$/;"	v
+verTeamMateFlag_arr	common/makeGroup.js	/^      let verTeamMateFlag_arr=Object.values(verTeamMateFlag);$/;"	v
+wxLogin	common/login.js	/^function wxLogin(){$/;"	f

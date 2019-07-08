@@ -1,0 +1,75 @@
+<template>
+  <div class="container auth">
+    <view class="avatar">
+      <open-data type="userAvatarUrl"></open-data>
+      <!-- <image src="{{userInfo.avatar_url}}"> -->
+    </view>
+    <div class="tip">为继续操作，需提供以下授权：</div>
+    <ul class="tip_side">
+      <li>获取你的公开信息（昵称，头像等）</li>
+    </ul>
+    <button class="btn" wx:if="{{canIUse}}"
+      open-type="getUserInfo" bindgetuserinfo="getUserInfo">确认授权</button>
+    <view wx:else >请升级微信版本</view>
+  </div>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { auth } from '../../common/login';
+export default class Auth extends wepy.page {
+  data = {
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
+  }
+  async onLoad() {  }
+
+  methods = {
+    async getUserInfo(e) {
+      let res = await auth(e.detail.userInfo)
+      if (res) {
+        wx.navigateBack();
+      }
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+@import '../../common/common.less';
+.container {
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  .avatar {
+    width: 400rpx;
+    height: 400rpx;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    open-data {
+      height: 100%;
+      width: 100%;
+      border-width: 50%;
+    }
+  }
+  .tip {
+    color: @gray-darker;
+    font-size: 16px;
+    margin: auto 60rpx;
+    line-height: 60rpx;
+  }
+  .tip_side {
+    margin: auto 80rpx;
+    line-height: 60rpx;
+    color: @gray;
+    font-size: 14px;
+  }
+  .btn {
+    line-height: 90rpx;
+    font-size: 40rpx;
+    color: #fff;
+    background: @blue;
+  }
+}
+</style>
+
+
+

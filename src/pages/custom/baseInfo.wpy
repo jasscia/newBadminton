@@ -1,84 +1,96 @@
 <template>
-  <form class="container"  @submit="submitBaseInfo">
-    <repeat for="{{list}}" key="index" index="index" item="item">      
-        <item2colunm :item.sync="item"></item2colunm>
+  <form class="container edit" @submit="submitBaseInfo">
+    <repeat for="{{list}}" key="index" index="index" item="item">
+      <item2colunm :item.sync="item"></item2colunm>
     </repeat>
     <button formType="submit">确定</button>
   </form>
 </template>
 <style lang="less">
-@import '../../common/common.less';
-.container{
-  button{
-    margin:20px auto;
-    width: 375rpx;
-    background: @btn-em;
+  @import '../../common/common.less';
+  .edit {
+    background: #fff;
+    button {
+      margin: 20px auto;
+      width: 375rpx;
+      background: @orange;
+      background: #fff;
+    }
   }
-}
 </style>
 
 <script>
-import wepy from 'wepy';
-import {changeRealname,initUserInfo,setStorage} from '../../common/common';
-import item2colunm from '../../components/item2colunm';
-export default class BaseInfo extends wepy.page {
-  config = {
-      navigationBarTitleText:"信息编辑"
-  };
-  components={
-    item2colunm:item2colunm
-  }
-  data={
-    userInfo:{},//这里存储 后端 不保存的 的数据
-    list:[
-      {title:'姓名',
-        name:'realName',
-        value:'',
-        type:'string'
-      },
-      {title:'年龄',
-        name:'age',
-        value:null,
-        type:'number'
-      },
-      {title:'身高',
-        name:'tall',
-        value:null,
-        type:'number'
-      },
-      {title:'体重',
-        name:'weight',
-        value:null,
-        type:'number'
+  import wepy from 'wepy';
+  import {
+    api_changeRealname
+  } from '../../common/api';
+  import item2colunm from '../../components/item2colunm';
+  export default class BaseInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: "个人信息编辑"
+    };
+    components = {
+      item2colunm: item2colunm
+    }
+    data = {
+      userInfo: {},
+      userOtherInfo: {}, //这里存储 后端 不保存的 的数据
+      list: []
+    }
+    async onLoad(option) {
+      this.userInfo = wx.getStorageSync('userInfo')
+      this.userOtherInfo = wx.getStorageSync('userOtherInfo')
+      console.log('userino', this.userInfo)
+      this.list =[{
+          title: '姓名',
+          name: 'realName',
+          value: this.userInfo.real_name || null,
+          type: 'string'
+        },
+        {
+          title: '年龄',
+          name: 'age',
+          value: this.userOtherInfo.age || null,
+          type: 'number'
+        },
+        {
+          title: '身高',
+          name: 'tall',
+          value: this.userOtherInfo.tall || null,
+          type: 'number'
+        },
+        {
+          title: '体重',
+          name: 'weight',
+          value: this.userOtherInfo.weight || null,
+          type: 'number'
+        }]
+        console.log('list', this.list)
+    }
+    methods = {
+      async submitBaseInfo(e) {
+        let real_name = e.detail.value.realName
+        let age = e.detail.value.age
+        let tall = e.detail.value.tall
+        let weight = e.detail.value.weight
+        if (real_name) {
+          await api_changeRealname({real_name,});
+          this.userInfo.real_name = real_name
+        }
+        if (age) {
+          this.userOtherInfo.age = age
+        }
+        if (tall) {
+          this.userOtherInfo.tall = tall
+        }
+        if (weight) {
+          this.userOtherInfo.weight = weight
+        }
+        wx.setStorageSync('userOtherInfo', this.userOtherInfo)
+        wx.navigateBack({
+          delta: 1
+        })
       }
-    ]
-  }
-async  onLoad(option){
-    this.userInfo=await initUserInfo();
-  }
-methods={
-  async submitBaseInfo(e){
-    let real_name=e.detail.value.realName
-    let age=e.detail.value.age
-    let tall=e.detail.value.tall
-    let weight=e.detail.value.weight
-    if(real_name){
-      await changeRealname(real_name);
-    }
-    if(age){
-      this.userInfo.age=age
-    }
-    if(tall){
-      this.userInfo.tall=tall
-    }
-    if(weight){
-      this.userInfo.weight=weight
-      }
-      wx.setStorageSync('userOtherInfo',this.userInfo)
-      wx.navigateBack({
-        delta:1
-      })
     }
   }
-}
 </script>

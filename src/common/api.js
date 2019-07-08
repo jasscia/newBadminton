@@ -1,95 +1,168 @@
+import {userInfo} from './login'
+import {fmtMatchInfo} from './util'
 
-const setStorage=function(key,data) {
-    wx.setStorage({
-      key: key,
-      data: data
-    });
-  }
-  const formatNumber = n => {
-    n = n.toString()
-    return n[1] ? n : '0' + n
-  }
-  const login=function(){
-    return new Promise((resolve,reject)=>{
-      wx.login({
-        success:resolve,
-        fail:reject
-      })
-    })
-  }
-  const getUserInfoWithoutToken=function(){
-    return new Promise((resolve,reject)=>{
-      wx.getUserInfo({
-        success:resolve,
-        fail:reject
-      })
-    })
-  }
-  const getUserInfoWithToken=async function(code,nickName,avatarUrl){
-    let url=URLList.getTokenURl,
-        method="GET",
-        data={code:code,
-              nick_name:nickName,
-              avatar_url:avatarUrl}
-    let res=await htr(url,method,data);
-    return res.data;
-  }
+const host = "https://kkiqq.cn/"
+const urlList={
+  gameInfo: host + "api/badminton/game",
+  gameList: {
+    mycreate: host + "api/badminton/game",
+    myjoin: host + "api/badminton/signuplist",
+    all: host + "api/badminton/gamelist",
+  },
+  groupList: host + 'api/badminton/group',
+  addPlayer: host + "api/badminton/game/addplayer",
+  cancelPlayer: host + "api/badminton/game/cancel",
+  deletePlayer: host + "api/badminton/player",
+  getToken: host + 'api/badminton/qlogin',
+  changeRealname: host + 'api/badminton/userrename',
+  getPersonalInfo: host + 'api/badminton/personalinfo'
+};
 
-const transformStatusAndTimeOfMatchInfo=function(matchInfo){
-  let status=['报名中','报名结束','正在比赛','比赛结束']; 
-    if(status[matchInfo.status]){
-      matchInfo.status=status[matchInfo.status]
-    };
-    matchInfo.begintime=formateDate(new Date(matchInfo.begintime));
-    matchInfo.created_at=formateDate(new Date(matchInfo.created_at));
-    matchInfo.updated_at=formateDate(new Date(matchInfo.updated_at));
-  return matchInfo;
-}
-const formateDate=(time)=>{
-  // console.log('进入formdata fn',time);
-  const days=['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
-  const day = days[time.getDay()]
-  const month = time.getMonth() + 1
-  const date = time.getDate()
-  const hour = formatNumber(time.getHours())
-  const minute = formatNumber(time.getMinutes())
-  const joincode=[' ','月','日 ',':','']
-  return [day,month,date,hour,minute].reduce((string,curValue,curKey)=>{
-    return string+joincode[curKey-1]+curValue
-  })
-}
-const htr=function(url,method,data){
-  return new Promise((resolve,reject)=>{
+const htr = function(url , method, data){
+  wx.showLoading({})
+  return new Promise((resolve, reject = () => {
+    wx.hideLoading({})
+  }) => {
     wx.request({
       url,
       method,
-      data,
-      success:resolve,
-      fail:reject
+      data: Object.assign(data || {}, url == urlList.getToken ? {} : {token: data && data.token || userInfo.token}),
+      success: (res) => {
+        let statusCode = res.statusCode
+        let data = res.data
+        if (statusCode >= 200 && statusCode < 300 || statusCode == 304) {
+          if (url == urlList.getToken && data.token) {
+            wx.hideLoading({})
+            resolve(data)
+          } else if (data && data.code == 1) {
+            wx.hideLoading({})
+            resolve(data.data || data.message)
+          } else if (data && data.code == 401) {
+            wx.navigateTo({
+              url: '/pages/auth/auth',
+            })
+          } else {
+            reject()
+          }
+        } else {
+          reject()
+        }
+      },
+      fail: reject
     })
   })
 }
-const URLList={
-  getGameInfoURL:"https://kkiqq.cn/api/badminton/game",
-  putGameInfoURL:"https://kkiqq.cn/api/badminton/game",
-  postGameInfoURL:"https://kkiqq.cn/api/badminton/game",
-  getGameListMyURL:"https://kkiqq.cn/api/badminton/game",
-  getGameListMyjoinURL:"https://kkiqq.cn/api/badminton/signuplist",
-  getGameListAllURL:"https://kkiqq.cn/api/badminton/gamelist",
-  addplayerURL:"https://kkiqq.cn/api/badminton/game/addplayer",
-  getTokenURl:'https://kkiqq.cn/api/badminton/qlogin',
-  changeRealnameURl:'https://kkiqq.cn/api/badminton/userrename',
-  postGroupListURl:'https://kkiqq.cn/api/badminton/group',
-  getGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
-  putGroupInfoURl:'https://kkiqq.cn/api/badminton/group',
-  getMyMatchDataURL:'https://kkiqq.cn/api/badminton/personalinfo'
-};
-export {URLList,
-        htr,
-        formateDate,
-        transformStatusAndTimeOfMatchInfo,
-        getUserInfoWithToken,
-        getUserInfoWithoutToken,
-        login,
-        formatNumber,
-        setStorage}
+//获取token
+//show loading
+//xhr请求
+//hide loading
+const api_getToken = async function(code, nickName, avatarUrl){
+  let url = urlList.getToken,
+      method="GET",
+      data={code: code,
+            nick_name: nickName,
+            avatar_url: avatarUrl}
+  let res = await htr(url, method, data);
+  return res;
+}
+
+const api_getMatchInfoList = async function(type, data) {
+  let url = urlList.gameList[type];
+  let res = await htr(url , 'GET', data);
+  res = res || []
+  res.map((matchInfo) => {
+    return fmtMatchInfo(matchInfo)
+  })
+  return res || []
+}
+
+const api_getMatchInfo = async function(gameid, data) {
+  let url = urlList.gameInfo +'\/'+gameid;
+  let res = await htr(url, 'GET', data);
+  res = fmtMatchInfo(res)
+  return res || {}
+}
+
+const api_updateMatchInfo = async function(gameid, data) {
+  let url = urlList.gameInfo +'\/'+gameid;
+  let res = await htr(url, 'PUT', data);
+  return res || {}
+}
+
+const api_addPlayer=async function(data){
+  let url = urlList.addPlayer
+  let res = await htr(url, 'POST', data)
+  return res || {}
+}
+
+const api_cancelPlayer=async function(data){
+  let url = urlList.cancelPlayer
+  let res = await htr(url, 'DELETE', data)
+  return res || {}
+}
+
+const api_deletePlayer=async function(data){
+  let url = urlList.deletePlayer
+  let res = await htr(url, 'DELETE', data)
+  return res || {}
+}
+
+const api_changeRealname=async function(data){
+  let url = urlList.changeRealname;
+  let res = await htr(url, 'POST', data);
+  return res || {}
+}
+
+const api_createGame = async function(data){
+//       data={
+//         token:token,
+//         gamename:formData.theme,
+//         status:0,
+//         note:null,
+//         address:formData.address,
+//         begintime:formData.begintime,
+//         auto_signup:formData.auto_signup
+//       };
+  let url = urlList.gameInfo;
+  let res = await htr(url, 'POST',data);
+  return res || {}
+}
+
+const api_postGroupList = async function(data) {
+  let url = urlList.groupList;
+  let res = await htr(url, 'POST',data);
+  return res || {}
+}
+
+const api_getGroupList = async function(data) {
+  let url = urlList.groupList;
+  let res = await htr(url, 'GET',data);
+  return res || {}
+}
+
+const api_putGroupInfo = async function(groupid, data){
+  let url = urlList.groupList+'\/'+groupid
+  let res=await htr(url, 'PUT',data)
+  return res || {}
+}
+
+const api_getPersonalInfo = async function(data){
+  let url = urlList.getPersonalInfo
+  let res= await htr(url, 'GET', data)
+  return res || {}
+}
+export {
+  api_getToken,
+  api_getMatchInfoList,
+  api_getMatchInfo,
+  api_updateMatchInfo,
+  api_addPlayer,
+  api_cancelPlayer,
+  api_deletePlayer,
+  api_changeRealname,
+  api_createGame,
+  api_postGroupList,
+  api_getGroupList,
+  api_putGroupInfo,
+  api_getPersonalInfo,
+}

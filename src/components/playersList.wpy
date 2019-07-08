@@ -1,53 +1,63 @@
 
 <template>
-  <view class="playersList">
-    <repeat for="{{playersList}}" key="index" item="playerInfo">
-      <view class="playerInfo">
-        <image class="avatar {{myturn===index?'me':''}} {{ownerturn===index?'owner':''}}"  src="{{playerInfo.user.avatar_url}}" />
-        <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
-      </view>
-    </repeat>
+  <view class="wrap">
+    <view class="note" wx:if="{{deleteAble}}">长按人名删除</view>
+    <view class="playersList">
+      <repeat for="{{playersList}}" key="index" item="playerInfo">
+        <view class="playerInfo" @longpress.stop="deletePlayer({{playerInfo.userid}})">
+          <image class="avatar {{myturn===index?'me':''}} {{ownerturn===index?'owner':''}}" src="{{playerInfo.user.avatar_url}}" />
+          <view class="name">{{playerInfo.user.real_name ||playerInfo.user.nick_name}}</view>
+        </view>
+      </repeat>
+    </view>
   </view>
 </template>
 
 <style lang="less" scoped>
   @import '../common/common.less';
-  
-  .playersList{
-    background: @bgc-card;
+  .wrap {
+    margin: 0rpx 10rpx;
+  }
+  .note {
+    font-size: 30rpx;
+    text-align: right;
+    padding: 10rpx;
+    color: @gray-dark;
+  }
+  .playersList {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     padding-bottom: 20rpx;
-    margin:10rpx auto;
-    .playerInfo{
-      width:100rpx;
-      height:120rpx;
+    .playerInfo {
+      width: 100rpx;
+      height: 120rpx;
       text-align: center;
-      margin:20rpx;
-      .avatar{
+      margin: 20rpx;
+      .avatar {
         height: 100rpx;
         width: 100rpx;
         border-radius: 50%;
         background-size: cover;
         position: relative;
       }
-      .me{
-        border:6rpx solid @btn-em;
+      .me {
+        border: 6rpx solid @orange;
         box-sizing: border-box;
       }
-      .owner{
-        border:6rpx solid @btn;
+      .owner {
+        border: 6rpx solid @blue;
         box-sizing: border-box;
       }
-      .name{
+      .name {
         font-size: 24rpx;
-        width:100rpx;
-        height:30rpx;
-        line-height:30rpx;
+        width: 100rpx;
+        height: 30rpx;
+        line-height: 30rpx;
         vertical-align: middle;
         white-space: nowrap;
         overflow: hidden;
+        color: @gray-darker;
       }
     }
   }
@@ -55,40 +65,81 @@
 
 
 <script>
-import wepy from 'wepy'
-export default class playersList extends wepy.component {
-  props={
-    matchInfo:{
-      type:Object,
-      default:{}}
-  }
-  data={
-    playersList:[],
-    myturn:null,
-    ownerturn:null
-  }
-  watch={
-    matchInfo(matchInfo){
-      if(!matchInfo){return}
-      this.playersList=matchInfo.players
-     let myUserInfo=wx.getStorageSync('userInfo')
-     let my_uid=myUserInfo.uid
-     let owner_uid=matchInfo.owner.uid
-      for(let i=0,len=this.playersList.length;i<len;i++){
-        let playerInfo=this.playersList[i]
-         if(!matchInfo.ifIn){
-       this.myturn=null
-      }else if(playerInfo.user.uid===my_uid){
-          this.myturn=i
+  import wepy from 'wepy'
+  import {
+    api_deletePlayer,
+    api_getMatchInfo
+  } from '../common/api'
+  export default class playersList extends wepy.component {
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {},
+        twoWay: true,
+      },
+      from: {
+        type: String,
+        default: null,
+      }
+    }
+    data = {
+      playersList: [],
+      myturn: null,
+      ownerturn: null,
+      deleteAble: false,
+    }
+    watch = {
+      matchInfo(matchInfo) {
+        if (!matchInfo) {
+          return
         }
-        if(playerInfo.user.uid===owner_uid){
-          this.ownerturn=i
+        this.playersList = matchInfo.players
+        let myUserInfo = wx.getStorageSync('userInfo')
+        let my_uid = myUserInfo.uid
+        let owner_uid = matchInfo.owner.uid
+        for (let i = 0, len = this.playersList.length; i < len; i++) {
+          let playerInfo = this.playersList[i]
+          if (!matchInfo.ifIn) {
+            this.myturn = null
+          } else if (playerInfo.user.uid === my_uid) {
+            this.myturn = i
+          }
+          if (playerInfo.user.uid === owner_uid) {
+            this.ownerturn = i
+          }
+        }
+        this.deleteAble = this.from == 'live' && matchInfo.status == '报名中' && my_uid == owner_uid
+        this.$apply()
+      }
+    }
+    methods = {
+      async deletePlayer(playerid) {
+        if (!this.deleteAble) {
+          return
+        }
+        let gameid = this.matchInfo.id
+        let res = await api_deletePlayer({
+          gameid: gameid,
+          playerid: playerid
+        })
+        console.log('res=', res)
+        if (res) {
+          console.log('re fetch')
+          this.matchInfo = await api_getMatchInfo(gameid)
+          this.$apply()
+          wx.showToast({
+            title: '删除成功',
+            icon: 'success',
+            duration: 1500
+          })
+        } else {
+          console.log('re fetch')
+          wx.showToast({
+            title: '删除失败',
+            duratuin: 1500
+          })
         }
       }
-      // console.log('playersList changed in component',this.playersList,this.myturn,this.ownerturn)
-
-    this.$apply()
     }
   }
-}
 </script>

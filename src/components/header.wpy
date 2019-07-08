@@ -1,59 +1,58 @@
 <template>
-  <view  class="header"  @tap="selectItem" >
-    <repeat for="{{titleList}}" index="index" key="index"> 
+  <view class="header" @tap="selectItem">
+    <repeat for="{{titleList}}" index="index" key="index">
       <view class="{{selectedItem===item?'selectedItem':''}}" data-titleName="{{item}}">{{item}}</view>
     </repeat>
   </view>
 </template>
 
-<style lang="less" >
-@import '../common/common.less';
-.header{
-  margin:0px;
-  margin-bottom: 40rpx;
-  padding-top:20rpx;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  
-.selectedItem::after {
-  content: '';
-  position: absolute;
-  left:50%;
-  transform: translateX(-50%);
-  bottom:-5px;
-  width:120rpx;
-  color:cadetblue;
-  border-bottom:10rpx solid;
+<style lang="less">
+  @import '../common/common.less';
+  .header {
+    margin: 0px;
+    margin-bottom: 40rpx;
+    padding-top: 20rpx;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .selectedItem::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -5px;
+      width: 120rpx;
+      color: cadetblue;
+      border-bottom: 10rpx solid;
+    }
+    .selectedItem {
+      position: relative;
+    }
   }
-  .selectedItem{
-    position: relative;
-  }
-}
 </style>
 <script>
   import wepy from 'wepy';
   export default class Header extends wepy.component {
-    props={
-      titleList:{
-        type:Array,
-        default:[]
+    props = {
+      titleList: {
+        type: Array,
+        default: []
       },
-      selectedItem:{
-        type:String,
-        default:null,
-        twoWay:true
+      selectedItem: {
+        type: String,
+        default: null,
+        twoWay: true
       }
     }
-    onLoad(){
+    onLoad() {
       // if(this.titleList && this.titleList.length){
       // this.selectedItem=this.titleList[0]}
     }
-    methods={
-      selectItem(e){
-        let titlename=e.target.dataset.titlename;
-        if(titlename){
-          this.selectedItem=titlename;
+    methods = {
+      selectItem(e) {
+        let titlename = e.target.dataset.titlename;
+        if (titlename) {
+          this.selectedItem = titlename;
         }
       }
     }

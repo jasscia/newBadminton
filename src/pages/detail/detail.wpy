@@ -1,95 +1,86 @@
 
 <template>
-  <view class="container">
-  <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
-  <view  wx:if="{{userInfo.avatar_url}}">
-    <matchActiveInDetail :matchInfo.sync="matchInfo" :mode.sync="mode"></matchActiveInDetail>
-      <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
-      <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
-      <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}"
-                  :matchInfo.sync="matchInfo"></matchResultInDetail>
+  <view class="container detail">
+    <matchActiveInDetail :matchInfo.sync="matchInfo" mode="label"></matchActiveInDetail>
+    <matchBaseInfoInDetail :matchInfo.sync="matchInfo"></matchBaseInfoInDetail>
+    <playersListInDetail :matchInfo.sync="matchInfo"></playersListInDetail>
+    <matchResultInDetail wx:if="{{matchInfo.contorlAttr.ifStarted}}" :matchInfo.sync="matchInfo"></matchResultInDetail>
   </view>
-  
-</view>
 </template>
 
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .item,.label{
-    background: @bgc-card;
-    height:60rpx;
+  .detail {
+      background: #fff;
+  }
+  .item,
+  .label {
+    height: 60rpx;
     line-height: 60rpx;
     vertical-align: middle;
-    padding:10rpx 20rpx;
-    margin-bottom:8rpx;
-    font-size:30rpx;
-    .label.title{
-      color: @font-side;
+    padding: 10rpx 20rpx;
+    margin-bottom: 8rpx;
+    font-size: 30rpx;
+    .label.title {
+      color: @gray-light;
       font-weight: lighter;
-      text-align:left;
+      text-align: left;
     }
-    .title{
+    .title {
       width: 150rpx;
     }
-    .title,.content{
+    .title,
+    .content {
       display: inline-block;
       height: 40px;
       line-height: 40px;
       vertical-align: middle;
     }
-    .content{
-      width:500rpx;
+    .content {
+      width: 500rpx;
     }
   }
 </style>
 
-
 <script>
-import wepy from 'wepy'
-import {initUserInfo, downLoadMatchInfo,share,addPlayer} from "../../common/common"
-import playersList from '../../components/playersList'
-import matchBaseInfo from '../../components/matchBaseInfo'
-import matchResult from '../../components/matchResult'
-import matchActive from '../../components/matchActive'
-import authorizion from '../../components/authorizion'
 
-export default class BaseData extends wepy.page {
-  components={
-    playersListInDetail:playersList,
-    matchBaseInfoInDetail:matchBaseInfo,
-    matchActiveInDetail:matchActive,
-    matchResultInDetail:matchResult,
-    authorizion:authorizion,
-  }
-data={
-    userInfo: {},
-    matchInfo:{},
-    mode:'cube'
-  }
- async onLoad(options){
-   this.$emit('initPage')
-   this.gameid=options.gameid
-   this.matchInfo=await downLoadMatchInfo(this.gameid)
-   this.$apply()
- }
- async onShow(options){
-   this.matchInfo=await downLoadMatchInfo(this.gameid)
-   this.$apply()
- }
- onShareAppMessage(){
-   return  share('/pages/detail/detail?gameid='+this.gameid)
- }
- events = {
-  async initPage(data) {
-        let userInfo = await initUserInfo(data);
-
-        if (userInfo && userInfo.token) {
-          this.userInfo = userInfo;
-          this.matchInfo=await downLoadMatchInfo(this.gameid);
-          this.$apply();
-        }
+  import wepy from 'wepy'
+  import {share} from '../../common/util'
+  import {api_getMatchInfo} from '../../common/api'
+  import playersList from '../../components/playersList'
+  import matchBaseInfo from '../../components/matchBaseInfo'
+  import matchResult from '../../components/matchResult'
+  import matchActive from '../../components/matchActive'
+  export default class BaseData extends wepy.page {
+    config = {
+      navigationBarTitleText: '比赛详情'
+    }
+    components = {
+      matchActiveInDetail: matchActive,
+      matchBaseInfoInDetail: matchBaseInfo,
+      playersListInDetail: playersList,
+      matchResultInDetail: matchResult
+    }
+    data = {
+      gameid: null,
+      matchInfo: {}
+    }
+    onLoad(options) {
+      this.gameid = options.gameid
+      //  this.$emit('getMatchInfo')
+    }
+    onShow(options) {
+      this.$emit('getMatchInfo')
+    }
+    onShareAppMessage() {
+      return share('/pages/detail/detail?gameid=' + this.gameid)
+    }
+    events = {
+      async getMatchInfo() {
+        this.matchInfo = await api_getMatchInfo(this.gameid)
+        console.log('match info = ', this.matchInfo)
+        this.$apply()
       }
- }
- 
-}
+    }
+  }
 </script>

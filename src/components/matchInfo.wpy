@@ -1,13 +1,13 @@
 <template>
-<view class="matchInfo"> 
-    <view class="row row1" wx:if="{{mode==='withoutPanle'}}">
-      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'signupable':'unsignupable'}}">{{matchInfo.status}}</text>
-      <text class="status {{matchInfo.ifIn?'signuped':'unsignup'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
+  <view class="matchInfo card">
+    <view class="row row1" wx:if="{{from==='all'}}">
+      <text class="status {{matchInfo.contorlAttr.ifOktoInviate?'label-positive':'label-negative'}}">{{matchInfo.status}}</text>
+      <text class="status {{matchInfo.ifIn?'text-positive':'text-negative'}}">{{matchInfo.ifIn?"已报名":"未报名"}}</text>
     </view>
     <!-- <block > -->
-    <view class="statement-group" wx:if="{{mode==='withPanle'}}">
-      <text  class="statement wait"  wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
-      <text  class="statement {{matchInfo.contorlAttr.ifDone?'done':''}} {{matchInfo.contorlAttr.ifGoingon?'goingon':''}}"  wx:else>{{matchInfo.status}}</text>
+    <view class="row row1" wx:if="{{from==='my'}}">
+      <text class="label-info" wx:if="{{matchInfo.players.length<4}}">人数小于4,尚未达到开赛条件</text>
+      <text class="status {{matchInfo.contorlAttr.ifDone?'label-negative': matchInfo.contorlAttr.ifGoingon?'label-warn':'label-positive'}}" wx:else>{{matchInfo.status}}</text>
     </view>
     <view class="row row2">{{matchInfo.gamename}}
       <view class="owner"> 创建者-{{matchInfo.owner.real_name||matchInfo.owner.nick_name}}</view>
@@ -19,7 +19,7 @@
       <view class="avatarList">
         <repeat for="{{matchInfo.players}}" key="index" index="index" item="player">
           <view class="avatar">
-            <image src="{{player.user.avatar_url}}"/>
+            <image src="{{player.user.avatar_url}}" />
           </view>
         </repeat>
       </view>
@@ -28,110 +28,88 @@
 </template>
 
 <style lang="less" scoped>
-@import '../common/common.less';
-  .matchInfo{
+  @import '../common/common.less';
+  .matchInfo {
     border-radius: 10px;
-    margin:0;
-    padding:0;
   }
-  .row{
-    margin:20rpx;
-  }
-  .row1{
+  .row1 {
     display: flex;
-    justify-content:space-between;
-    font-size:28rpx;
-    color:#333;
-    padding:0 10rpx;
-    .status{
+    justify-content: space-between;
+    font-size: 28rpx;
+    color: #333;
+    .status,
+    .label-info {
+      height: 50rpx;
+      line-height: 50rpx;
       border-radius: 6rpx;
     }
-    .signupable{
-      background: @btn;
-    }
-    .unsignupable{
-      background: tomato;
-    }
-    .signuped{
-      color:@btn-em;
-    }
-    .unsignup{}
   }
-  .statement-group{
-    font-size: 30rpx;
-    color:@font;
-   text-align: right;
-   padding:0;
-  }
-  .statement{
-    background:cadetblue;
-  }
-  .statement.wait{
-    background: lightgoldenrodyellow;
-  }
-  .statement.done{
-    background: tomato;
-  }
-  .statement.goingon{
-    background: orange;
-  }
-  // }
-  .row2{
+  .row2 {
     font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    .owner{
+    padding: 10rpx 20rpx;
+    .owner {
       font-size: 12px;
       display: inline;
       font-weight: lighter;
     }
   }
-  .row4{
+  .row3 {
+    padding: 20rpx;
+  }
+  .row4 {
     overflow: hidden;
     white-space: nowrap;
+    padding: 20rpx;
   }
-  .row5{
-    height:30px;
+  .row5 {
+    height: 30px;
     display: flex;
     justify-content: space-between;
-    .avatarList{
+    padding: 20rpx;
+    box-sizing: content-box;
+    .avatarList {
       // margin-right: 10rpx;
-      flex:1;
+      flex: 1;
       display: flex;
       flex-wrap: nowrap;
       overflow: hidden;
       justify-content: flex-end;
-      .avatar{
-        width:42rpx;
-        box-sizing: border-box; 
+      .avatar {
+        width: 42rpx;
+        box-sizing: border-box;
         border-radius: 50%;
         text-align: right;
       }
-      image{
-        height:28px;
-        width:28px;
+      image {
+        height: 28px;
+        width: 28px;
         border-radius: 50%;
         background-size: cover;
         float: right;
-        border:4rpx solid @bgc-card;
+        border-width: 4rpx solid @white;
       }
     }
   }
-  .row2::before{
-    content:"\e6fe";
+  .row2::before {
+    content: "\e6fe";
   }
-  .row3::before{
-    content:"\e735";
+  .row3::before {
+    content: "\e735";
   }
- .row4::before{
-    content:"\e6ec";
+  .row4::before {
+    content: "\e6ec";
   }
-  .row5::before{
-    content:"\e700";
+  .row5::before {
+    content: "\e700";
   }
-  .row2::before,.row3::before,.row4::before,.row5::before{    
-    width:20px;
+  .row2::before,
+  .row3::before,
+  .row4::before,
+  .row5::before {
+    width: 20px;
     display: inline-block;
     text-align: left;
     font-family: "iconfont";
@@ -139,24 +117,29 @@
   }
 </style>
 <script>
-import wepy from 'wepy';
-import {updateMatchInfo,share,downLoadMatchInfo} from '../common/common'
-export default class matchInfo extends wepy.component{
-  props={
-    matchInfo:{
-      type:Object,
-      default:{},
-     },
-    mode:{
-      type:String,
-      default:'withoutPanle'
+  import wepy from 'wepy';
+  import {formateDate} from '../common/util'
+  export default class matchInfo extends wepy.component {
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {},
+      },
+      from: {
+        type: String,
+        default: 'all'
+      },
+    }
+    onLoad() {
+      // console.log(this.statusList, this.matchInfo)
+    }
+    methods = {
+      emitGotoLive(e) {
+        console.log('click---', this.statusList, this.matchInfo)
+        return
+        // this.$emit('goToLive', e)
+      }
     }
   }
-methods={
-  emitGotoLive(e){
-    this.$emit('goToLive',e)
-  }
-}
-}
 </script>
 

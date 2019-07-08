@@ -1,99 +1,76 @@
 <template>
   <view class="container">
     <header :titleList.sync="titleList" :selectedItem.sync="activeBar"></header>
-    <mygame wx:if="{{userInfo.avatar_url}}"             
-            :matchInfoList.sync="matchInfoList"
-            :activeBar.sync="activeBar"
-            :mode="mode"></mygame>
-    <authorizion wx:if="{{!userInfo.avatar_url}}"> </authorizion>
+    <mygame :matchInfoList.sync="matchInfoList" :activeBar.sync="activeBar"></mygame>
   </view>
 </template>
 <style lang="less" scoped>
   @import '../../common/common.less';
-  .container{
-    background: @bgc;
+  tab {
+    height: 30rpx;
   }
 </style>
 <script>
-import wepy from "wepy";
-import {initUserInfo,downLoadMatchInfoList,share} from '../../common/common';
-import mygame from '../../components/mygame';
-import header from '../../components/header';
-import authorizion from '../../components/authorizion'
-export default class Main extends wepy.page{
-  config={
-    navigationBarTitleText:'我的赛事'
-  }
-    data={
+  import wepy from "wepy";
+  import {share} from '../../common/util';
+  import {api_getMatchInfoList} from '../../common/api';
+  import header from '../../components/header';
+  import mygame from './mygame';
+  export default class Main extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的赛事'
+    }
+    data = {
       userInfo: {},
       matchInfoList: [],
-      activeBar:'我创建的比赛',
-      titleList:['我创建的比赛','我参与的比赛'],
-      mode: 'withPanle',
-      type: 'mycreate'
-   }
+      activeBar: '我创建的',
+      titleList: ['我创建的', '我参与的'],
+      type: 'mycreate',
+    }
     components = {
-      mygame:mygame,
-      header:header,
-      authorizion:authorizion,
+      mygame: mygame,
+      header: header,
     }
-
-  onLoad(){
-    this.$emit('initPage')
-  }
-
-  async refresh(){
-      this.matchInfoList = await downLoadMatchInfoList(this.type)
-      this.$apply()
-  }
-
-  onShareAppMessage(res){
-    let from=res.from;
-    let gameid=res.target.dataset.gameid
-    if(from==='button'){
-      return share('/pages/detail/detail?gameid='+gameid)
-    } else {
-     return share('/pages/main/main.wpy')
+    onShow() {
+      this.$emit('getMatchInfoList')
     }
-  }
-
-  watch = {
-    activeBar() {
-      if(this.activeBar == this.titleList[0]){
-        this.type='mycreate'
-      } else if(this.activeBar == this.titleList[1]) {
-        this.type= 'myjoin'
+    async refresh() {
+      this.$emit('getMatchInfoList')
+    }
+    onShareAppMessage(res) {
+      let from = res.from;
+      let gameid = res.target.dataset.gameid
+      if (from === 'button') {
+        return share('/pages/detail/detail?gameid=' + gameid)
+      } else {
+        return share('/pages/main/main.wpy')
       }
-      this.$emit('initPage')
     }
-  }
-  events = {
-    turnOverCard(index){
-      this.$broadcast('turnOverCard', index)
-    },
-
-    createNewAgainst(){
-      wx.navigateTo({
-        url:"/pages/main/createNewAgainst"
-      })
-    },
-
-    async updatematchinfoList(){
-      this.matchInfoList = await downLoadMatchInfoList(this.activeType)
-      this.$apply()
-    },
-
-    async initPage(data) {
-      let userInfo = await initUserInfo(data);
-
-      if (userInfo && userInfo.token) {
-        this.userInfo = userInfo;
-        this.matchInfoList = await downLoadMatchInfoList(this.type)
+    watch = {
+      activeBar() {
+        if (this.activeBar == this.titleList[0]) {
+          this.type = 'mycreate'
+        } else if (this.activeBar == this.titleList[1]) {
+          this.type = 'myjoin'
+        }
+        this.$emit('getMatchInfoList')
+      }
+    }
+    events = {
+      turnOverCard(index) {
+        this.$broadcast('turnOverCard', index)
+      },
+      createNewAgainst() {
+        wx.navigateTo({
+          url: "/pages/main/createNewAgainst"
+        })
+      },
+      async getMatchInfoList() {
+        this.matchInfoList = await api_getMatchInfoList(this.type)
         this.$apply();
       }
     }
   }
-}
 </script>
 
 

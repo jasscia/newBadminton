@@ -1,0 +1,109 @@
+<template>
+  <view class="warp">
+    <view class="add" @tap.stop="createNewAgainst">
+      <button>创建赛事</button>
+    </view>
+    <view class="errPage" wx:if="{{activeBar == '我参与的比赛' && !matchInfoList.length}}">
+      没有参加任何比赛
+    </view>
+    <repeat for="{{matchInfoList}}" key="index" index="index" item="matchInfo">
+      <view class="matchCard" @tap="turnOverCard" data-index="{{index}}" data-matchinfo="{{matchInfo}}">
+        <twoSide :index.sync="index">
+          <block slot='frontSide'>
+            <matchInfo :matchInfo.sync="matchInfo" :gameIndex.sync="index" from="my"></matchInfo>
+          </block>
+          <block slot='backSide'>
+            <matchActive :matchInfo.sync="matchInfo" :matchIndex.sync="index" mode="card"></matchActive>
+          </block>
+        </twoSide>
+      </view>
+    </repeat>
+  </view>
+</template>
+<style lang="less" scoped>
+  @import '../../common/common.less';
+  .warp {
+    .add {
+      margin-top: 40rpx;
+      border-radius: 10px;
+      line-height: 100rpx;
+      text-align: center;
+      vertical-align: middle;
+      button {
+        display: inline-block;
+        vertical-align: middle;
+        height: 100px;
+        width: 90%;
+        padding: 0;
+        line-height: 100px;
+        font-size: 60rpx;
+        letter-spacing: 20rpx;
+      }
+    }
+    .errPage {
+      margin: 100rpx auto 0;
+      height: 200rpx;
+      width: 90%;
+      line-height: 200rpx;
+      text-align: center;
+      vertical-align: middle;
+      border-radius: 20rpx;
+      color: #666;
+      letter-spacing: 5rpx;
+    }
+    .matchCard {
+      margin: 20rpx;
+      font-size: 28rpx;
+      color: #666;
+      border-radius: 30rpx;
+      position: relative;
+      height: 380rpx;
+    }
+  }
+</style>
+<script>
+  import wepy from "wepy";
+  import matchActive from '../../components/matchActive';
+  import matchInfo from '../../components/matchInfo';
+  import twoSide from '../../components/twoSide';
+  export default class Mygame extends wepy.component {
+    props = {
+      matchInfoList: {
+        type: Array,
+        default: []
+      },
+      activeBar: {
+        type: String,
+        default: '',
+      },
+    }
+    components = {
+      matchInfo: matchInfo,
+      twoSide: twoSide,
+      matchActive: matchActive,
+    }
+    watch = {
+      matchInfoList(n, o) {
+        console.log('oooooooo')
+        console.log(n, o)
+      }
+    }
+    methods = {
+      turnOverCard(e) {
+        let index = e.currentTarget.dataset.index
+        this.$emit('turnOverCard', index)
+      },
+      createNewAgainst() {
+        this.$emit('createNewAgainst')
+      },
+    }
+    events = { 
+      matchInfoChange(params) {
+        console.log('params', params)
+        this.matchInfoList[params.index] = params.matchInfo
+      }
+    }
+  }
+</script>
+
+

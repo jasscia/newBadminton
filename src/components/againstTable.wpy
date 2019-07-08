@@ -1,222 +1,219 @@
-
 <template>
-  <view class="warp"> 
-  <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
-    <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}" 
-          @tap='itemTap' data-where="body" data-index="{{index}}">
-      <view class="side">
-        <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
-        <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
+  <view class="warp">
+    <repeat for="{{matchInfo.groupWithInfo}}" key="index" index="index" item="groupInfo" if="{{state===1}}">
+      <view class="againstItem {{groupInfo.status===1 && matchInfo.limitForLive!=='readOnly'?'done':'undone'}} {{(groupInfo.status===0 && activedGroupIndex===index)?'selected':''}}" @tap='itemTap' data-where="body" data-index="{{index}}">
+        <view class="side">
+          <view class="name">{{groupInfo.id_a1.real_name||groupInfo.id_a1.nick_name}}</view>
+          <view class="name">{{groupInfo.id_a2.real_name||groupInfo.id_a2.nick_name}}</view>
+        </view>
+        <view class="handleBtnGroup">
+          <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="more" hover-class="hover">+</button>
+          <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="less" hover-class="hover">-</button>
+        </view>
+        <view class="score scoreL">{{groupInfo.score_a}}</view>
+        <view class="sub" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
+          <view>第{{index+1}}场</view>
+          <button wx:if="{{groupInfo.status!==1}}" data-where="finish" class="finishBtn">点这结束</button>
+          <button wx:else class="finishBtn" data-where="look">点这查看</button>
+        </view>
+        <view class="sub" wx:else>
+          <view>第{{index+1}}场</view>
+        </view>
+        <view class="score scoreR">{{groupInfo.score_b}}</view>
+        <view class="handleBtnGroup">
+          <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideB" data-way="more" hover-class="hover">+</button>
+          <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideB" data-way="less" hover-class="hover">-</button>
+        </view>
+        <view class="side">
+          <view class="name">{{groupInfo.id_b1.real_name||groupInfo.id_b1.nick_name}}</view>
+          <view class="name">{{groupInfo.id_b2.real_name||groupInfo.id_b2.nick_name}}</view>
+        </view>
       </view>
-      <view class="handleBtnGroup">
-        <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="more"  hover-class="hover">+</button>
-        <button disabled="{{matchInfo.limitForLive==='readOnly'}}" data-where="sideA" data-way="less"  hover-class="hover">-</button>
-      </view>
-      <view class="score scoreL">{{groupInfo.score_a}}</view>
-      <view class="sub" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
-        <view>第{{index+1}}场</view>
-        <button wx:if="{{groupInfo.status!==1}}" data-where="finish"  class="finishBtn">点这结束</button> 
-        <button wx:else  class="finishBtn" data-where="look" >点这查看</button>
-      </view>
-      <view class="sub" wx:else>
-        <view>第{{index+1}}场</view>
-      </view>
-      <view class="score scoreR">{{groupInfo.score_b}}</view>
-      <view class="handleBtnGroup">
-        <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="more" hover-class="hover">+</button>
-        <button disabled="{{matchInfo.limitForLive==='readOnly'}}"  data-where="sideB" data-way="less"  hover-class="hover">-</button>
-      </view>
-      <view class="side">
-        <view class="name">{{groupInfo.id_b1.real_name||groupInfo.id_b1.nick_name}}</view>
-        <view class="name">{{groupInfo.id_b2.real_name||groupInfo.id_b2.nick_name}}</view>
-      </view>
-    </view>
-  </repeat>
-  <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
+    </repeat>
+    <view class="err" if="{{state!==1}}">{{msg[state]}}</view>
   </view>
 </template>
 
 <style lang="less" scoped>
   @import '../common/common.less';
-.warp{
-  width:100%;
-  box-sizing: border-box;
-  padding-left:20rpx;
-  padding-right:20rpx;
-  .againstItem{
-    font-size:36rpx;
-    height:200rpx;
-    background-color: @btn-em;
-    display: flex;
-    align-items: center;
-    margin:40rpx 0;
+  .warp {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+    .againstItem {
+      font-size: 36rpx;
+      height: 200rpx;
+      background-color: @orange;
+      display: flex;
+      align-items: center;
+      margin: 40rpx 0;
+      border-radius: 20rpx;
+      position: relative;
+      .side,
+      .handleBtnGroup,
+      .score,
+      .sub {
+        display: inline-block;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 0;
+      }
+      /* 总宽 750rpx
+  padding:20px 0;
+  其余的 分别宽 160 70 70 110 */
+      .side {
+        width: 160rpx;
+        color: @gray-lighter;
+        .name {
+          height: 60rpx;
+          line-height: 60rpx;
+          margin: 10px 10rpx;
+          box-sizing: border-box;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+      .handleBtnGroup {
+        width: 70rpx;
+        button {
+          width: 100%;
+          height: 60rpx;
+          line-height: 60rpx;
+          margin: 10rpx 0;
+          padding: 0;
+          text-align: center;
+          display: inline-block;
+        }
+      }
+      .score {
+        width: 70rpx;
+        height: 160rpx;
+        text-align: center;
+        line-height: 160rpx;
+        font-size: 60rpx;
+        background: @blue;
+      }
+      .scoreL {
+        border-bottom-left-radius: 50%;
+        border-top-left-radius: 50%;
+      }
+      .scoreR {
+        border-bottom-right-radius: 50%;
+        border-top-right-radius: 50%;
+      }
+      .sub {
+        width: 110rpx;
+        font-size: 25rpx;
+        letter-spacing: -2rpx;
+        text-align: center;
+        .finishBtn {
+          margin: 5rpx;
+          background: gold;
+          border-radius: 20%;
+          font-size: 25rpx;
+          padding: 0;
+        }
+      }
+    }
+  }
+  .done::before {
+    content: '结束';
+    position: absolute;
+    left: 0;
+    right: 410rpx;
+    bottom: 0;
+    top: 0;
+  }
+  .done::after {
+    content: '结束';
+    position: absolute;
+    left: 405rpx;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+  .done::before,
+  .done::after {
+    background: @orange;
+    text-align: center;
+    line-height: 95px;
+    vertical-align: middle;
+    z-index: 999;
     border-radius: 20rpx;
-    position: relative;
-    .side,
-    .handleBtnGroup,
-    .score,
-    .sub{
-      display: inline-block;
-      text-align: center;
-      box-sizing: border-box;
-      padding:0;
-    }
-
-/* 总宽 750rpx
-padding:20px 0;
-其余的 分别宽 160 70 70 110 */
-    .side{
-      width:160rpx;
-      .name{
-      width:100%;
-      margin: 10px 0;
-      text-align: center;
-      white-space:nowrap;
-      overflow: hidden;
-      }
-    }
-    .handleBtnGroup{
-      width:70rpx;
-      }
-    .score{
-      width: 70rpx;
-    }
-    .sub{
-      width:110rpx;
-    }
-    .handleBtnGroup button{
-      width:100%;
-      height:60rpx;
-      line-height: 60rpx;
-      margin:10rpx 0;
-      text-align: center;
-      display: inline-block;
-    }
-    .score{
-      height:160rpx;
-      text-align: center; 
-      line-height: 160rpx;
-      font-size:60rpx; 
-      background:@btn; 
-    }
-    .scoreL{
-      border-bottom-left-radius: 50%;
-      border-top-left-radius: 50%;
-    }
-    .scoreR{
-      border-bottom-right-radius: 50%;
-      border-top-right-radius: 50%;
-    }
-    .sub{
-      font-size: 25rpx;
-      letter-spacing: -2rpx;
-      text-align: center;
-      .finishBtn{
-      margin:5rpx;
-      background: gold;
-      border-radius: 20%;
-      font-size: 25rpx;
-      padding:0;
-      } 
-    }
-  }  
-}
-
-.done::before{
-  content: '结束';
-  position: absolute;
-  left:0;
-  right:410rpx;
-  bottom:0;
-  top:0;
-}
-.done::after{
-  content: '结束';
-  position: absolute;
-  left:405rpx;
-  right:0;
-  bottom:0;
-  top:0;
-}
-.done::before,.done::after{
-  background: @btn-em;
-  text-align: center;
-  line-height: 95px;
-  vertical-align: middle;
-  z-index: 999;
-  border-radius: 20rpx;
-}
-.againstItem.selected{
-  background:lightgreen;
-  transform:scaleY(1.3);
-  transition: transform 0.5s;
-}
+  }
+  .againstItem.selected {
+    background: lightgreen;
+    transform: scaleY(1.3);
+    transition: transform 0.5s;
+  }
 </style>
 
 
 <script>
-import wepy from 'wepy';
-import badmin from '../common/makeGroup'
-export default class AgainstTable extends wepy.component {
-  props={
-    matchInfo:{
-      type:Object,
-      default:{},
-      twoWay: true,
-    },
-    activedGroupIndex: {
-      type: Number,
-      default: null,
-      twoWay: true,
+  import wepy from 'wepy';
+  import badmin from '../common/makeGroup'
+  export default class AgainstTable extends wepy.component {
+    props = {
+      matchInfo: {
+        type: Object,
+        default: {},
+        twoWay: true,
+      },
+      activedGroupIndex: {
+        type: Number,
+        default: null,
+        twoWay: true,
+      }
+    }
+    methods = {
+      itemTap(e) {
+        let dataset = e.target.dataset
+        let where = dataset.where || e.currentTarget.dataset.where
+        let index = e.currentTarget.dataset.index
+        let way = dataset.way
+        let status = this.matchInfo && this.matchInfo.group[index] && this.matchInfo.group[index].status
+        if (!where) {
+          return
+        } //1-1有点击到任何地方 什么都不做
+        if (where === 'finish') {
+          this.matchInfo.group[index].status = 1 //当点击了完成 修改
+          this.activedGroupIndex = index
+          // this.activedGroupIndex=null
+          this.$emit('submitScore', index)
+        }
+        if (where === 'look') {
+          this.matchInfo.group[index].status = 0
+          this.activedGroupIndex = index
+        }
+        if (where === 'sideA') {
+          if (way === "more") {
+            // score_a=++groupInfo.score_a
+            this.matchInfo.group[index].score_a++
+          }
+          if (way === "less" && this.matchInfo.group[index].score_a !== 0) {
+            // score_a=--groupInfo.score_a
+            this.matchInfo.group[index].score_a--
+          }
+          this.activedGroupIndex = index
+        }
+        if (where === 'sideB') {
+          if (way === "more") {
+            // score_b=++groupInfo.score_b
+            this.matchInfo.group[index].score_b++
+          }
+          if (way === "less" && this.matchInfo.group[index].score_b !== 0) {
+            // score_b=--groupInfo.score_b
+            this.matchInfo.group[index].score_b--
+          }
+          this.activedGroupIndex = index
+        }
+        if (where === 'body') {
+          this.activedGroupIndex = index
+          // this.activedGroupIndex=null
+        }
+      },
     }
   }
-  methods={
-    itemTap(e){
-      let dataset=e.target.dataset
-      let where=dataset.where||e.currentTarget.dataset.where
-      let index=e.currentTarget.dataset.index
-      let way=dataset.way
-      let status=this.matchInfo && this.matchInfo.group[index] && this.matchInfo.group[index].status
-      if(!where){
-        return
-      }//1-1有点击到任何地方 什么都不做
-      if(where==='finish'){
-        this.matchInfo.group[index].status = 1//当点击了完成 修改
-        this.activedGroupIndex=index
-        // this.activedGroupIndex=null
-        this.$emit('submitScore', index)
-      }
-      if(where==='look'){
-        this.matchInfo.group[index].status=0
-        this.activedGroupIndex=index
-      }
-      if(where==='sideA'){
-        if (way === "more") {
-          // score_a=++groupInfo.score_a
-          this.matchInfo.group[index].score_a++
-        }
-        if (way === "less" && this.matchInfo.group[index].score_a!==0){
-          // score_a=--groupInfo.score_a
-          this.matchInfo.group[index].score_a--
-        }
-        this.activedGroupIndex=index
-      }
-      if(where==='sideB'){
-        if (way === "more") {
-          // score_b=++groupInfo.score_b
-          this.matchInfo.group[index].score_b++
-        }
-        if (way === "less" && this.matchInfo.group[index].score_b!==0){
-          // score_b=--groupInfo.score_b
-          this.matchInfo.group[index].score_b--
-        }
-        this.activedGroupIndex=index
-      }
-      if(where==='body'){
-        this.activedGroupIndex=index
-        // this.activedGroupIndex=null
-      }
-    },
-  }
-}
 </script>

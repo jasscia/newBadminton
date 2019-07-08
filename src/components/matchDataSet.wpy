@@ -13,7 +13,7 @@
       </picker>
       <label>></label>
     </view>
-   
+
     <view class="errTip label" wx:if="{{state!==1}}">{{msg}}</view>
 
     <button id="btn" @tap="makeGroup" wx:if="{{matchInfo.limitForLive!=='readOnly'}}">
@@ -164,7 +164,7 @@
       this.playersList.forEach(playerInfo => {
         playersUidList.push(playerInfo.userid)
       })
-      //方案1对应的转化方案 
+      //方案1对应的转化方案
       for (let i = 0, len = groupListJustWithOrder[1].length; i < len; i++) {
         let p1 = playersUidList[groupListJustWithOrder[1][i] - 1]; //这是因为groupListJustWithOrder的存储方式是【【---n】，【---n】，【---n】，【---n】】
         let p2 = playersUidList[groupListJustWithOrder[2][i] - 1]; //相同index上的 是要对阵的四个人员
